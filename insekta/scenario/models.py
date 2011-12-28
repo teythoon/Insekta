@@ -155,9 +155,8 @@ class ScenarioRun(models.Model):
             <type arch="x86_64">hvm</type>
           </os>
           <devices>
-            <disk type='file' device='disk'>
-              <!-- TODO: This is not a file but a lvm volume -->
-              <source file='{volume}' />
+            <disk type='block' device='disk'>
+              <source dev='{volume}' />
               <target dev='hda' />
             </disk>
             <interface type='bridge'>
