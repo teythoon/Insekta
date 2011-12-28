@@ -116,9 +116,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'insekta.common',
+    'insekta.scenario',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -142,4 +144,12 @@ LOGGING = {
             'propagate': True,
         },
     }
+}
+
+LIBVIRT_NODES = {
+    'qemu': 'qemu:///system'
+}
+
+LIBVIRT_STORAGE_POOLS = {
+    'qemu': 'insekta'
 }
