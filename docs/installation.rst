@@ -47,9 +47,10 @@ will create it now::
    pip install django pygments creoleparser jinja2 gunicorn sphinx
    exit
 
-Nginx will be our reverse proxy for gunicorn, we need to install it::
+Nginx will be our reverse proxy for gunicorn and PostgreSQL our database
+server. We need to install both::
    
-   aptitude install nginx
+   aptitude install nginx postgresql
 
 Dependencies are now installed :)
 
