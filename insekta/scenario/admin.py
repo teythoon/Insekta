@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from insekta.scenario.models import (Scenario, Secret, ScenarioRun,
-                                     SubmittedSecret)
+                                     SubmittedSecret, ScenarioGroup)
 
 class SecretInline(admin.TabularInline):
     model = Secret
@@ -38,3 +38,4 @@ class SubmittedSecretAdmin(admin.ModelAdmin):
 admin.site.register(Scenario, ScenarioAdmin)
 admin.site.register(ScenarioRun, ScenarioRunAdmin)
 admin.site.register(SubmittedSecret, SubmittedSecretAdmin)
+admin.site.register(ScenarioGroup)
