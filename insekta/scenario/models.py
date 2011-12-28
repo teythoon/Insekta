@@ -194,3 +194,10 @@ class SubmittedSecret(models.Model):
 
     def __unicode__(self):
         return u'{} submitted secret "{}"'.format(self.user, self.secret)
+
+class ScenarioGroup(models.Model):
+    title = models.CharField(max_length=200)
+    scenarios = models.ManyToManyField(Scenario, related_name='groups')
+
+    def __unicode__(self):
+        self.title
