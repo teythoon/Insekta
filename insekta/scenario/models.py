@@ -17,6 +17,9 @@ RUN_STATE_CHOICES = (
     ('running', 'Running'),
 )
 
+class ScenarioError(Exception):
+    pass
+
 class Scenario(models.Model):
     name = models.CharField(max_length=80, unique=True)
     title = models.CharField(max_length=200)
@@ -65,6 +68,9 @@ class Scenario(models.Model):
         :param user: Instance of :class:`django.contrib.auth.models.User`.
         :return: Instance of :class:`insekta.scenario.models.ScenarioRun`.
         """
+        if not self.enabled:
+            raise ScenarioError('Scenario is not enabled')
+
         if node is None:
             node = random.choice(self.get_nodes())
         return ScenarioRun.objects.create(scenario=self, user=user)
