@@ -78,7 +78,7 @@ def enter_secret(macro, environ, *secrets):
     form = tag.form(macro.parsed_body(), method='post', action=target)
    
     for secret in secrets:
-        msg = '{}:{}'.format(user.pk, secret)
+        msg = '{0}:{1}'.format(user.pk, secret)
         hmac_gen = hmac.new(settings.SECRET_KEY, msg, hashlib.sha1())
         secret_token = hmac_gen.hexdigest()
         form.append(tag.input(name='secret_token', value=secret_token,
