@@ -123,4 +123,4 @@ _bodied_macros = {
 _dialect = create_dialect(creole11_base, non_bodied_macros=_non_bodied_macros,
         bodied_macros=_bodied_macros)
 
-render_scenario = Parser(dialect=create_dialect(creole11_base), method='xhtml')
+render_scenario = Parser(dialect=create_dialect(_dialect), method='xhtml')
