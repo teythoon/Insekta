@@ -135,6 +135,8 @@ set to last partition's last block plus 2 [#f1]_. ``bs`` parameter should be
 set to the physical block size::
 
    dd if=debian-base.img of=scenario.img bs=512 count=1484801
+   kvm-img convert -O qcow2 scenario.img scenario.qcow2
+   rm scenario.img
 
 Creating the scenario
 ---------------------
@@ -145,7 +147,7 @@ look like:
 
 * simple-buffer-overflow
 
-  * scenario.img
+  * scenario.qcow2
   * metadata.json
   * description.creole
   * static
@@ -153,10 +155,12 @@ look like:
     * memory-layout.png
     * http-server.tar.gz
 
-scenario.img
+scenario.qcow2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This is the image you just created ;-)
+
+It is references in the metadata, it's name is just a convention.
 
 metadata.json
 ^^^^^^^^^^^^^
@@ -165,13 +169,17 @@ This file contains some metadata about the scenario. It is valid json and
 looks like::
 
    {
+       "image": "scenario.qcow2",
        "name": "simple-buffer-overflow",
        "title": "Exploiting simple buffer overflows",
        "memory": 256,
        "secrets": ["foo", "bar"]
    }
 
-Currently there are only 4 directives:
+Currently there are 5 directives:
+
+``image``
+   The filename of the scenario image.
 
 ``name``
    The name of the scenario. Should only contain alphanumeric characters and
