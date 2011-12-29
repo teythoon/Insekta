@@ -19,6 +19,10 @@ def vmbox(macro, environ):
     ``vm_state``
        One of ``disabled``, ``started`` and ``stopped``. Suspended machines
        are in the state ``stopped``.
+    
+    ``csrf_token``
+       Django's CSRF token. Use :func:`django.middleware.csrf.get_token` to
+       get it.
     """
    
     actions = {
@@ -40,6 +44,9 @@ def vmbox(macro, environ):
     form = tag.form(method='post', action=environ['vm_target'])
     for action in enabled_actions:
         form.append(action)
+
+    form.append(tag.input(type='hidden', name='csrfmiddlewaretoken',
+                          value=environ['csrf_token']))
    
     title = tag.span(_('Managing the virtual machine'), class_='vm_title')
     text = _('Choose one of the following actions:')
@@ -71,6 +78,10 @@ def enter_secret(macro, environ, *secrets):
           this form. It is a security token that is build by generating
           a HMAC with ``settings.SECRET_KEY`` as key. The message is the
           user id and the valid secret divided by a colon.
+
+    ``csrf_token``
+       Django's CSRF token. Use :func:`django.middleware.csrf.get_token` to
+       get it.
     """
     target = environ['enter_secret_target']
     user = environ['user']
@@ -79,13 +90,17 @@ def enter_secret(macro, environ, *secrets):
    
     for secret in secrets:
         msg = '{0}:{1}'.format(user.pk, secret)
-        hmac_gen = hmac.new(settings.SECRET_KEY, msg, hashlib.sha1())
+        hmac_gen = hmac.new(settings.SECRET_KEY, msg, hashlib.sha1)
         secret_token = hmac_gen.hexdigest()
         form.append(tag.input(name='secret_token', value=secret_token,
                               type='hidden'))
+    
+    form.append(tag.input(type='hidden', name='csrfmiddlewaretoken',
+                          value=environ['csrf_token']))
 
     p = tag.p(_('Enter secret:'))
     p.append(tag.input(name='secret', type='text'))
+    p.append(tag.input(type='submit', name='enter_secret', value=_('Submit')))
     form.append(p)
 
     return tag.div(form, class_='enter_secret')
