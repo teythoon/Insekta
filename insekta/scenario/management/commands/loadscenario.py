@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import os
 import json
 
@@ -62,10 +64,13 @@ class Command(BaseCommand):
             scenario.description = description
             scenario.enabled = False
             created = False
+            print('Updating scenario ...')
         except Scenario.DoesNotExist:
             scenario = Scenario(name=metadata['name'], title=
                     metadata['title'], memory=metadata['memory'],
                     description=description)
+            created = True
+            print('Creating scenario ...')
         
         scenario.save()
 
@@ -79,6 +84,7 @@ class Command(BaseCommand):
             except libvirt.libvirtError:
                 pass
             
+            print('Creating volume for scenario ...')
             pool = scenario.get_pool(node)
             xml_desc = """
             <volume>
@@ -90,18 +96,22 @@ class Command(BaseCommand):
             </volume>
             """.format(scenario.name, scenario_size)
             volume = pool.createXML(xml_desc, flags=0)
-            stream = libvirt.virStream(connections[node])
-            got = 0
+
+            print('Uploading image to volume ...')
+            stream = connections[node].newStream()
+            stream.upload(volume, offset=0, length=scenario_size, flags=0)
             with open(scenario_img) as f_scenario:
                 while True:
                     data = f_scenario.read(4096)
                     if not data:
                         stream.finish()
                         break
-                    data_len = len(data)
-                    stream.send(data, data_len)
-                    stream.upload(volume, offset=got, length=data_len, flags=0)
-                    got += data_len
+                    
+                    # Backward-compatibility for older libvirt versions
+                    try:
+                        stream.send(data)
+                    except TypeError:
+                        stream.send(data, len(data))
 
         if not created:
             scenario.enabled = was_enabled
