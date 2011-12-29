@@ -9,6 +9,7 @@ from django.core.management.base import BaseCommand, CommandError
 from insekta.scenario.models import Scenario
 from insekta.common.virt import connections
 
+CHUNK_SIZE = 8192
 _REQUIRED_KEYS = ['name', 'title', 'memory', 'secrets', 'image']
 
 class Command(BaseCommand):
@@ -102,7 +103,7 @@ class Command(BaseCommand):
             stream.upload(volume, offset=0, length=scenario_size, flags=0)
             with open(scenario_img) as f_scenario:
                 while True:
-                    data = f_scenario.read(4096)
+                    data = f_scenario.read(CHUNK_SIZE)
                     if not data:
                         stream.finish()
                         break
