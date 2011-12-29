@@ -27,13 +27,13 @@ class Command(BaseCommand):
                 if not isinstance(metadata, dict):
                     raise ValueError('Metadata must be a dictionary')
         except IOError, e:
-            raise CommandError('Could not load metadata: {}'.format(e))
+            raise CommandError('Could not load metadata: {0}'.format(e))
         except ValueError, e:
-            raise CommandError('Could not parse metadata: {}'.format(e))
+            raise CommandError('Could not parse metadata: {0}'.format(e))
 
         for required_key in _REQUIRED_KEYS:
             if required_key not in metadata:
-                raise CommandError('Metadata requires the key{}'.format(
+                raise CommandError('Metadata requires the key{0}'.format(
                         required_key))
         
         secrets = metadata['secrets']
@@ -46,7 +46,7 @@ class Command(BaseCommand):
             with open(description_file) as f_description:
                 description = f_description.read()
         except IOError, e:
-            raise CommandError('Could not read description: {}'.format(e))
+            raise CommandError('Could not read description: {0}'.format(e))
 
         scenario_img = os.path.join(scenario_dir, metadata['image'])
         if not os.path.exists(scenario_img):
@@ -94,7 +94,7 @@ class Command(BaseCommand):
             except libvirt.libvirtError:
                 pass
             
-            print('Creating volume on node {} ...'.format(node))
+            print('Creating volume on node {0} ...'.format(node))
             pool = scenario.get_pool(node)
             xml_desc = """
             <volume>
@@ -129,5 +129,5 @@ class Command(BaseCommand):
             scenario.save()
         
         enable_str = 'is' if scenario.enabled else 'is NOT'
-        print('Done! Scenario {} enabled'.format(enable_str))
+        print('Done! Scenario {0} enabled'.format(enable_str))
 

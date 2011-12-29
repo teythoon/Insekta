@@ -123,7 +123,7 @@ class ScenarioRun(models.Model):
         :return: Instance of :class:`libvirt.virDomain`.
         """
         conn = connections[self.node]
-        return conn.lookupByName('scenarioRun{}'.format(self.pk))
+        return conn.lookupByName('scenarioRun{0}'.format(self.pk))
 
     def get_volume(self):
         """Return the volume where this scenario run stores it's data.
@@ -131,7 +131,7 @@ class ScenarioRun(models.Model):
         :return: Instance of :class:`libvirt.virStorageVol`.
         """
         pool = self.scenario.get_pool(self.node)
-        return pool.storageVolLookupByName('scenarioRun{}'.format(self.pk))
+        return pool.storageVolLookupByName('scenarioRun{0}'.format(self.pk))
 
     def _create_volume(self):
         """Create a new volume by using a backing image.
@@ -181,7 +181,7 @@ class ScenarioRun(models.Model):
 
 
     def __unicode__(self):
-        return u'{} running "{}"'.format(self.user, self.scenario)
+        return u'{0} running "{1}"'.format(self.user, self.scenario)
 
 class Secret(models.Model):
     scenario = models.ForeignKey(Scenario)
@@ -198,7 +198,7 @@ class SubmittedSecret(models.Model):
     user = models.ForeignKey(User)
 
     def __unicode__(self):
-        return u'{} submitted secret "{}"'.format(self.user, self.secret)
+        return u'{0} submitted secret "{1}"'.format(self.user, self.secret)
 
 class ScenarioGroup(models.Model):
     title = models.CharField(max_length=200)
