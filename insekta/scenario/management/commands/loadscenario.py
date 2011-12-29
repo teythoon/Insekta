@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from insekta.scenario.models import Scenario
 
-_REQUIRED_KEYS = ['name', 'title', 'memory', 'secrets']
+_REQUIRED_KEYS = ['name', 'title', 'memory', 'secrets', 'image']
 
 class Command(BaseCommand):
     args = '<scenario_path>'
@@ -44,11 +44,11 @@ class Command(BaseCommand):
         except IOError, e:
             raise CommandError('Could not read description: {}'.format(e))
 
-        scenario_img = os.path.join(scenario_dir, 'scenario.img')
+        scenario_img = os.path.join(scenario_dir, metadata['image'])
         if not os.path.exists(scenario_img):
-            raise CommandError('File scenario.img is missing')
+            raise CommandError('Image file is missing')
         if not os.path.isfile(scenario_img):
-            raise CommandError('scenario.img is not a file')
+            raise CommandError('Image file is not a file')
 
         self._create_scenario(metadata, description, scenario_img)
 
