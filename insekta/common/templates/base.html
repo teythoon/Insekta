@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+<ul id="menu">
+    <li><a href="{% url scenario.overview %}">Scenario overview</a></li>
+    <li><a href="{% url scenario.all %}">All scenarios</a></li>
+    <li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a></li>
+</ul>
+{% endif %}
+<div id="content">
+{% block content %}{% endblock content %}
+</div>
+</body>
+</html>
