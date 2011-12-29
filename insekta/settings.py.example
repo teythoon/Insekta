@@ -151,5 +151,5 @@ LIBVIRT_NODES = {
 }
 
 LIBVIRT_STORAGE_POOLS = {
-    'qemu': 'insekta'
+    'qemu': 'default'
 }

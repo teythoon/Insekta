@@ -134,20 +134,25 @@ class ScenarioRun(models.Model):
         return pool.storageVolLookupByName('scenarioRun{}'.format(self.pk))
 
     def _create_volume(self):
-        """Create a new volume by cloning the scenario volume.
+        """Create a new volume by using a backing image.
 
         :return: :class:`libvirt.virStorageVol`
         """
         pool = self.scenario.get_pool(self.node)
-        clone_vol = self.scenario.get_volume(self.node)
-        capacity = clone_vol.info()[1]
+        base_volume = self.scenario.get_volume(self.node)
+        capacity = base_volume.info()[1]
         xmldesc = """
         <volume>
-          <name>scenarioRun{}</name>
-          <capacity>{}</capacity>
+          <name>scenarioRun{id}</name>
+          <capacity>{capacity}</capacity>
+          <backingStore>
+            <path>{backing_image}</path>
+            <format type='qcow2' />
+          </backingStore>
         </volume>
-        """.format(self.pk, capacity)
-        return pool.createXMLFrom(xmldesc, clone_vol, flags=0)
+        """.format(id=self.pk, capacity=capacity,
+                   backing_img=base_volume.target())
+        return pool.createXML(xmldesc, flags=0)
     
     def _build_domain_xml(self, volume):
         scenario = self.scenario
@@ -161,8 +166,8 @@ class ScenarioRun(models.Model):
             <type arch="x86_64">hvm</type>
           </os>
           <devices>
-            <disk type='block' device='disk'>
-              <source dev='{volume}' />
+            <disk type='file' device='disk'>
+              <source file='{volume}' />
               <target dev='hda' />
             </disk>
             <interface type='bridge'>

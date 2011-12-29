@@ -76,6 +76,9 @@ class Command(BaseCommand):
             <volume>
               <name>{}</name>
               <capacity>{}</capacity>
+              <target>
+                <format type='qcow2' />
+              </target>
             </volume>
             """.format(scenario.name, scenario_size)
             volume = pool.createXML(xml_desc, flags=0)
