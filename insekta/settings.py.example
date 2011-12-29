@@ -120,6 +120,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'insekta.common',
+    'insekta.registration',
     'insekta.scenario',
 )
 
@@ -147,7 +148,7 @@ LOGGING = {
 }
 
 LIBVIRT_NODES = {
-    'qemu': 'qemu:///system'
+    'qemu': 'qemu://root@192.168.0.40/system'
 }
 
 LIBVIRT_STORAGE_POOLS = {
