@@ -32,6 +32,18 @@ class Scenario(models.Model):
     def __unicode__(self):
         return self.title
 
+    def get_secrets(self):
+        """Return a frozenset of secrets as strings."""
+        return frozenset(secret.secret for secret in self.secret_set.all())
+
+    def get_submitted_secrets(self, user):
+        """Return a frozenset of user submitted secrets.
+
+        :param user: Instance of :class:`django.contrib.auth.models.User`.
+        """
+        submitted_secrets = SubmittedSecret.objects.filter(user=user)
+        return frozenset(secret.secret for secret in submitted_secrets)
+
     def get_nodes(self):
         """Return a list containing all nodes this scenario can run on."""
         # For now, we have only one node per hypervisor, but this
