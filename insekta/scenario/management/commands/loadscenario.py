@@ -98,7 +98,7 @@ class Command(BaseCommand):
             volume = pool.createXML(xml_desc, flags=0)
 
             print('Uploading image to volume ...')
-            stream = connections[node].newStream()
+            stream = connections[node].newStream(flags=0)
             stream.upload(volume, offset=0, length=scenario_size, flags=0)
             with open(scenario_img) as f_scenario:
                 while True:
