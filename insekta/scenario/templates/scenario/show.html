@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ scenario.title }}{% endblock %}
+
+{% block content %]
+<h2>{{ scenario.title }}</h2>
+
+{{ description|safe }}
+
+{% endblock content %}
