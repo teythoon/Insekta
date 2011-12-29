@@ -113,6 +113,7 @@ class Command(BaseCommand):
                         stream.send(data)
                     except TypeError:
                         stream.send(data, len(data))
+            connections.close()
 
         if not created:
             scenario.enabled = was_enabled

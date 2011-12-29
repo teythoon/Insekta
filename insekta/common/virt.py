@@ -24,8 +24,9 @@ class ConnectionHandler(object):
     def __iter__(self):
         return iter(self.libvirt_nodes)
 
-    def __del__(self):
-        for conn in self._connections.values():
+    def close(self):
+        for key, conn in self._connections.items():
             conn.close()
+            del self._connections[key]
 
 connections = ConnectionHandler(settings.LIBVIRT_NODES)
