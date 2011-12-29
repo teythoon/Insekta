@@ -5,6 +5,7 @@ import libvirt
 from django.core.management.base import BaseCommand, CommandError
 
 from insekta.scenario.models import Scenario
+from insekta.common.virt import connections
 
 _REQUIRED_KEYS = ['name', 'title', 'memory', 'secrets', 'image']
 
@@ -64,7 +65,7 @@ class Command(BaseCommand):
         except Scenario.DoesNotExist:
             scenario = Scenario(name=metadata['name'], title=
                     metadata['title'], memory=metadata['memory'],
-                    description=metadata['description'])
+                    description=description)
         
         scenario.save()
 
@@ -74,22 +75,22 @@ class Command(BaseCommand):
         for node in scenario.get_nodes():
             try:
                 volume = scenario.get_volume(node)
-                volume.delete()
+                volume.delete(flags=0)
             except libvirt.libvirtError:
                 pass
             
             pool = scenario.get_pool(node)
             xml_desc = """
             <volume>
-              <name>{}</name>
-              <capacity>{}</capacity>
+              <name>{0}</name>
+              <capacity>{1}</capacity>
               <target>
                 <format type='qcow2' />
               </target>
             </volume>
             """.format(scenario.name, scenario_size)
             volume = pool.createXML(xml_desc, flags=0)
-            stream = libvirt.virStream()
+            stream = libvirt.virStream(connections[node])
             stream.upload(volume, offset=0, length=scenario_size, flags=0)
             with open(scenario_img) as f_scenario:
                 while True:
