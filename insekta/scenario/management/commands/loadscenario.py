@@ -53,13 +53,19 @@ class Command(BaseCommand):
         self._create_scenario(metadata, description, scenario_img)
 
     def _create_scenario(self, metadata, description, scenario_img):
-        scenario, created = Scenario.objects.get_or_create(
-                name=metadata['name'])
-        was_enabled = scenario.enabled
-        scenario.title = metadata['title']
-        scenario.memory = metadata['memory']
-        scenario.description = description
-        scenario.enabled = False
+        try:
+            scenario = Scenario.objects.get(name=metadata['name'])
+            was_enabled = scenario.enabled
+            scenario.title = metadata['title']
+            scenario.memory = metadata['memory']
+            scenario.description = description
+            scenario.enabled = False
+            created = False
+        except Scenario.DoesNotExist:
+            scenario = Scenario(name=metadata['name'], title=
+                    metadata['title'], memory=metadata['memory'],
+                    description=metadata['description'])
+        
         scenario.save()
 
         img_stat = os.stat(scenario_img)
