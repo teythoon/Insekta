@@ -1,14 +1,14 @@
 import hashlib
 import hmac
 from genshi.builder import tag
-from creoleparser import Parser, create_dialect, creole11_base, parse_args
+from creoleparser import Parser, create_dialect, creole11_base
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
-def vmbox(macro, environment):
+def vmbox(macro, environ):
     """Macro for showing a box with information and actions for a vm.
     
-    Requires the following keys in the environment:
+    Requires the following keys in the environ:
 
     ``vm_target``
        An url for the action attribute of the form element. Submitting the
@@ -35,9 +35,9 @@ def vmbox(macro, environment):
         'disabled': (actions['activate'], ),
         'started': (actions['suspend'], actions['stop']),
         'stopped': (actions['start'], actions['deactivate'])
-    }[environment['vm_state']]
+    }[environ['vm_state']]
 
-    form = tag.form(method='post', action=environment['vm_target'])
+    form = tag.form(method='post', action=environ['vm_target'])
     for action in enabled_actions:
         form.append(action)
    
@@ -49,10 +49,10 @@ def vmbox(macro, environment):
     vmbox.append(text)
     return vmbox
 
-def enter_secret(macro, environment):
+def enter_secret(macro, environ, *secrets):
     """Macro for entering a secret. Takes a several secrets as args.
 
-    Requires the following keys in the environment:
+    Requires the following keys in the environ:
     
     ``user``
        An instance of :class:`django.contrib.auth.models.User`. Will be used
@@ -72,13 +72,12 @@ def enter_secret(macro, environment):
           a HMAC with ``settings.SECRET_KEY`` as key. The message is the
           user id and the valid secret divided by a colon.
     """
-    args, kwargs = parse_args(macro.arg_string)
-    target = environment['enter_secret_target']
-    user = environment['user']
+    target = environ['enter_secret_target']
+    user = environ['user']
     
     form = tag.form(macro.parsed_body(), method='post', action=target)
    
-    for secret in args:
+    for secret in secrets:
         msg = '{}:{}'.format(user.pk, secret)
         hmac_gen = hmac.new(settings.SECRET_KEY, msg, hashlib.sha1())
         secret_token = hmac_gen.hexdigest()
@@ -91,19 +90,18 @@ def enter_secret(macro, environment):
 
     return tag.div(form, class_='enter_secret')
 
-def require_secret(macro, environment):
+def require_secret(macro, environ, *secrets):
     """Macro for hiding text that can be shown by submitting a secret.
 
     You can provide several secrets as arguments. If ANY of the secret
     was submitted by the user, the content is shown.
 
-    Requires the following keys in the environment:
+    Requires the following keys in the environ:
 
     ``submitted_secrets``
        A set of secrets for this scenario which were submitted by the user.
     """
-    secrets, kwargs = parse_args(macro.arg_string)
-    show_content = any(x in environment['submitted_secrets'] for x in secrets)
+    show_content = any(x in environ['submitted_secrets'] for x in secrets)
 
     if show_content:
         return macro.parsed_body()
@@ -112,7 +110,7 @@ def require_secret(macro, environment):
                   'You need to enter a specific secret to show it.')
         return tag.div(tag.p(text), class_='require_secret')
 
-def spoiler(macro, environment):
+def spoiler(macro, environ):
     """Macro for spoiler. Showing and hiding it is done via javascript."""
     return tag.div(macro.parsed_body(), class_='spoiler')
 
