@@ -129,5 +129,5 @@ class Command(BaseCommand):
             scenario.save()
         
         enable_str = 'is' if scenario.enabled else 'is NOT'
-        print('Done! Scenario {} enabled'.format(enable_str)
+        print('Done! Scenario {} enabled'.format(enable_str))
 
