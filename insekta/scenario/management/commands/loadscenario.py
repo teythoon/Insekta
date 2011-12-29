@@ -6,7 +6,7 @@ import json
 import libvirt
 from django.core.management.base import BaseCommand, CommandError
 
-from insekta.scenario.models import Scenario
+from insekta.scenario.models import Scenario, Secret
 from insekta.common.virt import connections
 
 CHUNK_SIZE = 8192
@@ -75,9 +75,18 @@ class Command(BaseCommand):
         
         scenario.save()
 
+        print('Importing secrets for scenario ...')
+        for scenario_secret in Secret.objects.filter(scenario=scenario):
+            if scenario_secret.secret not in metadata['secrets']:
+                scenario_secret.delete()
+
+        for secret in metadata['secrets']:
+            Secret.objects.get_or_create(scenario=scenario, secret=secret)
+
         img_stat = os.stat(scenario_img)
         scenario_size = img_stat.st_size
 
+        print('Storing image on all nodes:')
         for node in scenario.get_nodes():
             try:
                 volume = scenario.get_volume(node)
@@ -85,7 +94,7 @@ class Command(BaseCommand):
             except libvirt.libvirtError:
                 pass
             
-            print('Creating volume for scenario ...')
+            print('Creating volume on node {} ...'.format(node))
             pool = scenario.get_pool(node)
             xml_desc = """
             <volume>
@@ -98,7 +107,7 @@ class Command(BaseCommand):
             """.format(scenario.name, scenario_size)
             volume = pool.createXML(xml_desc, flags=0)
 
-            print('Uploading image to volume ...')
+            print('Uploading image to this volume ...')
             stream = connections[node].newStream(flags=0)
             stream.upload(volume, offset=0, length=scenario_size, flags=0)
             with open(scenario_img) as f_scenario:
@@ -118,4 +127,7 @@ class Command(BaseCommand):
         if not created:
             scenario.enabled = was_enabled
             scenario.save()
+        
+        enable_str = 'is' if scenario.enabled else 'is NOT'
+        print('Done! Scenario {} enabled'.format(enable_str)
 
