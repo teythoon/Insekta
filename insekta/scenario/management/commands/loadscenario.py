@@ -91,14 +91,17 @@ class Command(BaseCommand):
             """.format(scenario.name, scenario_size)
             volume = pool.createXML(xml_desc, flags=0)
             stream = libvirt.virStream(connections[node])
-            stream.upload(volume, offset=0, length=scenario_size, flags=0)
+            got = 0
             with open(scenario_img) as f_scenario:
                 while True:
                     data = f_scenario.read(4096)
                     if not data:
                         stream.finish()
                         break
-                    stream.send(data, len(data))
+                    data_len = len(data)
+                    stream.send(data, data_len)
+                    stream.upload(volume, offset=got, length=data_len, flags=0)
+                    got += data_len
 
         if not created:
             scenario.enabled = was_enabled
