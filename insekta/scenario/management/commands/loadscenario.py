@@ -2,9 +2,12 @@ from __future__ import print_function
 
 import os
 import json
+import subprocess
+import re
 
 import libvirt
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
 
 from insekta.scenario.models import Scenario, Secret
 from insekta.common.virt import connections
@@ -20,7 +23,8 @@ class Command(BaseCommand):
             raise CommandError('The only arg is the scenario directory')
         
         scenario_dir = args[0]
-        
+       
+        # Parsing metadata
         try:
             with open(os.path.join(scenario_dir, 'metadata.json')) as f_meta:
                 metadata = json.load(f_meta)
@@ -30,17 +34,20 @@ class Command(BaseCommand):
             raise CommandError('Could not load metadata: {0}'.format(e))
         except ValueError, e:
             raise CommandError('Could not parse metadata: {0}'.format(e))
-
+       
+        # Validating metadata
         for required_key in _REQUIRED_KEYS:
             if required_key not in metadata:
                 raise CommandError('Metadata requires the key{0}'.format(
                         required_key))
-        
+       
+        # Validating secrets
         secrets = metadata['secrets']
         if (not isinstance(secrets, list) or not all(isinstance(x, basestring)
                 for x in secrets)):
             raise CommandError('Secrets must be a list of strings')
 
+        # Reading description
         description_file = os.path.join(scenario_dir, 'description.creole')
         try:
             with open(description_file) as f_description:
@@ -48,15 +55,29 @@ class Command(BaseCommand):
         except IOError, e:
             raise CommandError('Could not read description: {0}'.format(e))
 
+        # Checking image
         scenario_img = os.path.join(scenario_dir, metadata['image'])
         if not os.path.exists(scenario_img):
             raise CommandError('Image file is missing')
         if not os.path.isfile(scenario_img):
             raise CommandError('Image file is not a file')
+        
+        # Getting virtual size by calling qemu-img
+        qemu_img = getattr(settings, 'QEMU_IMG_BINARY', '/usr/bin/qemu-img')
+        p = subprocess.Popen([qemu_img, 'info', scenario_img],
+                             stdout=subprocess.PIPE)
+        stdout, _stderr = p.communicate()
+        match = re.search('virtual size:.*?\((\d+) bytes\)', stdout)
+        if not match:
+            raise CommandError('Invalid image file format')
+       
+        scenario_size = int(match.group(1))
 
-        self._create_scenario(metadata, description, scenario_img)
+        self._create_scenario(metadata, description, scenario_img,
+                              scenario_size)
 
-    def _create_scenario(self, metadata, description, scenario_img):
+    def _create_scenario(self, metadata, description, scenario_img,
+                         scenario_size):
         try:
             scenario = Scenario.objects.get(name=metadata['name'])
             was_enabled = scenario.enabled
@@ -82,9 +103,6 @@ class Command(BaseCommand):
 
         for secret in metadata['secrets']:
             Secret.objects.get_or_create(scenario=scenario, secret=secret)
-
-        img_stat = os.stat(scenario_img)
-        scenario_size = img_stat.st_size
 
         print('Storing image on all nodes:')
         for node in scenario.get_nodes():
