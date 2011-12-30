@@ -247,6 +247,12 @@ with some additional macros e.g. ``spoiler``, ``vmBox``, ``enterSecret`` and
       <</requireSecret>>
       <</requireSecret>>
 
+``ip``
+   Will be replaced by the IP of the virtual machine if the scenared has
+   started. If not, it will use 127.0.0.1 as dummy. Example::
+    
+    You can attack the machine at http://<<ip>>/
+
 static
 ^^^^^^
 
