@@ -3,6 +3,7 @@ import random
 import libvirt
 from django.db import models
 from django.conf import settings
+from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
 from insekta.common.virt import connections
@@ -14,10 +15,15 @@ HYPERVISOR_CHOICES = (
 RUN_STATE_CHOICES = (
     ('init', 'Initialize'),
     ('preparing', 'Preparing'),
-    ('running', 'Running'),
+    ('started', 'VM started'),
+    ('suspended', 'VM suspended'),
+    ('stopped', 'VM stopped')
 )
 
 class ScenarioError(Exception):
+    pass
+
+class InvalidSecret(ScenarioError):
     pass
 
 class Scenario(models.Model):
@@ -41,8 +47,9 @@ class Scenario(models.Model):
 
         :param user: Instance of :class:`django.contrib.auth.models.User`.
         """
-        submitted_secrets = SubmittedSecret.objects.filter(user=user)
-        return frozenset(secret.secret for secret in submitted_secrets)
+        submitted_secrets = SubmittedSecret.objects.filter(user=user,
+                secret__scenario=self)
+        return frozenset(sub.secret.secret for sub in submitted_secrets)
 
     def get_nodes(self):
         """Return a list containing all nodes this scenario can run on."""
@@ -86,6 +93,16 @@ class Scenario(models.Model):
         if node is None:
             node = random.choice(self.get_nodes())
         return ScenarioRun.objects.create(scenario=self, user=user, node=node)
+    
+    def submit_secret(self, user, secret):
+        try:
+            secret_obj = Secret.objects.get(scenario=self, secret=secret)
+        except Secret.DoesNotExist:
+            raise InvalidSecret(_('This secret is invalid!'))
+        else:
+            if secret in self.get_submitted_secrets(user):
+                raise InvalidSecret(_('This secret was already submitted!'))
+            return SubmittedSecret.objects.create(secret=secret_obj, user=user)
 
 class ScenarioRun(models.Model):
     scenario = models.ForeignKey(Scenario)
@@ -212,6 +229,9 @@ class Secret(models.Model):
 class SubmittedSecret(models.Model):
     secret = models.ForeignKey(Secret)
     user = models.ForeignKey(User)
+
+    class Meta:
+        unique_together = (('user', 'secret'), )
 
     def __unicode__(self):
         return u'{0} submitted secret "{1}"'.format(self.user, self.secret)
