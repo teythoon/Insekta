@@ -34,6 +34,14 @@ def vmbox(macro, environ):
         'activate': tag.input(type='submit', name='activate',
                               value=_('Activate')),
     }
+
+    text_state = {
+        'disabled': _('Your virtual machine is not enabled yet.'),
+        'started': _('Your virtual machine is running at {ip}.').format(
+            ip=environ.get('ip', 'unknown ip')),
+        'stopped': _('Your virtual machine ({ip}) is stopped.').format(
+            ip=environ.get('ip', 'unknown ip'))
+    }[environ['vm_state']]
     
     enabled_actions = {
         'disabled': (actions['activate'], ),
@@ -48,12 +56,14 @@ def vmbox(macro, environ):
     form.append(tag.input(type='hidden', name='csrfmiddlewaretoken',
                           value=environ['csrf_token']))
    
-    title = tag.span(_('Managing the virtual machine'), class_='vm_title')
-    text = _('Choose one of the following actions:')
+    title = tag.span(_('Managing the virtual machine'), class_='vmbox_title')
+    text_actions = _('Choose one of the following actions:')
 
     vmbox = tag.div(class_='vmbox')
     vmbox.append(title)
-    vmbox.append(text)
+    vmbox.append(tag.p(text_state))
+    vmbox.append(tag.p(text_actions))
+    vmbox.append(form)
     return vmbox
 
 def enter_secret(macro, environ, *secrets):
@@ -79,6 +89,13 @@ def enter_secret(macro, environ, *secrets):
           a HMAC with ``settings.SECRET_KEY`` as key. The message is the
           user id and the valid secret divided by a colon.
 
+    ``all_secrets``
+       A list of strings containing all available secrets for this scenario.
+    
+    ``submitted_secrets``
+       A list of strings containing all secrets submitted by the user for
+       this scenario.
+
     ``csrf_token``
        Django's CSRF token. Use :func:`django.middleware.csrf.get_token` to
        get it.
@@ -87,6 +104,14 @@ def enter_secret(macro, environ, *secrets):
     user = environ['user']
     
     form = tag.form(macro.parsed_body(), method='post', action=target)
+
+    # If there are no secrets in the arguments, we will accept all secrets
+    if not secrets:
+        secrets = environ['all_secrets']
+
+    # If all secrets are already submitted, hide this box
+    if not (set(secrets) - set(environ['submitted_secrets'])):
+        return ''
    
     for secret in secrets:
         msg = '{0}:{1}'.format(user.pk, secret)
@@ -129,7 +154,14 @@ def spoiler(macro, environ):
     """Macro for spoiler. Showing and hiding it is done via javascript."""
     return tag.div(macro.parsed_body(), class_='spoiler')
 
-_non_bodied_macros = {'vmBox': vmbox}
+def ip(macro, environ):
+    """Macro for the virtual machine's ip."""
+    ip = environ.get('ip')
+    if not ip:
+        ip = '127.0.0.1'
+    return tag.span(ip, class_='ip')
+
+_non_bodied_macros = {'vmBox': vmbox, 'ip': ip}
 _bodied_macros = {
     'enterSecret': enter_secret,
     'requireSecret': require_secret,
