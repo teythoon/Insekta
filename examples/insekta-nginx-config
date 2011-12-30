@@ -3,12 +3,8 @@ server {
     server_name insekta.cinsects.de;
     access_log /var/log/nginx/insekta.cinsects.de.access.log;
 
-    location /media/ {
-        /home/insekta/.virtualenvs/insekta/lib/python2.6/site-packages/django/contrib/admin/media/;
-    }
-
     location /static/ {
-        alias /home/insekta/common/static/;
+        alias /home/insekta/insekta/insekta/_static;
     }
     
     location / {
