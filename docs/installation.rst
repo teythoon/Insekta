@@ -4,12 +4,8 @@ Installation
 Installing Debian squeeze
 -------------------------
 
-Create a large logical volume group. It will be used as storage pool for
-libvirt.
-
-.. warning::
-   Do not install system partitions into this volume group! Use own partitions
-   or own volume group instead.
+Create a large partition and choose ``/var/lib/libvirt/`` as mountpoint.
+It will be used as storage pool for libvirt.
 
 The first user should be named ``insekta``, as we will refer to this name in
 the documentation.
@@ -100,31 +96,38 @@ and reload the configuration::
    
    sysctl -p /etc/sysctl.conf
 
+Installing Insekta
+------------------
 
-Adding a storage pool
----------------------
-
-libvirt uses storage pools to store the images for its domains. We will use
-our logical volume group as storage pool. Find out it's name::
+Just clone the git and execute Djangos ``syndb`` inside the virtual
+environment::
    
-  vgdisplay
-  --- Volume Group ---
-  VG Name               insekta
-  [...]
+   git clone gitolite@unicorn.gnubo.de:insekta
+   workon insekta
+   cd insekta/insekta
+   ./manage.py syncdb
 
-Create a pool xml definition ``insekta-pool.xml``::
+For testing, you can run the development server by calling::
    
-   <pool type="logical">
-       <name>insekta</name>
-       <target>
-           <path>/dev/insekta</path>
-       </target>
-   </pool>
+   ./manage.py runserver 8000
 
-Now you can define the storage pool and start it using this xml file::
+and point your browser (you shouldn't have one on this system :P) to
+`http://localhost:8000/ <http://localhost:8000/>`_.
+
+Stop the development server and copy the init script in the scripts
+directory to ``/etc/init.d/insekta``::
    
-   virsh -c qemu:///system pool-define insekta-pool.xml
-   virsh -c qemu:///system pool-autostart insekta
-   virsh -c qemu:///system pool-start insekta
+   cp ../examples/insekta-init-script /etc/init.d/insekta
+
+Copy the nginx site configuration to ``/etc/nginx/sites-available/insekta``,
+change it to suit your needs and symlink it into ``sites-enabled``::
+   
+   cp ../examples/insekta-nginx-config /etc/nginx/sites-available/insekta
+   vim /etc/nginx/sites-available/insekta # Change ServerName etc.
+   ln -s /etc/nginx/sites-available/insekta /etc/nginx/sites-enabled/
+
+Finally restart nginx::
+   
+   /etc/init.d/nginx restart
 
 

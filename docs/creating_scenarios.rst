@@ -257,7 +257,15 @@ Put any files in this directory and you can reference them in your
 Registering the scenario image with Insekta
 -------------------------------------------
 
-TBD
+Registering is easy::
+   
+   ./manage.py loadscenario /path/to/your/scenario
+
+If you want to update the image, just call it again.
+
+.. warning::
+   Updating a scenario destroys all existing domains that belong to this
+   scenario. However, submitted secrets are not lost.
 
 .. rubric:: Footnotes
 
