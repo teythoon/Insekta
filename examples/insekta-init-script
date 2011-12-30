@@ -1,0 +1,24 @@
+#!/bin/sh
+
+case "$1" in
+  start)
+    echo "Starting insekta"
+    . /home/insekta/.virtualenvs/insekta/bin/activate
+    start-stop-daemon -c insekta --start -d /home/insekta/insekta --exec /home/insekta/.virtualenvs/insekta/bin/gunicorn_django -- -w 2 -b 127.0.0.1:8042 -D -p /home/insekta/insekta.pid
+    ;;
+  stop)
+    echo "Stopping insekta"
+    start-stop-daemon --pidfile /home/insekta/insekta.pid --stop
+    ;;
+  restart)
+    /etc/init.d/insekta stop
+    /etc/init.d/insekta start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/insekta (start|stop|restart)" >& 2
+    exit 1;
+    ;;
+esac
+
+exit 0
+
