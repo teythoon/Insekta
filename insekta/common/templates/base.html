@@ -2,7 +2,11 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>{% block title %}{% endblock %}</title>
+<title>{% block title %}{% endblock %} @ Insekta</title>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}insekta.css" />
+{% if user.is_authenticated %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}scenario.css" />
+{% endif %}
 </head>
 <body>
 {% if user.is_authenticated %}
@@ -14,6 +18,15 @@
 {% endcomment %}
 </ul>
 {% endif %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div id="content">
 {% block content %}{% endblock content %}
 </div>
