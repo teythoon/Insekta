@@ -9,7 +9,9 @@
 <ul id="menu">
     <li><a href="{% url scenario.overview %}">Scenario overview</a></li>
     <li><a href="{% url scenario.all %}">All scenarios</a></li>
-    <li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a></li>
+{% comment %}
+<li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a></li>
+{% endcomment %}
 </ul>
 {% endif %}
 <div id="content">
