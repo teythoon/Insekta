@@ -85,7 +85,7 @@ class Scenario(models.Model):
 
         if node is None:
             node = random.choice(self.get_nodes())
-        return ScenarioRun.objects.create(scenario=self, user=user)
+        return ScenarioRun.objects.create(scenario=self, user=user, node=node)
 
 class ScenarioRun(models.Model):
     scenario = models.ForeignKey(Scenario)
@@ -105,7 +105,7 @@ class ScenarioRun(models.Model):
         :return: Instance of :class:`libvirt.virDomain`.
         """
         volume = self._create_volume()
-        xml_desc = self._build_domain_xml(self, volume)
+        xml_desc = self._build_domain_xml(volume)
         domain = connections[self.node].defineXML(xml_desc)
         domain.create()
         self.state = 'running'
@@ -157,19 +157,22 @@ class ScenarioRun(models.Model):
         <volume>
           <name>scenarioRun{id}</name>
           <capacity>{capacity}</capacity>
+          <target>
+            <format type='qcow2' />
+          </target>
           <backingStore>
             <path>{backing_image}</path>
             <format type='qcow2' />
           </backingStore>
         </volume>
         """.format(id=self.pk, capacity=capacity,
-                   backing_img=base_volume.target())
+                   backing_image=base_volume.path())
         return pool.createXML(xmldesc, flags=0)
     
     def _build_domain_xml(self, volume):
         scenario = self.scenario
         return """
-        <domain>
+        <domain type='kvm'>
           <name>scenarioRun{id}</name>
           <description>{user} running &quot;{title}&quot;</description>
           <memory>{memory}</memory>
@@ -179,6 +182,7 @@ class ScenarioRun(models.Model):
           </os>
           <devices>
             <disk type='file' device='disk'>
+              <driver name='qemu' type='qcow2' />
               <source file='{volume}' />
               <target dev='hda' />
             </disk>
@@ -189,7 +193,7 @@ class ScenarioRun(models.Model):
           </devices>
         </domain>
         """.format(id=self.pk, user=self.user.username, title=scenario.title,
-                   memory=scenario.memory * 1024, volume=volume.target())
+                   memory=scenario.memory * 1024, volume=volume.path())
 
 
     def __unicode__(self):
