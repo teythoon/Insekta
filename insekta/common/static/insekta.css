@@ -1,0 +1,19 @@
+/* Main css file */
+ul.messages {
+    padding:0;
+    list-style:none;
+}
+
+.messages li {
+    padding:0.3em;
+}
+
+.messages li.error {
+    background:#ebb;
+    border:1px solid #d00;
+}
+
+.messages li.success {
+    background:#beb;
+    border:1px solid #0d0;
+}

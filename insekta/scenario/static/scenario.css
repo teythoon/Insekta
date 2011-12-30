@@ -1,0 +1,21 @@
+.vmbox, .enter_secret, .require_secret, .spoiler {
+    border:1px solid #000;
+    margin:0.5em;
+}
+
+.vmbox {
+}
+
+.vmbox .vmbox_title {
+    display: block;
+    size:1.2em;
+}
+
+.enter_secret {
+}
+
+.require_secret {
+}
+
+.spoiler {
+}
