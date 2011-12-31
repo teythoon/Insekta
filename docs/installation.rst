@@ -40,7 +40,7 @@ will create it now::
    su insekta
    mkdir ~/.virtualenvs
    mkvirtualenv insekta
-   pip install django pygments creoleparser jinja2 gunicorn sphinx
+   pip install django pygments creoleparser gunicorn sphinx
    exit
 
 Nginx will be our reverse proxy for gunicorn and PostgreSQL our database
