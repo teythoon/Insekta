@@ -17,8 +17,9 @@ def vmbox(macro, environ):
        ``stop`` with an undefined value.
 
     ``vm_state``
-       One of ``disabled``, ``started`` and ``stopped``. Suspended machines
-       are in the state ``stopped``.
+       One of ``disabled``, ``started``, ``stopped``, ``suspended`` and
+       ``preparing``. The state ``preparing`` signalizes an ongoing state
+       change.
     
     ``csrf_token``
        Django's CSRF token. Use :func:`django.middleware.csrf.get_token` to
@@ -27,8 +28,9 @@ def vmbox(macro, environ):
    
     actions = {
         'start': tag.input(type='submit', name='start', value=_('Start')),
-        'suspend': tag.input(type='submit', name='suspend', value=_('Suspend')),
         'stop': tag.input(type='submit', name='stop', value=_('Stop')),
+        'suspend': tag.input(type='submit', name='suspend', value=_('Suspend')),
+        'resume': tag.input(type='submit', name='resume', value=_('Resume')),
         'deactivate': tag.input(type='submit', name='deactivate',
                                 value=_('Deactivate')),
         'activate': tag.input(type='submit', name='activate',
@@ -36,17 +38,20 @@ def vmbox(macro, environ):
     }
 
     text_state = {
-        'disabled': _('Your virtual machine is not enabled yet.'),
+        'disabled': _('Your virtual machine is not activated yet.'),
         'started': _('Your virtual machine is running at {ip}.').format(
             ip=environ.get('ip', 'unknown ip')),
         'stopped': _('Your virtual machine ({ip}) is stopped.').format(
+            ip=environ.get('ip', 'unknown ip')),
+        'suspended': _('Your virtual machine ({ip}) is suspended.').format(
             ip=environ.get('ip', 'unknown ip'))
     }[environ['vm_state']]
     
     enabled_actions = {
         'disabled': (actions['activate'], ),
         'started': (actions['suspend'], actions['stop']),
-        'stopped': (actions['start'], actions['deactivate'])
+        'stopped': (actions['start'], actions['deactivate']),
+        'suspended': (actions['resume'], actions['deactivate'])
     }[environ['vm_state']]
 
     form = tag.form(method='post', action=environ['vm_target'])
@@ -96,6 +101,10 @@ def enter_secret(macro, environ, *secrets):
        A list of strings containing all secrets submitted by the user for
        this scenario.
 
+    ``secret_token_function``
+       A function that calculates the secret's security token. Takes an user
+       and a secret.
+
     ``csrf_token``
        Django's CSRF token. Use :func:`django.middleware.csrf.get_token` to
        get it.
@@ -110,13 +119,11 @@ def enter_secret(macro, environ, *secrets):
         secrets = environ['all_secrets']
 
     # If all secrets are already submitted, hide this box
-    if not (set(secrets) - set(environ['submitted_secrets'])):
+    if all(secret in environ['submitted_secrets'] for secret in secrets):
         return ''
    
     for secret in secrets:
-        msg = '{0}:{1}'.format(user.pk, secret)
-        hmac_gen = hmac.new(settings.SECRET_KEY, msg, hashlib.sha1)
-        secret_token = hmac_gen.hexdigest()
+        secret_token = environ['secret_token_function'](user, secret)
         form.append(tag.input(name='secret_token', value=secret_token,
                               type='hidden'))
     
