@@ -50,6 +50,26 @@ server. We need to install both::
 
 Dependencies are now installed :)
 
+Creating storage pool
+---------------------
+
+Insekta will store it's images for the virtual machine inside a libvirt
+storage pool. Put the following XML into a file ``default-pool.xml``::
+   
+   <pool type='dir'>
+     <name>default</name>
+     <target>
+       <path>/var/lib/libvirt/images</path>
+     </target>
+   </pool>
+
+and call ``virsh`` with the command ``pool-define`` to define the pool and
+``pool-start`` to start it::
+   
+   virsh -c qemu:///system pool-define default-pool.xml
+   virsh -c qemu:///system pool-start default
+
+All our images will now be saved to ``/var/lib/libvirt/images``.
 
 Configuring network
 -------------------
