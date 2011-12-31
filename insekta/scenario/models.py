@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
 from insekta.common.virt import connections
+from insekta.network.models import Address
 
 HYPERVISOR_CHOICES = (
     ('qemu', 'Qemu (with KVM)'),
@@ -128,12 +129,15 @@ class Scenario(models.Model):
 
         if node is None:
             node = random.choice(self.get_nodes())
-        return ScenarioRun.objects.create(scenario=self, user=user, node=node)
+
+        return ScenarioRun.objects.create(scenario=self, user=user, node=node,
+                                          address=Address.objects.get_free())
 
 class ScenarioRun(models.Model):
     scenario = models.ForeignKey(Scenario)
     user = models.ForeignKey(User)
     node = models.CharField(max_length=20)
+    address = models.ForeignKey(Address)
     state = models.CharField(max_length=10, default='disabled',
                              choices=RUN_STATE_CHOICES)
 
@@ -270,13 +274,15 @@ class ScenarioRun(models.Model):
               <target dev='hda' />
             </disk>
             <interface type='bridge'>
+              <mac address='{mac}' />
               <source bridge='br0' />
-            </interface>'
+            </interface>
             <graphics type='vnc' port='-1' autoport='yes' />
           </devices>
         </domain>
         """.format(id=self.pk, user=self.user.username, title=scenario.title,
-                   memory=scenario.memory * 1024, volume=volume.path())
+                   memory=scenario.memory * 1024, volume=volume.path(),
+                   mac=self.address.mac)
     
     def _do_vm_action(self, action, new_state):
         """Do an action on the virtual machine.

@@ -124,6 +124,7 @@ INSTALLED_APPS = (
     'insekta.common',
     'insekta.registration',
     'insekta.scenario',
+    'insekta.network',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -156,3 +157,6 @@ LIBVIRT_NODES = {
 LIBVIRT_STORAGE_POOLS = {
     'qemu': 'default'
 }
+
+VM_IP_BLOCKS = ['192.168.0.0/24']
+VM_MAC_OUI = '52:54:00'
