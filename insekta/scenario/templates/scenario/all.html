@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "All scenarios" %}{% endblock %}
+
+{% block content %}
+<h2>{% trans "All scenarios" %}</h2>
+
+{% if scenario_list %}
+<ul>
+{% for scenario in scenario_list %}
+<li><a href="{% url scenario.show scenario.name %}">{{ scenario.title }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>{% trans "There are no scenarios." %}</p>
+{% endif %}
+{% endblock %}
