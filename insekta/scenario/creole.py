@@ -1,9 +1,6 @@
-import hashlib
-import hmac
 from genshi.builder import tag
 from creoleparser import Parser, create_dialect, creole11_base
 from django.utils.translation import ugettext as _
-from django.conf import settings
 
 def vmbox(macro, environ):
     """Macro for showing a box with information and actions for a vm.
@@ -31,10 +28,8 @@ def vmbox(macro, environ):
         'stop': tag.input(type='submit', name='stop', value=_('Stop')),
         'suspend': tag.input(type='submit', name='suspend', value=_('Suspend')),
         'resume': tag.input(type='submit', name='resume', value=_('Resume')),
-        'deactivate': tag.input(type='submit', name='deactivate',
-                                value=_('Deactivate')),
-        'activate': tag.input(type='submit', name='activate',
-                              value=_('Activate')),
+        'destroy': tag.input(type='submit', name='destroy', value=_('Deactivate')),
+        'create': tag.input(type='submit', name='create', value=_('Activate')),
     }
 
     text_state = {
@@ -48,10 +43,10 @@ def vmbox(macro, environ):
     }[environ['vm_state']]
     
     enabled_actions = {
-        'disabled': (actions['activate'], ),
+        'disabled': (actions['create'], ),
         'started': (actions['suspend'], actions['stop']),
-        'stopped': (actions['start'], actions['deactivate']),
-        'suspended': (actions['resume'], actions['deactivate'])
+        'stopped': (actions['start'], actions['destroy']),
+        'suspended': (actions['resume'], actions['destroy'])
     }[environ['vm_state']]
 
     form = tag.form(method='post', action=environ['vm_target'])

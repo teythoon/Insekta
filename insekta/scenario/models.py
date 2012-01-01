@@ -180,8 +180,6 @@ class ScenarioRun(models.Model):
                     libvirt.VIR_DOMAIN_SHUTOFF: 'stopped'
                 }.get(state, 'error')
             self.state = new_state
-        self.save()
-                
 
     def create_domain(self):
         """Create a domain for this scenario run.
@@ -303,7 +301,8 @@ class ScenarioRun(models.Model):
         except libvirt.libvirtError, e:
             self.refresh_state()
             raise ScenarioError(str(e))
-        self.save()
+        finally:
+            self.save()
 
 
     def __unicode__(self):
