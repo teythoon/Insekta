@@ -12,9 +12,17 @@
 }
 
 .enter_secret {
+    background: url(secret.png) no-repeat 5px center;
+    min-height:50px;
+    padding-left:80px;
+    border:2px solid #000;
 }
 
 .require_secret {
+    background: url(herebedragons.png) no-repeat 10px bottom;
+    min-height:50px;
+    padding-left:80px;
+    border:2px solid #000;
 }
 
 .spoiler {

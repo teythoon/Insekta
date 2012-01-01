@@ -125,7 +125,7 @@ def enter_secret(macro, environ, *secrets):
     form.append(tag.input(type='hidden', name='csrfmiddlewaretoken',
                           value=environ['csrf_token']))
 
-    p = tag.p(_('Enter secret:'))
+    p = tag.p(tag.strong(_('Enter secret:')), ' ')
     p.append(tag.input(name='secret', type='text'))
     p.append(tag.input(type='submit', name='enter_secret', value=_('Submit')))
     form.append(p)
@@ -148,9 +148,10 @@ def require_secret(macro, environ, *secrets):
     if show_content:
         return macro.parsed_body()
     else:
-        text = _('Here is some hidden content.'
-                  'You need to enter a specific secret to show it.')
-        return tag.div(tag.p(text), class_='require_secret')
+        dragons = tag.strong(_('Here be dragons.'))
+        text = _('This content is hidden, '
+                  'you need to submit a specific secret in order to show it.')
+        return tag.div(tag.p(dragons, ' ', text), class_='require_secret')
 
 def spoiler(macro, environ):
     """Macro for spoiler. Showing and hiding it is done via javascript."""
