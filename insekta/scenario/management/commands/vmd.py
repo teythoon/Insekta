@@ -1,5 +1,6 @@
 from __future__ import print_function
 import time
+import signal
 
 from django.core.management.base import NoArgsCommand
 
@@ -11,8 +12,12 @@ class Command(NoArgsCommand):
     help = 'Manages the state changes of virtual machines'
 
     def handle_noargs(self, **options):
+        self.run = True
+        signal.signal(signal.SIGINT, lambda sig, frame: self.stop())
+        signal.signal(signal.SIGTERM, lambda sig, frame: self.stop())
+
         last_call = time.time()
-        while True:
+        while self.run:
             for task in RunTaskQueue.objects.all():
                 try:
                     self._handle_task(task)
@@ -58,3 +63,7 @@ class Command(NoArgsCommand):
         elif task.action == 'destroy':
             scenario_run.destroy_domain()
             scenario_run.delete()
+
+    def stop(self):
+        print('Stopping, please wait a few moments.')
+        self.run = False
