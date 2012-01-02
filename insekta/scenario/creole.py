@@ -1,6 +1,11 @@
 from genshi.builder import tag
+from genshi import Markup
 from creoleparser import Parser, create_dialect, creole11_base
 from django.utils.translation import ugettext as _
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import HtmlFormatter
+from pygments.util import ClassNotFound
 
 def enter_secret(macro, environ, *secrets):
     """Macro for entering a secret. Takes a several secrets as args.
@@ -100,11 +105,21 @@ def ip(macro, environ):
         ip = '127.0.0.1'
     return tag.span(ip, class_='ip')
 
+def code(macro, environ, lang='text', linenos=False):
+    try:
+        lexer = get_lexer_by_name(lang)
+    except ClassNotFound:
+        return tag.div(_('No such language: {lang}').format(lang=lang),
+                       class_='error')
+    formatter = HtmlFormatter(linenos=linenos == 'yes')
+    return Markup(highlight(macro.body, lexer, formatter))
+
 _non_bodied_macros = {'ip': ip}
 _bodied_macros = {
     'enterSecret': enter_secret,
     'requireSecret': require_secret,
-    'spoiler': spoiler
+    'spoiler': spoiler,
+    'code': code
 }
 _dialect = create_dialect(creole11_base, non_bodied_macros=_non_bodied_macros,
         bodied_macros=_bodied_macros)
