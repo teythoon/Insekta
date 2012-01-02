@@ -17,7 +17,8 @@ from insekta.scenario.creole import render_scenario
 def scenario_home(request):
     """Show an users running/suspended vms and other informations."""
     return TemplateResponse(request, 'scenario/home.html', {
-
+        'scenario_run_list': ScenarioRun.objects.select_related().filter(
+                user=request.user)
     })
 
 @login_required
@@ -74,7 +75,10 @@ def manage_vm(request, scenario_name):
         scenario_run = ScenarioRun.objects.get(user=request.user,
                                                scenario=scenario)
     except ScenarioRun.DoesNotExist:
-        scenario_run = scenario.start(request.user)
+        if request.method == 'POST':
+            scenario_run = scenario.start(request.user)
+        else:
+            scenario_run = None
    
     # GET will check whether the action was executed
     if request.method == 'GET' and 'task_id' in request.GET:
@@ -82,8 +86,8 @@ def manage_vm(request, scenario_name):
         if not RunTaskQueue.objects.filter(pk=task_id).count():
             return TemplateResponse(request, 'scenario/vmbox_dynamic.html', {
                 'scenario': scenario,
-                'vm_state': scenario_run.state,
-                'ip': scenario_run.address.ip
+                'vm_state': scenario_run.state if scenario_run else 'disabled',
+                'ip': scenario_run.address.ip if scenario_run else None
             })
         else:
             return HttpResponseNotModified()

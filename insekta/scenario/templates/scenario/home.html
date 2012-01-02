@@ -5,4 +5,25 @@
 
 {% block content %}
 <h1>{% blocktrans with username=user.username %}Welcome, {{ username}}!{% endblocktrans %}</h1>
+
+{% if scenario_run_list %}
+<table class="data-table">
+    <tr>
+        <th>{% trans "Scenario" %}</th>
+        <th>{% trans "VM state" %}</th>
+    </tr>
+{% for scenario_run in scenario_run_list %}
+{% with scenario=scenario_run.scenario %}
+    <tr>
+        <td><a href="{% url scenario.show scenario.name %}">
+                {{ scenario.title }}</a></td>
+        <td>{{ scenario_run.state }}</td>
+    </tr>
+{% endwith %}
+{% endfor %}
+</table>
+{% else %}
+<p>{% trans "You have no running scenarios." %}</p>
+{% endif %}
+
 {% endblock content %}
