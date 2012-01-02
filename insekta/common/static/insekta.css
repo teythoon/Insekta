@@ -42,6 +42,7 @@ body {
 ul.messages {
     padding:0;
     list-style:none;
+    margin:1em 2em 0 2em;
 }
 
 .messages li {

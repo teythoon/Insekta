@@ -1,7 +1,8 @@
 from django.conf.urls.defaults import patterns, url
 
 urlpatterns = patterns('insekta.scenario.views',
-   url(r'^$', 'scenario_overview', name='scenario.overview'),
+   url(r'^$', 'scenario_home', name='scenario.home'),
+   url(r'^groups$', 'scenario_groups', name='scenario.groups'),
    url(r'^all$', 'all_scenarios', name='scenario.all'),
    url(r'^show/([\w-]+)$', 'show_scenario', name='scenario.show'),
    url(r'^manage_vm/([\w-]+)$', 'manage_vm', name='scenario.manage_vm'),

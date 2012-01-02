@@ -1,3 +1,4 @@
+{% load url from future %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -11,15 +12,16 @@
 <body>
 <div id="header">
 <h1>Insekta</h1>
-{% if user.is_authenticated %}
 <ul id="menu">
-    <li><a href="{% url scenario.overview %}">Scenario overview</a></li>
-    <li><a href="{% url scenario.all %}">All scenarios</a></li>
-{% comment %}
-<li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a></li>
-{% endcomment %}
-</ul>
+{% if user.is_authenticated %}
+    <li><a href="{% url 'scenario.home' %}">Home</a></li>
+    <li><a href="{% url 'scenario.groups' %}">Scenario groups</a></li>
+    <li><a href="{% url 'scenario.all' %}">All scenarios</a></li>
+    <li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a></li>
+{% else %}
+    <li><a href="{% url 'django.contrib.auth.views.login' %}">Login</a></li>
 {% endif %}
+</ul>
 </div>
 
 {% if messages %}

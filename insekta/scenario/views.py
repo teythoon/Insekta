@@ -14,9 +14,16 @@ from insekta.scenario.models import (Scenario, ScenarioRun, RunTaskQueue,
 from insekta.scenario.creole import render_scenario
 
 @login_required
-def scenario_overview(request):
+def scenario_home(request):
+    """Show an users running/suspended vms and other informations."""
+    return TemplateResponse(request, 'scenario/home.html', {
+
+    })
+
+@login_required
+def scenario_groups(request):
     """Show an overview of the scenarios in groups."""
-    return TemplateResponse(request, 'scenario/overview.html', {
+    return TemplateResponse(request, 'scenario/groups.html', {
 
     })
 
