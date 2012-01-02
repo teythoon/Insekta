@@ -2,70 +2,6 @@ from genshi.builder import tag
 from creoleparser import Parser, create_dialect, creole11_base
 from django.utils.translation import ugettext as _
 
-def vmbox(macro, environ):
-    """Macro for showing a box with information and actions for a vm.
-    
-    Requires the following keys in the environ:
-
-    ``vm_target``
-       An url for the action attribute of the form element. Submitting the
-       form will generate a POST request will contain of of the following
-       keys: ``activate``, ``deactivate``, ``start``, ``suspend`` and
-       ``stop`` with an undefined value.
-
-    ``vm_state``
-       One of ``disabled``, ``started``, ``stopped``, ``suspended`` and
-       ``preparing``. The state ``preparing`` signalizes an ongoing state
-       change.
-    
-    ``csrf_token``
-       Django's CSRF token. Use :func:`django.middleware.csrf.get_token` to
-       get it.
-    """
-   
-    actions = {
-        'start': tag.input(type='submit', name='start', value=_('Start')),
-        'stop': tag.input(type='submit', name='stop', value=_('Stop')),
-        'suspend': tag.input(type='submit', name='suspend', value=_('Suspend')),
-        'resume': tag.input(type='submit', name='resume', value=_('Resume')),
-        'destroy': tag.input(type='submit', name='destroy', value=_('Deactivate')),
-        'create': tag.input(type='submit', name='create', value=_('Activate')),
-    }
-
-    text_state = {
-        'disabled': _('Your virtual machine is not activated yet.'),
-        'started': _('Your virtual machine is running at {ip}.').format(
-            ip=environ.get('ip', 'unknown ip')),
-        'stopped': _('Your virtual machine ({ip}) is stopped.').format(
-            ip=environ.get('ip', 'unknown ip')),
-        'suspended': _('Your virtual machine ({ip}) is suspended.').format(
-            ip=environ.get('ip', 'unknown ip'))
-    }[environ['vm_state']]
-    
-    enabled_actions = {
-        'disabled': (actions['create'], ),
-        'started': (actions['suspend'], actions['stop']),
-        'stopped': (actions['start'], actions['destroy']),
-        'suspended': (actions['resume'], actions['destroy'])
-    }[environ['vm_state']]
-
-    form = tag.form(method='post', action=environ['vm_target'])
-    for action in enabled_actions:
-        form.append(action)
-
-    form.append(tag.input(type='hidden', name='csrfmiddlewaretoken',
-                          value=environ['csrf_token']))
-   
-    title = tag.span(_('Managing the virtual machine'), class_='vmbox_title')
-    text_actions = _('Choose one of the following actions:')
-
-    vmbox = tag.div(class_='vmbox')
-    vmbox.append(title)
-    vmbox.append(tag.p(text_state))
-    vmbox.append(tag.p(text_actions))
-    vmbox.append(form)
-    return vmbox
-
 def enter_secret(macro, environ, *secrets):
     """Macro for entering a secret. Takes a several secrets as args.
 
@@ -164,7 +100,7 @@ def ip(macro, environ):
         ip = '127.0.0.1'
     return tag.span(ip, class_='ip')
 
-_non_bodied_macros = {'vmBox': vmbox, 'ip': ip}
+_non_bodied_macros = {'ip': ip}
 _bodied_macros = {
     'enterSecret': enter_secret,
     'requireSecret': require_secret,

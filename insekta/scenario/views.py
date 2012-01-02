@@ -7,7 +7,8 @@ from django.contrib import messages
 from django.middleware.csrf import get_token
 
 from insekta.scenario.models import (Scenario, ScenarioRun, RunTaskQueue,
-                                     InvalidSecret, calculate_secret_token)
+                                     InvalidSecret, calculate_secret_token,
+                                     AVAILABLE_TASKS)
 from insekta.scenario.creole import render_scenario
 
 @login_required
@@ -36,12 +37,10 @@ def show_scenario(request, scenario_name):
         ip = scenario_run.address.ip
     except ScenarioRun.DoesNotExist:
         vm_state = 'disabled'
-        ip = 'unknown_ip'
+        ip = None
 
     environ = {
         'ip': ip,
-        'vm_target': reverse('scenario.manage_vm', args=(scenario_name, )),
-        'vm_state': vm_state,
         'user': request.user,
         'enter_secret_target': reverse('scenario.submit_secret',
                                        args=(scenario_name, )),
@@ -54,6 +53,8 @@ def show_scenario(request, scenario_name):
     return TemplateResponse(request, 'scenario/show.html', {
         'scenario': scenario,
         'description': render_scenario(scenario.description, environ=environ),
+        'vm_state': vm_state,
+        'ip': ip
     })
 
 @login_required
@@ -66,14 +67,10 @@ def manage_vm(request, scenario_name):
     except ScenarioRun.DoesNotExist:
         scenario_run = scenario.start(request.user)
 
-    action = None
-    user_actions = ('start', 'resume', 'suspend', 'stop', 'create', 'destroy')
-    for user_action in user_actions:
-        if user_action in request.POST:
-            action = user_action
-            break
+    action = request.POST.get('action')
+    print action
 
-    if not action:
+    if not action or action not in AVAILABLE_TASKS:
         return redirect(reverse('scenario.show', args=(scenario_name, )))
 
     # FIXME: Implement some way to prevent spamming (aka. DoS)

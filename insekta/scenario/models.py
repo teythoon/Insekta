@@ -24,13 +24,14 @@ RUN_STATE_CHOICES = (
     ('error', 'VM has weird error')
 )
 
-AVAILABLE_TASKS = (
-    ('create', 'Create VM'),
-    ('start', 'Start VM'),
-    ('suspend', 'Suspend VM'),
-    ('stop', 'Stop VM'),
-    ('destroy', 'Destroy VM')
-)
+AVAILABLE_TASKS = {
+    'create': 'Create VM',
+    'start': 'Start VM',
+    'stop': 'Stop VM',
+    'suspend': 'Suspend VM',
+    'resume': 'Suspend VM',
+    'destroy': 'Destroy VM'
+}
 
 class ScenarioError(Exception):
     pass
@@ -310,7 +311,7 @@ class ScenarioRun(models.Model):
 
 class RunTaskQueue(models.Model):
     scenario_run = models.ForeignKey(ScenarioRun, unique=True)
-    action = models.CharField(max_length=10, choices=AVAILABLE_TASKS)
+    action = models.CharField(max_length=10, choices=AVAILABLE_TASKS.items())
 
     def __unicode__(self):
         return u'{0} for {1}'.format(self.get_action_display(),
