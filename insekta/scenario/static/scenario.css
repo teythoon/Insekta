@@ -20,6 +20,11 @@
     text-align:center;
 }
 
+#vm_spinner {
+    text-align:center;
+    padding:1em;
+}
+
 .vm_ip, .vm_state {
     border:2px solid;
     margin:0.5em;

@@ -1,0 +1,75 @@
+{% load i18n %}
+{% if ip %}
+<p class="vm_section_title">{% trans "IP address:" %}</p>
+<p class="vm_ip">{{ ip }}</p>
+{% endif %}
+
+<p class="vm_section_title">{% trans "Current state:" %}</p>
+<p class="vm_state">
+{% if vm_state == 'started' %}{% trans "running" %}{% endif %}
+{% if vm_state == 'stopped' %}{% trans "shutoff" %}{% endif %}
+{% if vm_state == 'suspended' %}{% trans "suspended" %}{% endif %}
+{% if vm_state == 'disabled' %}{% trans "disabled" %}{% endif %}
+{% if vm_state == 'error' %}<span class="error">{% trans "unknown error" %}</span>{% endif %}
+
+</p>
+
+<p class="vm_section_title">{% trans "Available actions:" %}</p>
+<div class="vm_actions">
+    {% if vm_state == 'stopped' %}
+    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
+            name="vmbox_form" class="vm_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="start" />
+        <input type="submit" value="start" class="vm_start" />
+    </form>
+    {% endif %}
+    
+    {% if vm_state == 'started' %} 
+    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
+            name="vmbox_form" class="vm_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="stop" />
+        <input type="submit" value="stop" class="vm_stop" />
+    </form>
+    {% endif %}
+
+    {% if vm_state == 'started' %}
+    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
+            name="vmbox_form" class="vm_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="suspend" />
+        <input type="submit" value="suspend" class="vm_suspend" />
+    </form>
+    {% endif %}
+
+    {% if vm_state == 'suspended' %} 
+    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
+            name="vmbox_form" class="vm_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="resume" />
+        <input type="submit" value="resume" class="vm_resume" />
+    </form>
+    {% endif %}
+
+</div>
+
+<div class="vm_actions">
+    {% if vm_state == 'disabled' %} 
+    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
+            name="vmbox_form" class="vm_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create" />
+        <input type="submit" value="enable" class="vm_enable" />
+    </form>
+    {% endif %}
+
+    {% if vm_state == 'stopped' %}
+    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
+            name="vmbox_form" class="vm_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="destroy" />
+        <input type="submit" value="disable" class="vm_disable" />
+    </form>
+    {% endif %}
+

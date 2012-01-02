@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
+from django.http import (HttpResponse, HttpResponseBadRequest,
+                         HttpResponseNotModified)
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -66,18 +68,35 @@ def manage_vm(request, scenario_name):
                                                scenario=scenario)
     except ScenarioRun.DoesNotExist:
         scenario_run = scenario.start(request.user)
+   
+    # GET will check whether the action was executed
+    if request.method == 'GET' and 'task_id' in request.GET:
+        task_id = request.GET['task_id']
+        if not RunTaskQueue.objects.filter(pk=task_id).count():
+            return TemplateResponse(request, 'scenario/vmbox_dynamic.html', {
+                'scenario': scenario,
+                'vm_state': scenario_run.state,
+                'ip': scenario_run.address.ip
+            })
+        else:
+            return HttpResponseNotModified()
+    # while POST asks the daemon to execute the action
+    elif request.method == 'POST':
+        action = request.POST.get('action')
 
-    action = request.POST.get('action')
-    print action
+        if not action or action not in AVAILABLE_TASKS:
+            raise HttpResponseBadRequest('Action not available')
 
-    if not action or action not in AVAILABLE_TASKS:
-        return redirect(reverse('scenario.show', args=(scenario_name, )))
-
-    # FIXME: Implement some way to prevent spamming (aka. DoS)
-    # Checking is done in the daemon, here we just assume that
-    # everything will work fine
-    RunTaskQueue.objects.create(scenario_run=scenario_run, action=action)
-    messages.success(request, _('Task was received and will be executed.'))
+        # FIXME: Implement some way to prevent spamming (aka. DoS)
+        # Checking is done in the daemon, here we just assume that
+        # everything will work fine
+        task = RunTaskQueue.objects.create(scenario_run=scenario_run,
+                                           action=action)
+        if request.is_ajax():
+            return HttpResponse('{{"task_id": {0}}}'.format(task.pk),
+                                mimetype='application/x-json')
+        else:
+            messages.success(request, _('Task was received and will be executed.'))
     
     return redirect(reverse('scenario.show', args=(scenario_name, )))
 
