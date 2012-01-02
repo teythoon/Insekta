@@ -1,4 +1,4 @@
-# German translation of Insekta
+# English translation of Insekta
 # Copyright (C) 2012 Insekta team
 # This file is distributed under the same license as the Insekta package.
 # Henning Pridoehl <henning@cinsects.de>, 2012.
@@ -8,53 +8,53 @@ msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-02 04:04+0100\n"
-"PO-Revision-Date: 2012-01-02 04:06+0100\n"
+"PO-Revision-Date: 2012-01-02 04:08+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: German\n"
-"X-Poedit-Country: GERMANY\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: common/templates/base.html:18
 #: scenario/templates/scenario/home.html:4
 msgid "Home"
-msgstr "Start"
+msgstr "Home"
 
 #: common/templates/base.html:19
 #: scenario/templates/scenario/groups.html:4
 #: scenario/templates/scenario/groups.html:7
 msgid "Scenario groups"
-msgstr "Szenariogruppen"
+msgstr "Scenario groups"
 
 #: common/templates/base.html:20
 #: scenario/templates/scenario/all.html:3
 #: scenario/templates/scenario/all.html:6
 msgid "All scenarios"
-msgstr "Alle Szenarien"
+msgstr "All scenarios"
 
 #: common/templates/base.html:21
 msgid "Logout"
-msgstr "Ausloggen"
+msgstr "Logout"
 
 #: common/templates/base.html:23
 msgid "Login"
-msgstr "Einloggen"
+msgstr "Login"
 
 #: registration/templates/registration/login.html:8
 msgid "Your username and password didn't match. Please try again."
-msgstr "Dein Benutzername oder Passwort stimmt nicht. Bitte versuche es erneut."
+msgstr "Your username and password didn't match. Please try again."
 
 #: scenario/creole.py:64
 msgid "Enter secret:"
-msgstr "Gib das Geheimnis ein:"
+msgstr "Enter secret:"
 
 #: scenario/creole.py:66
 msgid "Submit"
-msgstr "Einreichen"
+msgstr "Submit"
 
 #: scenario/creole.py:87
 msgid "Here be dragons."
@@ -62,107 +62,107 @@ msgstr "Here be dragons."
 
 #: scenario/creole.py:88
 msgid "This content is hidden, you need to submit a specific secret in order to show it."
-msgstr "Der Inhalt ist versteckt, du musst ein bestimmtes Geheimnis einreichen um es anzuzeigen."
+msgstr "This content is hidden, you need to submit a specific secret in order to show it."
 
 #: scenario/models.py:81
 #: scenario/models.py:85
 msgid "This secret is invalid!"
-msgstr "Dein Geheimnis ist ungültig!"
+msgstr "This secret is invalid!"
 
 #: scenario/models.py:88
 msgid "This secret was already submitted!"
-msgstr "Dein Geheimnis wurde bereits eingericht."
+msgstr "This secret was already submitted!"
 
 #: scenario/views.py:110
 msgid "Task was received and will be executed."
-msgstr "Die Aufgabe wurde empfangen und wird ausgeführt."
+msgstr "Task was received and will be executed."
 
 #: scenario/views.py:124
 msgid "Congratulation! Your secret was valid."
-msgstr "Gratulation! Dein Geheimnis war gültig."
+msgstr "Congratulation! Your secret was valid."
 
 #: scenario/templates/scenario/all.html:15
 msgid "There are no scenarios."
-msgstr "Es gibt keine Szenarien."
+msgstr "There are no scenarios."
 
 #: scenario/templates/scenario/home.html:7
 #, python-format
 msgid "Welcome, %(username)s!"
-msgstr "Willkommen %(username)s!"
+msgstr "Welcome, %(username)s!"
 
 #: scenario/templates/scenario/home.html:12
 msgid "Scenario"
-msgstr "Szenario"
+msgstr "Scenario"
 
 #: scenario/templates/scenario/home.html:13
 msgid "VM state"
-msgstr "VM-Zustand"
+msgstr "VM state"
 
 #: scenario/templates/scenario/home.html:26
 msgid "You have no running scenarios."
-msgstr "Du hast keine laufenden Szenarien."
+msgstr "You have no running scenarios."
 
 #: scenario/templates/scenario/show.html:9
 msgid "Manage virtual machine"
-msgstr "Virtuelle Maschine verwalten"
+msgstr "Manage virtual machine"
 
 #: scenario/templates/scenario/show.html:11
 msgid "Please wait."
-msgstr "Bitte warte."
+msgstr "Please wait."
 
 #: scenario/templates/scenario/vmbox_dynamic.html:3
 msgid "IP address:"
-msgstr "IP-Adresse:"
+msgstr "IP address:"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:7
 msgid "Current state:"
-msgstr "Aktueller Zustand:"
+msgstr "Current state:"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:9
 msgid "running (state)"
-msgstr "In Betrieb"
+msgstr "running"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:10
 msgid "shutoff (state)"
-msgstr "Ausgeschaltet"
+msgstr "shutoff"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:11
 msgid "suspended (state)"
-msgstr "Im Ruhezustand"
+msgstr "suspended"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:12
 msgid "disabled (state)"
-msgstr "Deaktiviert"
+msgstr "disabled"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:13
 msgid "unknown error"
-msgstr "unbekannter Fehler"
+msgstr "unknown error"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:17
 msgid "Available actions:"
-msgstr "Verfügbare Aktionen:"
+msgstr "Available actions:"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:24
 msgid "start"
-msgstr "starten"
+msgstr "start"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:33
 msgid "stop"
-msgstr "stoppen"
+msgstr "stop"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:42
 msgid "suspend"
-msgstr "pausieren"
+msgstr "suspend"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:51
 msgid "resume"
-msgstr "fortsetzen"
+msgstr "resume"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:63
 msgid "enable"
-msgstr "aktivieren"
+msgstr "enable"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:72
 msgid "disable"
-msgstr "deaktivieren"
+msgstr "disable"
 

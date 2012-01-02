@@ -6,10 +6,10 @@
 
 <p class="vm_section_title">{% trans "Current state:" %}</p>
 <p class="vm_state">
-{% if vm_state == 'started' %}{% trans "running" %}{% endif %}
-{% if vm_state == 'stopped' %}{% trans "shutoff" %}{% endif %}
-{% if vm_state == 'suspended' %}{% trans "suspended" %}{% endif %}
-{% if vm_state == 'disabled' %}{% trans "disabled" %}{% endif %}
+{% if vm_state == 'started' %}{% trans "running (state)" %}{% endif %}
+{% if vm_state == 'stopped' %}{% trans "shutoff (state)" %}{% endif %}
+{% if vm_state == 'suspended' %}{% trans "suspended (state)" %}{% endif %}
+{% if vm_state == 'disabled' %}{% trans "disabled (state)" %}{% endif %}
 {% if vm_state == 'error' %}<span class="error">{% trans "unknown error" %}</span>{% endif %}
 
 </p>
@@ -21,7 +21,7 @@
             name="vmbox_form" class="vm_form">
         {% csrf_token %}
         <input type="hidden" name="action" value="start" />
-        <input type="submit" value="start" class="vm_start" />
+        <input type="submit" value="{% trans 'start' %}" class="vm_start" />
     </form>
     {% endif %}
     
@@ -30,7 +30,7 @@
             name="vmbox_form" class="vm_form">
         {% csrf_token %}
         <input type="hidden" name="action" value="stop" />
-        <input type="submit" value="stop" class="vm_stop" />
+        <input type="submit" value="{% trans 'stop' %}" class="vm_stop" />
     </form>
     {% endif %}
 
@@ -39,7 +39,7 @@
             name="vmbox_form" class="vm_form">
         {% csrf_token %}
         <input type="hidden" name="action" value="suspend" />
-        <input type="submit" value="suspend" class="vm_suspend" />
+        <input type="submit" value="{% trans 'suspend' %}" class="vm_suspend" />
     </form>
     {% endif %}
 
@@ -48,7 +48,7 @@
             name="vmbox_form" class="vm_form">
         {% csrf_token %}
         <input type="hidden" name="action" value="resume" />
-        <input type="submit" value="resume" class="vm_resume" />
+        <input type="submit" value="{% trans 'resume' %}" class="vm_resume" />
     </form>
     {% endif %}
 
@@ -60,7 +60,7 @@
             name="vmbox_form" class="vm_form">
         {% csrf_token %}
         <input type="hidden" name="action" value="create" />
-        <input type="submit" value="enable" class="vm_enable" />
+        <input type="submit" value="{% trans 'enable' %}" class="vm_enable" />
     </form>
     {% endif %}
 
@@ -69,7 +69,7 @@
             name="vmbox_form" class="vm_form">
         {% csrf_token %}
         <input type="hidden" name="action" value="destroy" />
-        <input type="submit" value="disable" class="vm_disable" />
+        <input type="submit" value="{% trans 'disable' %}" class="vm_disable" />
     </form>
     {% endif %}
 
