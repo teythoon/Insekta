@@ -126,6 +126,8 @@ environment::
    workon insekta
    cd insekta/insekta
    ./manage.py syncdb
+   ./manage.py compilemessages
+   ./manage.py collectstatic
 
 For testing, you can run the development server by calling::
    
