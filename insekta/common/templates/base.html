@@ -9,6 +9,8 @@
 {% endif %}
 </head>
 <body>
+<div id="header">
+<h1>Insekta</h1>
 {% if user.is_authenticated %}
 <ul id="menu">
     <li><a href="{% url scenario.overview %}">Scenario overview</a></li>
@@ -18,6 +20,7 @@
 {% endcomment %}
 </ul>
 {% endif %}
+</div>
 
 {% if messages %}
 <ul class="messages">
