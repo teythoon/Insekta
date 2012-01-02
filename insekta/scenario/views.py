@@ -4,9 +4,10 @@ from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseNotModified)
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.middleware.csrf import get_token
+from django import forms
 
 from insekta.scenario.models import (Scenario, ScenarioRun, RunTaskQueue,
                                      InvalidSecret, calculate_secret_token,
@@ -124,3 +125,45 @@ def submit_secret(request, scenario_name):
         messages.success(request, _('Congratulation! Your secret was valid.'))
 
     return redirect(reverse('scenario.show', args=(scenario_name, )))
+
+@login_required
+@permission_required('scenario.view_editor')
+def editor(request):
+    class EditorForm(forms.Form):
+        submitted_secrets = forms.CharField(label=_('Submitted secrets:'),
+                widget=forms.Textarea(attrs={'cols': 35, 'rows': 5}),
+                required=False)
+        all_secrets = forms.CharField(label=_('All secrets:'),
+                widget=forms.Textarea( attrs={'cols': 35, 'rows': 5}),
+                required=False)
+        content = forms.CharField(label=_('Content:'),
+                widget=forms.Textarea(attrs={'cols': 80, 'rows': 30}),
+                required=False)
+
+    def parse_secrets(secrets):
+        return [secret.strip() for secret in secrets.splitlines()]
+
+    if request.method == 'POST':
+        editor_form = EditorForm(request.POST)
+        if editor_form.is_valid():
+            data = editor_form.cleaned_data
+            environ = {
+                'submitted_secrets': parse_secrets(data['submitted_secrets']),
+                'all_secrets': parse_secrets(data['all_secrets']),
+                'secret_token_function': calculate_secret_token,
+                'user': request.user,
+                'enter_secret_target': 'javascript:return false;',
+                'csrf_token': ''
+            }
+            preview = render_scenario(data['content'], environ=environ)
+        else:
+            preview = None
+    else:
+        editor_form = EditorForm()
+        preview = None
+    
+    return TemplateResponse(request, 'scenario/editor.html', {
+        'editor_form': editor_form,
+        'preview': preview
+    })
+

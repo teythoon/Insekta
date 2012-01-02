@@ -48,6 +48,11 @@ class Scenario(models.Model):
     description = models.TextField()
     enabled = models.BooleanField(default=False)
 
+    class Meta:
+        permissions = (
+            ('view_editor', _('Can view the scenario editor')),
+        )
+
     def __unicode__(self):
         return self.title
 

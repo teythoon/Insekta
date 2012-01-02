@@ -19,6 +19,9 @@
     <li><a href="{% url 'scenario.home' %}">{% trans "Home" %}</a></li>
     <li><a href="{% url 'scenario.groups' %}">{% trans "Scenario groups" %}</a></li>
     <li><a href="{% url 'scenario.all' %}">{% trans "All scenarios" %}</a></li>
+{% if perms.scenario.view_editor %}
+    <li><a href="{% url 'scenario.editor' %}">{% trans "Scenario editor" %}</a></li>
+{% endif %}
 {% if user.is_staff %}
     <li><a href="{% url 'admin:index' %}">{% trans "Administration" %}</a></li>
 {% endif %}

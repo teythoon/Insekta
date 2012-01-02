@@ -8,4 +8,5 @@ urlpatterns = patterns('insekta.scenario.views',
    url(r'^manage_vm/([\w-]+)$', 'manage_vm', name='scenario.manage_vm'),
    url(r'^submit_secret/([\w-]+)$', 'submit_secret',
        name='scenario.submit_secret'),
+   url(r'^editor$', 'editor', name='scenario.editor'),
 )
