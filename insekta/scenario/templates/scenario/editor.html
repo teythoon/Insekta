@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Scenario editor" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Scenario editor" %}</h1>
+{% if preview %}
+<h2>Preview</h2>
+<hr />
+<div class="scenario">
+    {{ preview|safe }}
+</div>
+<hr />
+{% endif %}
+
+<form method="post" action="{% url scenario.editor %}">
+{% csrf_token %}
+<h2>{% trans "Scenario" %}</h2>
+<table>
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <input type="submit" value="{% trans 'Preview' %}" />
+        </td>
+    </tr>
+    <tr>
+        <th>{{ editor_form.all_secrets.label }}</th>
+        <th>{{ editor_form.submitted_secrets.label }}</th>
+    </tr>
+    <tr>
+        <td>{{ editor_form.all_secrets }}</td>
+        <td>{{ editor_form.submitted_secrets }}</td>
+    </tr>
+    <tr>
+        <th>{{ editor_form.content.label }}</th>
+    </tr>
+    <tr>
+        <td colspan="2">{{ editor_form.content }}</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <input type="submit" value="{% trans 'Preview' %}" />
+        </td>
+    </tr>
+</table>
+
+</form>
+{% endblock content %}
