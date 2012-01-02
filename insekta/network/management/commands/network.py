@@ -13,16 +13,10 @@ class Command(BaseCommand):
             raise CommandError('What do you want? fill or dump?')
         
         if args[0] == 'fill':
-            try:
-                amount = int(args[1])
-            except ValueError:
-                raise CommandError('Ehm, that is not a valid amount!')
-            except IndexError:
-                amount = 100
-
-            for addr in Address.objects.fill_pool(amount):
+            addresses = Address.objects.fill_pool()
+            for addr in addresses:
                 print('{0}={1}'.format(addr.mac, addr.ip))
-            print('\nInserted {0} addresses.'.format(amount))
+            print('\nInserted {0} addresses.'.format(len(addresses)))
         elif args[0] == 'dump':
             for addr in Address.objects.all():
                 print('{0}\t{1}'.format(addr.mac, addr.ip))

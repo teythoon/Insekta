@@ -1,5 +1,3 @@
-import random
-
 def ip_to_int(ip):
     """Packs an IP into an integer, e.g. '127.0.0.1' into 2130706433"""
     ip_int = 0
@@ -15,10 +13,14 @@ def int_to_ip(ip_int):
         ip_int >>= 8
     return '.'.join(octets)
 
-def get_random_ip(blocks):
-    """Get an random IP inside a block or a list of blocks."""
-    block = random.choice(blocks) if hasattr(blocks, '__iter__') else blocks
-    ip, cidr = block.split('/')
-    num_ips = 2**(32 - int(cidr, 10)) - 1
-    return int_to_ip(ip_to_int(ip) + random.randint(0, num_ips))
+def iterate_ips(blocks):
+    """Iterate over all IPs inside some IP blocks."""
+    if not hasattr(blocks, '__iter__'):
+        blocks = [blocks]
 
+    for block in blocks:
+        ip, cidr = block.split('/')
+        num_ips = 2**(32 - int(cidr, 10))
+        min_ip = ip_to_int(ip)
+        for i in xrange(num_ips):
+            yield int_to_ip(min_ip + i)
