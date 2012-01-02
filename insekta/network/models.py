@@ -3,7 +3,10 @@ import random
 from django.db import models, transaction, IntegrityError
 from django.conf import settings
 
+from insekta.common.dblock import dblock
 from insekta.network.utils import iterate_ips
+
+LOCK_NETWORK_ADDRESS = 947295
 
 class NetworkError(Exception):
     pass
@@ -12,9 +15,10 @@ class AddressManager(models.Manager):
     def get_free(self):
         """Get a free address and mark it as in use."""
         try:
-            address = self.get_query_set().filter(in_use=False)[0]
-            address.take_address()
-            return address
+            with dblock(LOCK_NETWORK_ADDRESS):
+                address = self.get_query_set().filter(in_use=False)[0]
+                address.take_address()
+                return address
         except IndexError:
             raise NetworkError('No more free addresses.')
 
