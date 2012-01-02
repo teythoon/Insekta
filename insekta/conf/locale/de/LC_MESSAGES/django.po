@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-02 04:29+0100\n"
-"PO-Revision-Date: 2012-01-02 04:06+0100\n"
+"POT-Creation-Date: 2012-01-02 04:41+0100\n"
+"PO-Revision-Date: 2012-01-02 04:41+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
 "Language: \n"
@@ -19,32 +19,38 @@ msgstr ""
 "X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: common/templates/base.html:18 scenario/templates/scenario/home.html:4
+#: common/templates/base.html:18
+#: scenario/templates/scenario/home.html:4
 msgid "Home"
 msgstr "Start"
 
-#: common/templates/base.html:19 scenario/templates/scenario/groups.html:4
+#: common/templates/base.html:19
+#: scenario/templates/scenario/groups.html:4
 #: scenario/templates/scenario/groups.html:7
 msgid "Scenario groups"
 msgstr "Szenariogruppen"
 
-#: common/templates/base.html:20 scenario/templates/scenario/all.html:3
+#: common/templates/base.html:20
+#: scenario/templates/scenario/all.html:3
 #: scenario/templates/scenario/all.html:6
 msgid "All scenarios"
 msgstr "Alle Szenarien"
 
-#: common/templates/base.html:21
+#: common/templates/base.html:22
+msgid "Administration"
+msgstr "Administration"
+
+#: common/templates/base.html:24
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: common/templates/base.html:23
+#: common/templates/base.html:26
 msgid "Login"
 msgstr "Einloggen"
 
 #: registration/templates/registration/login.html:8
 msgid "Your username and password didn't match. Please try again."
-msgstr ""
-"Dein Benutzername oder Passwort stimmt nicht. Bitte versuche es erneut."
+msgstr "Dein Benutzername oder Passwort stimmt nicht. Bitte versuche es erneut."
 
 #: scenario/creole.py:64
 msgid "Enter secret:"
@@ -59,14 +65,11 @@ msgid "Here be dragons."
 msgstr "Here be dragons."
 
 #: scenario/creole.py:88
-msgid ""
-"This content is hidden, you need to submit a specific secret in order to "
-"show it."
-msgstr ""
-"Der Inhalt ist versteckt, du musst ein bestimmtes Geheimnis einreichen um es "
-"anzuzeigen."
+msgid "This content is hidden, you need to submit a specific secret in order to show it."
+msgstr "Der Inhalt ist versteckt, du musst ein bestimmtes Geheimnis einreichen um es anzuzeigen."
 
-#: scenario/models.py:81 scenario/models.py:85
+#: scenario/models.py:81
+#: scenario/models.py:85
 msgid "This secret is invalid!"
 msgstr "Dein Geheimnis ist ungültig!"
 
@@ -166,3 +169,4 @@ msgstr "aktivieren"
 #: scenario/templates/scenario/vmbox_dynamic.html:72
 msgid "disable"
 msgstr "deaktivieren"
+
