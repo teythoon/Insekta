@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-02 04:04+0100\n"
+"POT-Creation-Date: 2012-01-02 04:29+0100\n"
 "PO-Revision-Date: 2012-01-02 04:08+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
@@ -19,19 +19,16 @@ msgstr ""
 "X-Poedit-Country: UNITED STATES\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: common/templates/base.html:18
-#: scenario/templates/scenario/home.html:4
+#: common/templates/base.html:18 scenario/templates/scenario/home.html:4
 msgid "Home"
 msgstr "Home"
 
-#: common/templates/base.html:19
-#: scenario/templates/scenario/groups.html:4
+#: common/templates/base.html:19 scenario/templates/scenario/groups.html:4
 #: scenario/templates/scenario/groups.html:7
 msgid "Scenario groups"
 msgstr "Scenario groups"
 
-#: common/templates/base.html:20
-#: scenario/templates/scenario/all.html:3
+#: common/templates/base.html:20 scenario/templates/scenario/all.html:3
 #: scenario/templates/scenario/all.html:6
 msgid "All scenarios"
 msgstr "All scenarios"
@@ -61,11 +58,14 @@ msgid "Here be dragons."
 msgstr "Here be dragons."
 
 #: scenario/creole.py:88
-msgid "This content is hidden, you need to submit a specific secret in order to show it."
-msgstr "This content is hidden, you need to submit a specific secret in order to show it."
+msgid ""
+"This content is hidden, you need to submit a specific secret in order to "
+"show it."
+msgstr ""
+"This content is hidden, you need to submit a specific secret in order to "
+"show it."
 
-#: scenario/models.py:81
-#: scenario/models.py:85
+#: scenario/models.py:81 scenario/models.py:85
 msgid "This secret is invalid!"
 msgstr "This secret is invalid!"
 
@@ -165,4 +165,3 @@ msgstr "enable"
 #: scenario/templates/scenario/vmbox_dynamic.html:72
 msgid "disable"
 msgstr "disable"
-
