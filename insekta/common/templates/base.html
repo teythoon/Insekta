@@ -14,12 +14,12 @@
 <h1>Insekta</h1>
 <ul id="menu">
 {% if user.is_authenticated %}
-    <li><a href="{% url 'scenario.home' %}">Home</a></li>
-    <li><a href="{% url 'scenario.groups' %}">Scenario groups</a></li>
-    <li><a href="{% url 'scenario.all' %}">All scenarios</a></li>
-    <li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">Logout</a></li>
+    <li><a href="{% url 'scenario.home' %}">{% trans "Home" %}</a></li>
+    <li><a href="{% url 'scenario.groups' %}">{% trans "Scenario groups" %}</a></li>
+    <li><a href="{% url 'scenario.all' %}">{% trans "All scenarios" %}</a></li>
+    <li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">{% trans "Logout" %}</a></li>
 {% else %}
-    <li><a href="{% url 'django.contrib.auth.views.login' %}">Login</a></li>
+    <li><a href="{% url 'django.contrib.auth.views.login' %}">{% trans "Login" %}</a></li>
 {% endif %}
 </ul>
 </div>

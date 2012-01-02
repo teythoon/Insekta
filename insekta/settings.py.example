@@ -152,6 +152,8 @@ LOGGING = {
 
 LOGIN_REDIRECT_URL = '/'
 
+LOCALE_PATHS = (os.path.join(ROOT, 'conf/locale'), )
+
 LIBVIRT_NODES = {
     'qemu': 'qemu://root@192.168.0.40/system'
 }
