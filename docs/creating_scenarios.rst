@@ -207,21 +207,8 @@ hacker needs to do to solve the scenario. Additionally it contains
 explanations of what's going on.
 
 The description is written in `creole markup <http://www.wikicreole.org/wiki/Home>`_
-with some additional macros e.g. ``spoiler``, ``vmBox``, ``enterSecret`` and
-``requireSecret``.
-
-``spoiler``
-   A simple javascript based spoiler tag. It's content won't be shown until
-   the hacker clicks on "show". Example::
-
-      <<spoiler>>This is *not* shown!<</spoiler>>
-
-``vmBox``
-   A box that contains buttons for starting, stopping and resetting the
-   virtual machine for the scenario. It also includes some statistics
-   about the runtime and the number of secrets. Example::
-      
-      <<vmBox>>
+with some additional macros e.g. ``enterSecret``, ``requireSecret``, ``ip``
+and ``spoiler``.
 
 ``enterSecret``
    A form that let the hacker enter some secret he obtained by hacking
@@ -252,6 +239,12 @@ with some additional macros e.g. ``spoiler``, ``vmBox``, ``enterSecret`` and
    started. If not, it will use 127.0.0.1 as dummy. Example::
     
     You can attack the machine at http://<<ip>>/
+
+``spoiler``
+   A simple javascript based spoiler tag. It's content won't be shown until
+   the hacker clicks on "show". Example::
+
+      <<spoiler>>This is *not* shown!<</spoiler>>
 
 static
 ^^^^^^
