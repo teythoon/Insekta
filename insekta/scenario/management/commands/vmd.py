@@ -4,6 +4,7 @@ import signal
 
 from django.core.management.base import NoArgsCommand
 
+from insekta.common.virt import connections
 from insekta.scenario.models import RunTaskQueue, ScenarioError
 
 MIN_SLEEP = 1.0
@@ -31,6 +32,7 @@ class Command(NoArgsCommand):
             if time_passed < MIN_SLEEP:
                 time.sleep(MIN_SLEEP - time_passed)
             last_call = current_time
+        connections.close()
 
     def _handle_task(self, task):
         scenario_run = task.scenario_run
