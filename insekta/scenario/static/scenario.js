@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById('vm_dynamic').innerHTML = xhr.responseText;
                         register_eventhandler();
                     } else if (xhr.status == 304) { // not modified
-                        check_new(task_id);
+                        check_new(check_url, task_id);
                     } else {
                         document.getElementById('vm_dynamic').innerHTML = 'ERROR';
                     }
