@@ -4,7 +4,7 @@ server {
     access_log /var/log/nginx/insekta.cinsects.de.access.log;
 
     location /static/ {
-        alias /home/insekta/insekta/insekta/_static;
+        alias /home/insekta/insekta/_static;
     }
     
     location / {

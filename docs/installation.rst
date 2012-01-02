@@ -119,15 +119,21 @@ and reload the configuration::
 Installing Insekta
 ------------------
 
-Just clone the git and execute Djangos ``syndb`` inside the virtual
-environment::
+Clone the git, change into Insekta's virtual environment and create the config
+file named ``settings.py``::
    
-   git clone gitolite@unicorn.gnubo.de:insekta
+   git clone gitolite@unicorn.gnubo.de:insekta .
    workon insekta
    cd insekta/insekta
-   ./manage.py syncdb
-   ./manage.py compilemessages
-   ./manage.py collectstatic
+   cp settings.py.example settings.py
+   vim settings.py
+
+Execute Djangos ``syndb`` and a few other management commands::
+   
+   ./manage.py syncdb # Create database structure
+   ./manage.py compilemessages # Compile translations
+   ./manage.py collectstatic # Collect all static files in _static
+   ./manage.py network fill # Inserts available IPs into database
 
 For testing, you can run the development server by calling::
    
