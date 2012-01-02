@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-02 04:41+0100\n"
-"PO-Revision-Date: 2012-01-02 04:42+0100\n"
+"POT-Creation-Date: 2012-01-02 21:01+0100\n"
+"PO-Revision-Date: 2012-01-02 21:02+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
 "Language: \n"
@@ -19,32 +19,39 @@ msgstr ""
 "X-Poedit-Country: UNITED STATES\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: common/templates/base.html:18
+#: common/templates/base.html:19
 #: scenario/templates/scenario/home.html:4
 msgid "Home"
 msgstr "Home"
 
-#: common/templates/base.html:19
+#: common/templates/base.html:20
 #: scenario/templates/scenario/groups.html:4
 #: scenario/templates/scenario/groups.html:7
 msgid "Scenario groups"
 msgstr "Scenario groups"
 
-#: common/templates/base.html:20
+#: common/templates/base.html:21
 #: scenario/templates/scenario/all.html:3
 #: scenario/templates/scenario/all.html:6
 msgid "All scenarios"
 msgstr "All scenarios"
 
-#: common/templates/base.html:22
+#: common/templates/base.html:23
+#: scenario/templates/scenario/editor.html:4
+#: scenario/templates/scenario/editor.html:7
+#, fuzzy
+msgid "Scenario editor"
+msgstr "Scenario"
+
+#: common/templates/base.html:26
 msgid "Administration"
 msgstr "Administration"
 
-#: common/templates/base.html:24
+#: common/templates/base.html:28
 msgid "Logout"
 msgstr "Logout"
 
-#: common/templates/base.html:26
+#: common/templates/base.html:30
 msgid "Login"
 msgstr "Login"
 
@@ -52,51 +59,79 @@ msgstr "Login"
 msgid "Your username and password didn't match. Please try again."
 msgstr "Your username and password didn't match. Please try again."
 
-#: scenario/creole.py:64
+#: scenario/creole.py:69
 msgid "Enter secret:"
 msgstr "Enter secret:"
 
-#: scenario/creole.py:66
+#: scenario/creole.py:71
 msgid "Submit"
 msgstr "Submit"
 
-#: scenario/creole.py:87
+#: scenario/creole.py:92
 msgid "Here be dragons."
 msgstr "Here be dragons."
 
-#: scenario/creole.py:88
+#: scenario/creole.py:93
 msgid "This content is hidden, you need to submit a specific secret in order to show it."
 msgstr "This content is hidden, you need to submit a specific secret in order to show it."
 
-#: scenario/models.py:81
-#: scenario/models.py:85
+#: scenario/creole.py:112
+msgid "No such language: {lang}"
+msgstr "No such language: {lang}"
+
+#: scenario/models.py:53
+msgid "Can view the scenario editor"
+msgstr "Can view the scenario editor"
+
+#: scenario/models.py:86
+#: scenario/models.py:90
 msgid "This secret is invalid!"
 msgstr "This secret is invalid!"
 
-#: scenario/models.py:88
+#: scenario/models.py:93
 msgid "This secret was already submitted!"
 msgstr "This secret was already submitted!"
 
-#: scenario/views.py:110
+#: scenario/views.py:111
 msgid "Task was received and will be executed."
 msgstr "Task was received and will be executed."
 
-#: scenario/views.py:124
+#: scenario/views.py:125
 msgid "Congratulation! Your secret was valid."
 msgstr "Congratulation! Your secret was valid."
+
+#: scenario/views.py:133
+#, fuzzy
+msgid "Submitted secrets:"
+msgstr "Enter secret:"
+
+#: scenario/views.py:136
+#, fuzzy
+msgid "All secrets:"
+msgstr "Enter secret:"
+
+#: scenario/views.py:139
+msgid "Content:"
+msgstr "Content:"
 
 #: scenario/templates/scenario/all.html:15
 msgid "There are no scenarios."
 msgstr "There are no scenarios."
 
+#: scenario/templates/scenario/editor.html:19
+#: scenario/templates/scenario/home.html:12
+msgid "Scenario"
+msgstr "Scenario"
+
+#: scenario/templates/scenario/editor.html:23
+#: scenario/templates/scenario/editor.html:42
+msgid "Preview"
+msgstr "Preview"
+
 #: scenario/templates/scenario/home.html:7
 #, python-format
 msgid "Welcome, %(username)s!"
 msgstr "Welcome, %(username)s!"
-
-#: scenario/templates/scenario/home.html:12
-msgid "Scenario"
-msgstr "Scenario"
 
 #: scenario/templates/scenario/home.html:13
 msgid "VM state"
