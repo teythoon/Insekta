@@ -1,8 +1,3 @@
-.enter_secret, .require_secret, .spoiler {
-    border:1px solid #000;
-    margin:0.5em;
-}
-
 #vmbox {
     position:fixed;
     right:0;
@@ -78,9 +73,37 @@
     background:#fff url(enable.png) no-repeat 5px center;
 }
 
-.scenario {
+#scenario {
     margin-right:21em;
 }
+
+#scenario h1 {
+    font-size:1.8em;
+}
+
+#scenario h2 {
+    font-size:1.5em;
+}
+
+#scenario h3 {
+    font-size:1.3em;
+}
+
+#scenario h4 {
+    font-size:1.1em;
+}
+
+#scenario h5, h6 {
+    font-size:1em;
+}
+
+
+
+.enter_secret, .require_secret, .spoiler {
+    border:1px solid #000;
+    margin:0.5em;
+}
+
 
 .enter_secret {
     background: url(secret.png) no-repeat 5px center;
