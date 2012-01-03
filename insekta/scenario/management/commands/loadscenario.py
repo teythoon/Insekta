@@ -4,6 +4,7 @@ import os
 import json
 import subprocess
 import re
+from optparse import make_option
 
 import libvirt
 from django.core.management.base import BaseCommand, CommandError
@@ -16,6 +17,14 @@ CHUNK_SIZE = 8192
 _REQUIRED_KEYS = ['name', 'title', 'memory', 'secrets', 'image']
 
 class Command(BaseCommand):
+    option_list = BaseCommand.option_list + (
+        make_option('--skipupload',
+                    action='store_true',
+                    dest='skip_upload',
+                    default=False,
+                    help='Do not upload the scenario image'),
+    )
+
     args = '<scenario_path>'
     help = 'Loads a scenario into the database and storage pool'
     def handle(self, *args, **options):
@@ -74,10 +83,10 @@ class Command(BaseCommand):
         scenario_size = int(match.group(1))
 
         self._create_scenario(metadata, description, scenario_img,
-                              scenario_size)
+                              scenario_size, options)
 
     def _create_scenario(self, metadata, description, scenario_img,
-                         scenario_size):
+                         scenario_size, options):
         try:
             scenario = Scenario.objects.get(name=metadata['name'])
             was_enabled = scenario.enabled
@@ -106,40 +115,12 @@ class Command(BaseCommand):
 
         print('Storing image on all nodes:')
         for node in scenario.get_nodes():
-            try:
-                volume = scenario.get_volume(node)
-                volume.delete(flags=0)
-            except libvirt.libvirtError:
-                pass
-            
-            print('Creating volume on node {0} ...'.format(node))
-            pool = scenario.get_pool(node)
-            xml_desc = """
-            <volume>
-              <name>{0}</name>
-              <capacity>{1}</capacity>
-              <target>
-                <format type='qcow2' />
-              </target>
-            </volume>
-            """.format(scenario.name, scenario_size)
-            volume = pool.createXML(xml_desc, flags=0)
+            volume = self._update_volume(node, scenario, scenario_size)
 
-            print('Uploading image to this volume ...')
-            stream = connections[node].newStream(flags=0)
-            stream.upload(volume, offset=0, length=scenario_size, flags=0)
-            with open(scenario_img) as f_scenario:
-                while True:
-                    data = f_scenario.read(CHUNK_SIZE)
-                    if not data:
-                        stream.finish()
-                        break
-                    
-                    # Backward-compatibility for older libvirt versions
-                    try:
-                        stream.send(data)
-                    except TypeError:
-                        stream.send(data, len(data))
+            if not options['skip_upload']:
+                self._upload_image(node, scenario_img, scenario_size, volume)
+
+
             connections.close()
 
         if not created:
@@ -149,3 +130,39 @@ class Command(BaseCommand):
         enable_str = 'is' if scenario.enabled else 'is NOT'
         print('Done! Scenario {0} enabled'.format(enable_str))
 
+    def _update_volume(self, node, scenario, scenario_size):
+        try:
+            volume = scenario.get_volume(node)
+            volume.delete(flags=0)
+        except libvirt.libvirtError:
+            pass
+        
+        print('Creating volume on node {0} ...'.format(node))
+        pool = scenario.get_pool(node)
+        xml_desc = """
+        <volume>
+          <name>{0}</name>
+          <capacity>{1}</capacity>
+          <target>
+            <format type='qcow2' />
+          </target>
+        </volume>
+        """.format(scenario.name, scenario_size)
+        return pool.createXML(xml_desc, flags=0)
+
+    def _upload_image(self, node, scenario_img, scenario_size, volume):
+        print('Uploading image to this volume ...')
+        stream = connections[node].newStream(flags=0)
+        stream.upload(volume, offset=0, length=scenario_size, flags=0)
+        with open(scenario_img) as f_scenario:
+            while True:
+                data = f_scenario.read(CHUNK_SIZE)
+                if not data:
+                    stream.finish()
+                    break
+                
+                # Backward-compatibility for older libvirt versions
+                try:
+                    stream.send(data)
+                except TypeError:
+                    stream.send(data, len(data))
