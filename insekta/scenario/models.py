@@ -344,10 +344,27 @@ class SubmittedSecret(models.Model):
 
 class ScenarioGroup(models.Model):
     title = models.CharField(max_length=200)
-    scenarios = models.ManyToManyField(Scenario, related_name='groups')
+    scenarios = models.ManyToManyField(Scenario, related_name='groups',
+                                       through='ScenarioBelonging')
 
     def __unicode__(self):
-        self.title
+        return self.title
+
+    def get_scenarios_ordered(self):
+        return [sb.scenario for sb in ScenarioBelonging.objects.filter(
+                scenario_group=self).order_by('rank')]
+
+class ScenarioBelonging(models.Model):
+    scenario = models.ForeignKey(Scenario)
+    scenario_group = models.ForeignKey(ScenarioGroup)
+    rank = models.IntegerField()
+
+    class Meta:
+        unique_together = (('scenario', 'scenario_group'), )
+
+    def __unicode__(self):
+        return u'{0} belongs to group {1} with rank {2}'.format(unicode(
+                self.scenario), unicode(self.scenario_group), self.rank)
 
 def calculate_secret_token(user, secret):
     msg = '{0}:{1}'.format(user.pk, secret)

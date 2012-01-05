@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from insekta.scenario.models import (Scenario, Secret, ScenarioRun,
-                                     SubmittedSecret, ScenarioGroup)
+                                     SubmittedSecret, ScenarioGroup,
+                                     ScenarioBelonging)
 
 class SecretInline(admin.TabularInline):
     model = Secret
@@ -35,7 +36,14 @@ class SubmittedSecretAdmin(admin.ModelAdmin):
     list_display = ('user', secret, secret_scenario_title)
 
 
+class ScenarioBelongingInline(admin.TabularInline):
+    model = ScenarioBelonging
+    ordering = ('rank', )
+
+class ScenarioGroupAdmin(admin.ModelAdmin):
+    inlines = [ScenarioBelongingInline]
+
 admin.site.register(Scenario, ScenarioAdmin)
 admin.site.register(ScenarioRun, ScenarioRunAdmin)
 admin.site.register(SubmittedSecret, SubmittedSecretAdmin)
-admin.site.register(ScenarioGroup)
+admin.site.register(ScenarioGroup, ScenarioGroupAdmin)
