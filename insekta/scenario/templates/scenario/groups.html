@@ -5,4 +5,21 @@
 
 {% block content %}
 <h1>{% trans "Scenario groups" %}</h1>
+
+{% if scenario_group_list %}
+{% for scenario_group in scenario_group_list %}
+{% if scenario_group.scenario_list %}
+<div class="scenario_group">
+<h2>{{ scenario_group.title }}</h2>
+<ul>
+{% for scenario in scenario_group.scenario_list %}
+<li><a href="{% url scenario.show scenario.name %}">{{ scenario.title }}</a></li>
+{% endfor %}
+<ul>
+</div>
+{% endif %} {% comment %}scenario list not empty{% endcomment %}
+{% endfor %} {% comment %}scenario group list{% endcomment %}
+{% else %}
+<p>{% trans "There are no scenario groups." %}</p>
+{% endif %}
 {% endblock %}

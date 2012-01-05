@@ -1,3 +1,5 @@
+from operator import attrgetter
+
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.http import (HttpResponse, HttpResponseBadRequest,
@@ -10,6 +12,7 @@ from django.middleware.csrf import get_token
 from django import forms
 
 from insekta.scenario.models import (Scenario, ScenarioRun, RunTaskQueue,
+                                     ScenarioGroup, ScenarioBelonging,
                                      InvalidSecret, calculate_secret_token,
                                      AVAILABLE_TASKS)
 from insekta.scenario.creole import render_scenario
@@ -25,8 +28,27 @@ def scenario_home(request):
 @login_required
 def scenario_groups(request):
     """Show an overview of the scenarios in groups."""
-    return TemplateResponse(request, 'scenario/groups.html', {
 
+    # Build a dctionary for scenario groups with pk as key.
+    # Attach attribute scenario_list to scenario group
+    groups = {}
+    for scenario_group in ScenarioGroup.objects.all():
+        scenario_group.scenario_list = []
+        groups[scenario_group.pk] = scenario_group
+
+    # Attach attribute "rank" to scenarios and put them into
+    # scenario group's scenario_list
+    for belonging in  ScenarioBelonging.objects.select_related('scenario'):
+        scenario_list = groups[belonging.scenario_group.pk].scenario_list
+        belonging.scenario.rank = belonging.rank
+        scenario_list.append(belonging.scenario)
+
+    # Sort all scenario_lists by rank
+    for group in groups.itervalues():
+        group.scenario_list.sort(key=attrgetter('rank'))
+
+    return TemplateResponse(request, 'scenario/groups.html', {
+        'scenario_group_list': groups.values() 
     })
 
 @login_required

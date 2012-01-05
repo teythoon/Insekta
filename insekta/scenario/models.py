@@ -350,10 +350,6 @@ class ScenarioGroup(models.Model):
     def __unicode__(self):
         return self.title
 
-    def get_scenarios_ordered(self):
-        return [sb.scenario for sb in ScenarioBelonging.objects.filter(
-                scenario_group=self).order_by('rank')]
-
 class ScenarioBelonging(models.Model):
     scenario = models.ForeignKey(Scenario)
     scenario_group = models.ForeignKey(ScenarioGroup)
