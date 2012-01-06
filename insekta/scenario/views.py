@@ -22,7 +22,8 @@ def scenario_home(request):
     """Show an users running/suspended vms and other informations."""
     return TemplateResponse(request, 'scenario/home.html', {
         'scenario_run_list': ScenarioRun.objects.select_related().filter(
-                user=request.user)
+                user=request.user),
+        'has_valid_cert': request.user.certificate.is_valid()
     })
 
 @login_required

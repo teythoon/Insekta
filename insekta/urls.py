@@ -8,6 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', lambda request: redirect(reverse('scenario.home'))),
     url(r'^scenario/', include('insekta.scenario.urls')),
+    url(r'^certificate/', include('insekta.pki.urls')),
     
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),

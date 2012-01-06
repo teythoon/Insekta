@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Certificate" %}{% endblock %}
+
+{% block content %}
+<h1>Certificate home</h1>
+{% if certificate.is_valid %}
+<h2>{% trans "Your certificate" %}</h2>
+<pre>
+{{ certificate.certificate }}
+</pre>
+<p><a href="{% url pki.download_cert %}">{% trans "Download certificate with VPN setup instructions." %}</a></p>
+{% else %}
+<h2>Generate certificate</h2>
+<form method="post" action="{% url pki.home %}">
+{% csrf_token %}
+<p>{% trans "Paste your CSR (Certificate Signing Request) into the following box" %}</p>
+{{ csr_form.csr.errors }}
+<p>{{ csr_form.csr }}</p>
+<p><input type="submit" value="{% trans 'Generate certificate' %}" /></p>
+</form>
+{% endif %}
+{% endblock %}

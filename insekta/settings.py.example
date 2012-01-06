@@ -164,3 +164,6 @@ LIBVIRT_STORAGE_POOLS = {
 
 VM_IP_BLOCKS = ['192.168.0.0/24']
 VM_MAC_OUI = '52:54:00'
+
+PKI_CA_KEYFILE = os.path.join(ROOT, 'ca.key')
+PKI_CA_CERTFILE = os.path.join(ROOT, 'ca.crt')

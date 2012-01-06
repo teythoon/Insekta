@@ -6,6 +6,7 @@
 {% block content %}
 <h1>{% blocktrans with username=user.username %}Welcome, {{ username}}!{% endblocktrans %}</h1>
 
+<h2>{% trans "Running scenarios" %}</h2>
 {% if scenario_run_list %}
 <table class="data-table">
     <tr>
@@ -24,6 +25,15 @@
 </table>
 {% else %}
 <p>{% trans "You have no running scenarios." %}</p>
+{% endif %}
+
+{% if not has_valid_cert %}
+<h2>{% trans "Certificate generation for VPN" %}</h2>
+<p><strong>{% trans "Please create a valid certificate for VPN setup." %}</strong></p>
+<p><a href="{% url pki.home %}">{% trans "Create certificate" %}</a></p>
+{% else %}
+<h2>{% trans "Certificate and VPN instructions" %}</h2>
+<p><a href="{% url pki.home %}">{% trans "View certificate page" %}</a></p>
 {% endif %}
 
 {% endblock content %}
