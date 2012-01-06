@@ -12,6 +12,7 @@ from django.conf import settings
 
 from insekta.scenario.models import Scenario, Secret
 from insekta.common.virt import connections
+from insekta.common.misc import progress_bar
 
 CHUNK_SIZE = 8192
 _REQUIRED_KEYS = ['name', 'title', 'memory', 'secrets', 'image']
@@ -154,6 +155,8 @@ class Command(BaseCommand):
         print('Uploading image to this volume ...')
         stream = connections[node].newStream(flags=0)
         stream.upload(volume, offset=0, length=scenario_size, flags=0)
+        progress = progress_bar(os.stat(scenario_img).st_size)
+        data_sent = 0
         with open(scenario_img) as f_scenario:
             while True:
                 data = f_scenario.read(CHUNK_SIZE)
@@ -166,3 +169,7 @@ class Command(BaseCommand):
                     stream.send(data)
                 except TypeError:
                     stream.send(data, len(data))
+
+                data_sent += len(data)
+                progress.send(data_sent)
+        print()
