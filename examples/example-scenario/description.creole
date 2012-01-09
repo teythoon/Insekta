@@ -1,0 +1,19 @@
+Welcome to the example scenario!
+
+== About this file ==
+This file contains [[Creole Markup|http://wikicreole.org]] and describes the
+scenario. You can use macros like //enterSecret// and //requireSecret// to
+ask the user for a secret or to require a specific secret to be submitted
+to show some content of the scenario description
+
+=== Example usage ===
+
+<<enterSecret 'list'>>
+Provide some hint to the secret here. This text will be shown together with a
+form to enter the secret. It will only accept the secret 'list'.
+<</enterSecret>>
+
+<<requireSecret 'list'>>
+This text won't be shown until the user enters the secret 'list' in some for
+for this secret and submits it.
+<</requireSecret>>

@@ -1,0 +1,7 @@
+{
+    "image": "scenario.qcow2",
+    "name": "example",
+    "title": "Example scenario for Insekta",
+    "memory": 128,
+    "secrets": ["list", "all", "secrets"]
+}
