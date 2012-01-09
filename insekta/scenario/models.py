@@ -279,14 +279,14 @@ class ScenarioRun(models.Model):
             </disk>
             <interface type='bridge'>
               <mac address='{mac}' />
-              <source bridge='br0' />
+              <source bridge='{bridge}' />
             </interface>
             <graphics type='vnc' port='-1' autoport='yes' />
           </devices>
         </domain>
         """.format(id=self.pk, user=self.user.username, title=scenario.title,
                    memory=scenario.memory * 1024, volume=volume.path(),
-                   mac=self.address.mac)
+                   mac=self.address.mac, bridge=settings.VM_BRIDGE)
     
     def _do_vm_action(self, action, new_state):
         """Do an action on the virtual machine.
