@@ -1,3 +1,4 @@
+import re
 from genshi.builder import tag
 from genshi import Markup
 from creoleparser import Parser, create_dialect, creole11_base
@@ -114,6 +115,10 @@ def code(macro, environ, lang='text', linenos=False):
     formatter = HtmlFormatter(linenos=linenos == 'yes')
     return Markup(highlight(macro.body, lexer, formatter))
 
+comment_re = re.compile('\{#(.+?)#\}')
+def comment(match, environ):
+    return Markup()
+
 _non_bodied_macros = {'ip': ip}
 _bodied_macros = {
     'enterSecret': enter_secret,
@@ -122,6 +127,6 @@ _bodied_macros = {
     'code': code
 }
 _dialect = create_dialect(creole11_base, non_bodied_macros=_non_bodied_macros,
-        bodied_macros=_bodied_macros)
+        bodied_macros=_bodied_macros, custom_markup=[(comment_re, comment)])
 
 render_scenario = Parser(dialect=_dialect, method='xhtml')
