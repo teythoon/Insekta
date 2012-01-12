@@ -10,7 +10,7 @@ class dblock(object):
             # PostgreSQL is the preferred deployment setup, for
             # local testing with sqlite we need no locking
             return
-        c = connection.cusor()
+        c = connection.cursor()
         c.execute('SELECT pg_advisory_lock({0:d}, {1:d});'.format(
                 self.lock_type, self.obj_pk))
     
