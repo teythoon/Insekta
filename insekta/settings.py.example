@@ -125,6 +125,7 @@ INSTALLED_APPS = (
     'insekta.registration',
     'insekta.scenario',
     'insekta.network',
+    'insekta.pki',
 )
 
 # A sample logging configuration. The only tangible logging
