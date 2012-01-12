@@ -24,3 +24,18 @@ def iterate_ips(blocks):
         min_ip = ip_to_int(ip)
         for i in xrange(num_ips):
             yield int_to_ip(min_ip + i)
+
+def iterate_nets(blocks, net_size):
+    """Iterate over all nets inside some IP blocks."""
+    if not hasattr(blocks, '__iter__'):
+        blocks = [blocks]
+
+    next_net_offset = 2**(32 - net_size)
+    for block in blocks:
+        ip, cidr = block.split('/')
+        max_net_ip = ip_to_int(ip) + 2**(32 - int(cidr, 10))
+        net_ip_int = ip_to_int(ip)
+        while net_ip_int < max_net_ip:
+            yield net_ip_int
+            net_ip_int += next_net_offset
+

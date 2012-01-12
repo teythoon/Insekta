@@ -4,7 +4,7 @@ from django.db import models, transaction, IntegrityError
 from django.conf import settings
 
 from insekta.common.dblock import dblock
-from insekta.network.utils import iterate_ips
+from insekta.network.utils import iterate_nets, int_to_ip
 
 LOCK_NETWORK_ADDRESS = 947295
 
@@ -30,13 +30,17 @@ class AddressManager(models.Manager):
 
         new_addresses = []
         oui = getattr(settings, 'VM_MAC_OUI', '52:54:00')
-        try:
-            ip_blocks = settings.VM_IP_BLOCKS
-        except AttributeError:
-            raise NetworkError('Please set VM_IP_BLOCKS in settings.py')
         
-        for ip in iterate_ips(ip_blocks):
+        if not hasattr(settings, 'VM_IP_BLOCKS'):
+            raise NetworkError('Please set VM_IP_BLOCKS in settings.py')
+
+        if not hasattr(settings, 'VM_NET_SIZE'):
+            raise NetworkError('Please set VM_NET_SIZE in settings.py')
+       
+        vm_nets = iterate_nets(settings.VM_IP_BLOCKS, settings.VM_NET_SIZE)
+        for net_ip_int in vm_nets:
             mac = ':'.join((oui, random_16(), random_16(), random_16()))
+            ip = int_to_ip(net_ip_int + 2)
             try:
                 new_addresses.append(Address.objects.create(mac=mac, ip=ip))
             except IntegrityError:
