@@ -163,7 +163,7 @@ LIBVIRT_STORAGE_POOLS = {
     'qemu': 'default'
 }
 
-VM_IP_BLOCKS = ['192.168.0.0/24']
+VM_IP_BLOCK = '192.168.0.0/24'
 VM_MAC_OUI = '52:54:00'
 VM_NET_SIZE = 28
 VM_BRIDGE = 'br-scn0'

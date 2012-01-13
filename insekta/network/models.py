@@ -31,13 +31,13 @@ class AddressManager(models.Manager):
         new_addresses = []
         oui = getattr(settings, 'VM_MAC_OUI', '52:54:00')
         
-        if not hasattr(settings, 'VM_IP_BLOCKS'):
-            raise NetworkError('Please set VM_IP_BLOCKS in settings.py')
+        if not hasattr(settings, 'VM_IP_BLOCK'):
+            raise NetworkError('Please set VM_IP_BLOCK in settings.py')
 
         if not hasattr(settings, 'VM_NET_SIZE'):
             raise NetworkError('Please set VM_NET_SIZE in settings.py')
        
-        vm_nets = iterate_nets(settings.VM_IP_BLOCKS, settings.VM_NET_SIZE)
+        vm_nets = iterate_nets(settings.VM_IP_BLOCK, settings.VM_NET_SIZE)
         for net_ip_int in vm_nets:
             mac = ':'.join((oui, random_16(), random_16(), random_16()))
             ip = int_to_ip(net_ip_int + 2)

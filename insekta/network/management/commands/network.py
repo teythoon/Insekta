@@ -25,12 +25,16 @@ class Command(BaseCommand):
             for addr in Address.objects.all():
                 print('{0}\t{1}'.format(addr.mac, addr.ip))
         elif args[0] == 'dhcpconf':
+            subnet_ip, cidr = settings.VM_IP_BLOCK.split('/')
+            netmask = int_to_ip(cidr_to_netmask(int(cidr)))
+            print('subnet {0} netmask {1} {{'.format(subnet_ip, netmask))
             for addr in Address.objects.all():
-                print('host vm{0} {{'.format(addr.pk))
-                print('\thardware ethernet {0}'.format(addr.mac))
-                print('\tfixed-address {0}'.format(addr.ip))
+                print('\thost vm{0} {{'.format(addr.pk))
+                print('\t\thardware ethernet {0};'.format(addr.mac))
+                print('\t\tfixed-address {0};'.format(addr.ip))
                 subnet_mask = int_to_ip(cidr_to_netmask(settings.VM_NET_SIZE))
-                print('\toption subnet-mask {0}'.format(subnet_mask))
+                print('\t\toption subnet-mask {0};'.format(subnet_mask))
                 router_ip = int_to_ip(ip_to_int(addr.ip) - 1)
-                print('\toption routers {0}'.format(router_ip))
-                print('}')
+                print('\t\toption routers {0};'.format(router_ip))
+                print('\t}')
+            print('}')
