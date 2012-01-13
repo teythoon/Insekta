@@ -1,9 +1,10 @@
 from __future__ import print_function
 
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
 
 from insekta.network.models import Address
-from insekta.network.utils import ip_to_int, int_to_ip
+from insekta.network.utils import ip_to_int, int_to_ip, cidr_to_netmask
 
 class Command(BaseCommand):
     args = '<fill [amount=100] | dump | dhcpconf>'
@@ -28,7 +29,7 @@ class Command(BaseCommand):
                 print('host vm{0} {{'.format(addr.pk))
                 print('\thardware ethernet {0}'.format(addr.mac))
                 print('\tfixed-address {0}'.format(addr.ip))
-                subnet_mask = '255.255.255.240' # FIXME: Remove hardcoded value
+                subnet_mask = int_to_ip(cidr_to_netmask(settings.VM_NET_SIZE))
                 print('\toption subnet-mask {0}'.format(subnet_mask))
                 router_ip = int_to_ip(ip_to_int(addr.ip) - 1)
                 print('\toption routers {0}'.format(router_ip))

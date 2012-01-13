@@ -13,6 +13,9 @@ def int_to_ip(ip_int):
         ip_int >>= 8
     return '.'.join(octets)
 
+def cidr_to_netmask(cidr):
+    return 0xffffffff ^ (1 << 32 - cidr) - 1
+
 def iterate_ips(blocks):
     """Iterate over all IPs inside some IP blocks."""
     if not hasattr(blocks, '__iter__'):
@@ -20,20 +23,20 @@ def iterate_ips(blocks):
 
     for block in blocks:
         ip, cidr = block.split('/')
-        num_ips = 2**(32 - int(cidr, 10))
+        num_ips = 1 << (32 - int(cidr, 10))
         min_ip = ip_to_int(ip)
         for i in xrange(num_ips):
-            yield int_to_ip(min_ip + i)
+            yield min_ip + i
 
 def iterate_nets(blocks, net_size):
     """Iterate over all nets inside some IP blocks."""
     if not hasattr(blocks, '__iter__'):
         blocks = [blocks]
 
-    next_net_offset = 2**(32 - net_size)
+    next_net_offset = 1 << (32 - net_size)
     for block in blocks:
         ip, cidr = block.split('/')
-        max_net_ip = ip_to_int(ip) + 2**(32 - int(cidr, 10))
+        max_net_ip = ip_to_int(ip) + (1 << (32 - int(cidr, 10)))
         net_ip_int = ip_to_int(ip)
         while net_ip_int < max_net_ip:
             yield net_ip_int
