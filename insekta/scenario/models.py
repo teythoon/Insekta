@@ -275,11 +275,12 @@ class ScenarioRun(models.Model):
             <disk type='file' device='disk'>
               <driver name='qemu' type='qcow2' />
               <source file='{volume}' />
-              <target dev='hda' />
+              <target dev='vda' bus='virtio' />
             </disk>
             <interface type='bridge'>
               <mac address='{mac}' />
               <source bridge='{bridge}' />
+              <model type='virtio' />
             </interface>
             <graphics type='vnc' port='-1' autoport='yes' />
           </devices>
