@@ -1,4 +1,5 @@
 from zipfile import ZipFile
+from contextlib import closing
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -46,7 +47,7 @@ def home(request):
 @user_passes_test(lambda u: u.certificate.is_valid())
 def download_cert(request):
     zip_content = StringIO()
-    with ZipFile(zip_content, 'w') as zip_file:
+    with closing(ZipFile(zip_content, 'w')) as zip_file:
         cert_content = request.user.certificate.certificate.encode('utf-8')
         zip_file.writestr('certificate.pem', cert_content)
     return HttpResponse(zip_content.getvalue(),
