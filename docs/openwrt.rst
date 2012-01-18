@@ -93,3 +93,26 @@ Saving the changes
 
    % ./scripts/env save
 
+Creating an image
+-----------------
+
+The ``./scripts/env`` script stores the image configuration and files
+below ``./files`` in a git repository. Let's make sure that we're in
+the template environment and create a new one.
+
+::
+
+   % ./scripts/env switch template
+   % ./scripts/env new unix_security_0x0002
+   Do you want to clone the current environment? (y/N): y<enter>
+
+You can now use ``make menuconfig`` to install any packages needed for
+your scenario and put files into ``./files``.
+
+::
+
+   % make
+   % make[1] world
+   [...]
+   % wc --bytes bin/x86/openwrt-x86-kvm_guest-combined-ext4.img.gz
+   4030079 bin/x86/openwrt-x86-kvm_guest-combined-ext4.img.gz
