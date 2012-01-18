@@ -21,8 +21,6 @@ We need to checkout OpenWRT and install a few build dependencies.
    % echo src-git packages git://nbd.name/packages.git > feeds.conf
    % ./scripts/feeds update
    % ./scripts/feeds install -a
-   % ./scripts/env new template
-   % make menuconfig
 
 The most likely reason for any issues you might encounter at this
 point are missing build dependencies. Install any missing packages and
@@ -35,6 +33,10 @@ Let's do some basic configuration of the image, stuff like target
 system, network configuration and package selection.
 
 ::
+
+   % ./scripts/env new template
+   % make menuconfig
+   [curses based configuration menu appears]
 
    Target System  ---> c86
    Subtarget  ---> KVM Guest
