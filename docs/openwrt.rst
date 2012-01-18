@@ -82,7 +82,7 @@ Personalizing the template
 
    % mkdir -p files/{etc/,root/.}ssh
    % for type in rsa dsa; do {
-        /usr/bin/ssh-keygen -N '' -t $type -f files/etc/ssh/ssh_host_${type}_key
+        /usr/bin/ssh-keygen -N '' -t "${type}" -f "files/etc/ssh/ssh_host_${type}_key"
      }; done
    % cat ~/.ssh/id_rsa.pub >> files/root/.ssh/authorized_keys
 
