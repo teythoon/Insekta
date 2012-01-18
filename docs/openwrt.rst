@@ -26,6 +26,17 @@ The most likely reason for any issues you might encounter at this
 point are missing build dependencies. Install any missing packages and
 update this document.
 
+Updating OpenWRT
+----------------
+
+To update your checkout, just run
+
+::
+
+   % cd openwrt
+   % git pull
+   % ./scripts/feeds update
+
 Template creation
 -----------------
 
