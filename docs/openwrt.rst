@@ -5,6 +5,9 @@ This document is written for debian like operating systems, if you use
 any other system you will have to install the equivalent packages for
 your distribution.
 
+Note that building OpenWRT requires at least 5 gigabytes of hard disk
+space and about two hours on a modest machine.
+
 Please run all these commands as a non privileged user.
 
 Initial setup
