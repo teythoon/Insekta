@@ -18,7 +18,7 @@ We need to checkout OpenWRT and install a few build dependencies.
 ::
 
    % sudo aptitude install build-essential zlib1g-dev libncurses-dev \
-                           git subversion gawk unzip flex
+                           git subversion gawk unzip flex gcc-multilib
    % git clone git://nbd.name/openwrt.git
    % cd openwrt
    % echo src-git packages git://nbd.name/packages.git > feeds.conf
@@ -52,7 +52,7 @@ system, network configuration and package selection.
    % make menuconfig
    [curses based configuration menu appears]
 
-   Target System  ---> c86
+   Target System  ---> x86
    Subtarget  ---> KVM Guest
    Target Images  --->
       [*] ext4
