@@ -13,7 +13,7 @@ Contents:
    
    intro
    installation
-   creating_scenarios
+   creating-scenarios
    openwrt-images
    debian-images
 
