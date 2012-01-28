@@ -1,16 +1,25 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load scenario_progress %}
+
 {% block title %}{% trans "All scenarios" %}{% endblock %}
 
 {% block content %}
 <h1>{% trans "All scenarios" %}</h1>
 
 {% if scenario_list %}
-<ul>
+<table>
+<tr>
+    <th>{% trans "Scenario" %}</th>
+    <th>{% trans "Submitted secrets" %}</th>
+</tr>
 {% for scenario in scenario_list %}
-<li><a href="{% url scenario.show scenario.name %}">{{ scenario.title }}</a></li>
+<tr>
+    <td><a href="{% url scenario.show scenario.name %}">{{ scenario.title }}</a></td>
+    <td>{% scenario_progress scenario.num_submitted_secrets scenario.num_secrets %}</td>
+</tr>
 {% endfor %}
-</ul>
+</table>
 {% else %}
 <p>{% trans "There are no scenarios." %}</p>
 {% endif %}

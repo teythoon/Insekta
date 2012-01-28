@@ -13,8 +13,8 @@ from django import forms
 
 from insekta.scenario.models import (Scenario, ScenarioRun, RunTaskQueue,
                                      ScenarioGroup, ScenarioBelonging,
-                                     InvalidSecret, calculate_secret_token,
-                                     AVAILABLE_TASKS)
+                                     UserProgress, InvalidSecret,
+                                     calculate_secret_token, AVAILABLE_TASKS)
 from insekta.scenario.creole import render_scenario
 
 @login_required
@@ -30,6 +30,8 @@ def scenario_home(request):
 def scenario_groups(request):
     """Show an overview of the scenarios in groups."""
 
+    all_scenarios = []
+
     # Build a dctionary for scenario groups with pk as key.
     # Attach attribute scenario_list to scenario group
     groups = {}
@@ -40,13 +42,19 @@ def scenario_groups(request):
     # Attach attribute "rank" to scenarios and put them into
     # scenario group's scenario_list
     for belonging in  ScenarioBelonging.objects.select_related('scenario'):
+        scenario = belonging.scenario
+        if not scenario.enabled:
+            continue
         scenario_list = groups[belonging.scenario_group.pk].scenario_list
-        belonging.scenario.rank = belonging.rank
-        scenario_list.append(belonging.scenario)
+        scenario.rank = belonging.rank
+        scenario_list.append(scenario)
+        all_scenarios.append(scenario)
 
     # Sort all scenario_lists by rank
     for group in groups.itervalues():
         group.scenario_list.sort(key=attrgetter('rank'))
+    
+    _attach_user_progress(all_scenarios, request.user)
 
     return TemplateResponse(request, 'scenario/groups.html', {
         'scenario_group_list': groups.values() 
@@ -55,9 +63,22 @@ def scenario_groups(request):
 @login_required
 def all_scenarios(request):
     """Show all scenarios as list."""
+    scenarios = list(Scenario.objects.filter(enabled=True))
     return TemplateResponse(request, 'scenario/all.html', {
-        'scenario_list': Scenario.objects.filter(enabled=True)
+        'scenario_list': _attach_user_progress(scenarios, request.user) 
     })
+
+def _attach_user_progress(scenarios, user):
+    """Attach attribute 'num_submitted_secrets' to all scenarios."""
+    user_progress = {}
+    for progress in UserProgress.objects.select_related('scenario').filter(
+                user=user):
+        user_progress[progress.scenario.pk] = progress.num_secrets
+
+    for scenario in scenarios:
+        scenario.num_submitted_secrets = user_progress.get(scenario.pk, 0)
+
+    return scenarios
 
 @login_required
 def show_scenario(request, scenario_name):

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load scenario_progress %}
 
 {% block title %}{% trans "Scenario groups" %}{% endblock %}
 
@@ -11,11 +12,18 @@
 {% if scenario_group.scenario_list %}
 <div class="scenario_group">
 <h2>{{ scenario_group.title }}</h2>
-<ul>
+<table>
+<tr>
+    <th>{% trans "Scenario" %}</th>
+    <th>{% trans "Submitted secrets" %}</th>
+</tr>
 {% for scenario in scenario_group.scenario_list %}
-<li><a href="{% url scenario.show scenario.name %}">{{ scenario.title }}</a></li>
+<tr>
+    <td><a href="{% url scenario.show scenario.name %}">{{ scenario.title }}</a></td>
+    <td>{% scenario_progress scenario.num_submitted_secrets  scenario.num_secrets %}</td>
+</tr>
 {% endfor %}
-<ul>
+<table>
 </div>
 {% endif %} {% comment %}scenario list not empty{% endcomment %}
 {% endfor %} {% comment %}scenario group list{% endcomment %}
