@@ -47,6 +47,7 @@ class Scenario(models.Model):
     hypervisor = models.CharField(max_length=10, default='qemu',
                                   choices=HYPERVISOR_CHOICES)
     description = models.TextField()
+    num_secrets = models.IntegerField()
     enabled = models.BooleanField(default=False)
 
     class Meta:

@@ -94,6 +94,7 @@ class Command(BaseCommand):
             scenario.title = metadata['title']
             scenario.memory = metadata['memory']
             scenario.description = description
+            scenario.num_secrets = len(metadata['secrets'])
             scenario.enabled = False
             created = False
             print('Updating scenario ...')
