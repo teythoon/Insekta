@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from insekta.scenario.models import (Scenario, Secret, ScenarioRun,
                                      SubmittedSecret, ScenarioGroup,
-                                     ScenarioBelonging)
+                                     ScenarioBelonging, UserProgress)
 
 class SecretInline(admin.TabularInline):
     model = Secret
@@ -43,7 +43,12 @@ class ScenarioBelongingInline(admin.TabularInline):
 class ScenarioGroupAdmin(admin.ModelAdmin):
     inlines = [ScenarioBelongingInline]
 
+
+class UserProgressAdmin(admin.ModelAdmin):
+    list_display = ('user', 'scenario', 'num_secrets')
+
 admin.site.register(Scenario, ScenarioAdmin)
 admin.site.register(ScenarioRun, ScenarioRunAdmin)
 admin.site.register(SubmittedSecret, SubmittedSecretAdmin)
 admin.site.register(ScenarioGroup, ScenarioGroupAdmin)
+admin.site.register(UserProgress, UserProgressAdmin)

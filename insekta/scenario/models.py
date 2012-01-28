@@ -4,6 +4,7 @@ import hashlib
 
 import libvirt
 from django.db import models
+from django.db.models.signals import post_save, post_delete
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
@@ -363,7 +364,28 @@ class ScenarioBelonging(models.Model):
         return u'{0} belongs to group {1} with rank {2}'.format(unicode(
                 self.scenario), unicode(self.scenario_group), self.rank)
 
+class UserProgress(models.Model):
+    user = models.ForeignKey(User)
+    scenario = models.ForeignKey(Scenario)
+    num_secrets = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return u'{0} submitted {1} secrets for {1}'.format(self.user,
+                self.num_secrets, self.scenario)
+
 def calculate_secret_token(user, secret):
     msg = '{0}:{1}'.format(user.pk, secret)
     hmac_gen = hmac.new(settings.SECRET_KEY, msg, hashlib.sha1)
     return hmac_gen.hexdigest()
+
+def _update_progress(sender, instance, **kwargs):
+    scenario = instance.secret.scenario
+    num_secrets = SubmittedSecret.objects.filter(user=instance.user,
+            secret__scenario=scenario).aggregate(c=models.Count('secret'))['c']
+    progress, _created = UserProgress.objects.get_or_create(user=instance.user,
+            scenario=scenario)
+    progress.num_secrets = num_secrets
+    progress.save()
+
+post_save.connect(_update_progress, SubmittedSecret)
+post_delete.connect(_update_progress, SubmittedSecret)
