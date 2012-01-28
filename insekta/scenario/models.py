@@ -366,7 +366,7 @@ class ScenarioBelonging(models.Model):
                 self.scenario), unicode(self.scenario_group), self.rank)
 
 class UserProgress(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, db_index=True)
     scenario = models.ForeignKey(Scenario)
     num_secrets = models.IntegerField(default=0)
 
