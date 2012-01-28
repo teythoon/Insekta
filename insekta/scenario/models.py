@@ -333,7 +333,7 @@ class Secret(models.Model):
         unique_together = (('scenario', 'secret'), )
 
     def __unicode__(self):
-        return self.secret
+        return u'{0}.{1}'.format(self.scenario.name, self.secret)
 
 class SubmittedSecret(models.Model):
     secret = models.ForeignKey(Secret)
