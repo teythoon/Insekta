@@ -62,3 +62,7 @@ ul.messages {
 #content {
     padding:0em 0em 0em 1em;
 }
+
+th {
+    text-align:left;
+}
