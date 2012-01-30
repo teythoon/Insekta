@@ -164,7 +164,7 @@ def submit_secret(request, scenario_name):
         scenario.submit_secret(request.user, request.POST.get('secret'),
                                request.POST.getlist('secret_token'))
     except InvalidSecret, e:
-        messages.error(request, str(e))
+        messages.error(request, unicode(e))
     else:
         messages.success(request, _('Congratulation! Your secret was valid.'))
 
