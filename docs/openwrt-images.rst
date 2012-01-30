@@ -119,3 +119,29 @@ your scenario and put files into ``./files``.
    [...]
    % wc --bytes bin/x86/openwrt-x86-kvm_guest-combined-ext4.img.gz
    4030079 bin/x86/openwrt-x86-kvm_guest-combined-ext4.img.gz
+
+Developing and testing your scenario
+------------------------------------
+
+Once your image is built it's time to boot it and to modify the
+configuration files relevant to your scenario.
+
+::
+
+   % zcat bin/x86/openwrt-x86-kvm_guest-combined-ext4.img.gz > /tmp/scenario.raw
+   % kvm -net nic,model=virtio -net user,hostfwd=tcp::2225-:22 \
+         -snapshot -drive file=/tmp/scenario.raw,if=virtio     \
+         -k en-us -m 32
+
+You can now use ``ssh root@localhost -p 2225`` to log on to your
+image. To make the configuration persistent, copy any files you
+modified to your ``files`` directory:
+
+::
+
+   % mkdir mnt
+   % sshfs -p 2225 root@localhost:/ mnt
+   % ls mnt
+   bin/  etc/  lost+found/  overlay/  rom/   sbin/  tmp/  var@
+   dev/  lib/  mnt/         proc/     root/  sys/   usr/  www/
+   % cp mnt/etc/sysctl.conf path/to/openwrt/files/etc
