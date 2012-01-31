@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django import forms
 from django.http import HttpResponse
+from django.conf import settings
 
 @login_required
 def home(request):
@@ -50,5 +51,7 @@ def download_cert(request):
     with closing(ZipFile(zip_content, 'w')) as zip_file:
         cert_content = request.user.certificate.certificate.encode('utf-8')
         zip_file.writestr('certificate.pem', cert_content)
+        zip_file.write(settings.PKI_CA_CERTFILE, 'ca.crt')
+        zip_file.write(settings.PKI_OPENVPN_CONFIG, 'client.conf')
     return HttpResponse(zip_content.getvalue(),
                         mimetype='application/x-zip-compressed')
