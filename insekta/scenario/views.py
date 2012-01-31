@@ -63,7 +63,7 @@ def scenario_groups(request):
 @login_required
 def all_scenarios(request):
     """Show all scenarios as list."""
-    scenarios = list(Scenario.objects.filter(enabled=True))
+    scenarios = list(Scenario.objects.filter(enabled=True).order_by('title'))
     return TemplateResponse(request, 'scenario/all.html', {
         'scenario_list': _attach_user_progress(scenarios, request.user) 
     })
