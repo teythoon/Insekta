@@ -88,20 +88,21 @@ class Command(BaseCommand):
 
     def _create_scenario(self, metadata, description, scenario_img,
                          scenario_size, options):
+        num_secrets = len(metadata['secrets'])
         try:
             scenario = Scenario.objects.get(name=metadata['name'])
             was_enabled = scenario.enabled
             scenario.title = metadata['title']
             scenario.memory = metadata['memory']
             scenario.description = description
-            scenario.num_secrets = len(metadata['secrets'])
+            scenario.num_secrets = num_secrets 
             scenario.enabled = False
             created = False
             print('Updating scenario ...')
         except Scenario.DoesNotExist:
             scenario = Scenario(name=metadata['name'], title=
                     metadata['title'], memory=metadata['memory'],
-                    description=description)
+                    description=description, num_secrets=num_secrets)
             created = True
             print('Creating scenario ...')
         
