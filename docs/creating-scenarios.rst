@@ -14,7 +14,7 @@ The directory structure will look like:
   * scenario.qcow2
   * metadata.json
   * description.creole
-  * static
+  * media
 
     * memory-layout.png
     * http-server.tar.gz
@@ -112,11 +112,20 @@ and ``spoiler``.
 
       <<spoiler>>This is *not* shown!<</spoiler>>
 
-static
-^^^^^^
+You can also link to other scenarios with creole's link syntax::
+   
+   If this is to boring, try [[advanced-buffer-overflows|the scenario with canaries]].
+   
+
+media
+^^^^^
 
 Put any files in this directory and you can reference them in your
-``description.creole``. They will be served via HTTP as static files.
+``description.creole`` like this::
+
+   Download the [[media:simple-buffer-overflow/http-server.tar.gz|HTTP server source code]].
+
+They will be served via HTTP as static files.
 
 
 Registering the scenario image
