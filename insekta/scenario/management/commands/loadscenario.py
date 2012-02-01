@@ -4,6 +4,7 @@ import os
 import json
 import subprocess
 import re
+import shutil
 from optparse import make_option
 
 import libvirt
@@ -83,11 +84,14 @@ class Command(BaseCommand):
        
         scenario_size = int(match.group(1))
 
+        # Directory containing static media files for the scenario
+        media_dir = os.path.join(scenario_dir, 'media')
+
         self._create_scenario(metadata, description, scenario_img,
-                              scenario_size, options)
+                              scenario_size, media_dir, options)
 
     def _create_scenario(self, metadata, description, scenario_img,
-                         scenario_size, options):
+                         scenario_size, media_dir, options):
         num_secrets = len(metadata['secrets'])
         try:
             scenario = Scenario.objects.get(name=metadata['name'])
@@ -115,6 +119,15 @@ class Command(BaseCommand):
 
         for secret in metadata['secrets']:
             Secret.objects.get_or_create(scenario=scenario, secret=secret)
+
+        print('Copying media files ...')
+        media_target = os.path.join(settings.MEDIA_ROOT, metadata['name'])
+        try:
+            shutil.rmtree(media_target)
+        except shutil.Error:
+            # If we create the scenario there is no old directory to remove
+            pass
+        shutil.copytree(media_dir, media_target)
 
         print('Storing image on all nodes:')
         for node in scenario.get_nodes():
