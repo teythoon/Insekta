@@ -3,6 +3,8 @@ from genshi.builder import tag
 from genshi import Markup
 from creoleparser import Parser, create_dialect, creole11_base
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
+from django.conf import settings
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
@@ -119,6 +121,15 @@ comment_re = re.compile('\{#(.+?)#\}')
 def comment(match, environ):
     return Markup()
 
+def wiki_link_cb(page_name):
+    if page_name.startswith('media:'):
+        return settings.MEDIA_URL + page_name.replace('media:', '', count=1)
+    else:
+        return reverse('scenario.show', (page_name, ))
+
+def wiki_image_cb(page_name):
+    return settings.MEDIA_URL + page_name
+
 _non_bodied_macros = {'ip': ip}
 _bodied_macros = {
     'enterSecret': enter_secret,
@@ -127,6 +138,7 @@ _bodied_macros = {
     'code': code
 }
 _dialect = create_dialect(creole11_base, non_bodied_macros=_non_bodied_macros,
-        bodied_macros=_bodied_macros, custom_markup=[(comment_re, comment)])
+        bodied_macros=_bodied_macros, custom_markup=[(comment_re, comment)],
+        wiki_links_path_func=[wiki_link_cb, wiki_image_cb])
 
 render_scenario = Parser(dialect=_dialect, method='xhtml')
