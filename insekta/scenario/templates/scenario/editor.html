@@ -24,11 +24,21 @@
         </td>
     </tr>
     <tr>
-        <th>{{ editor_form.all_secrets.label }}</th>
+        <th>{% trans "All secrets" %}</th>
         <th>{{ editor_form.submitted_secrets.label }}</th>
     </tr>
     <tr>
-        <td>{{ editor_form.all_secrets }}</td>
+        <td>
+            {% if secrets %}
+            <ul>
+                {% for secret in secrets %}
+                <li>{{ secret }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>{% trans "No secrets available." %}</p>
+            {% endif %}
+        </td>
         <td>{{ editor_form.submitted_secrets }}</td>
     </tr>
     <tr>

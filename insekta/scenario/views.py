@@ -16,6 +16,7 @@ from insekta.scenario.models import (Scenario, ScenarioRun, RunTaskQueue,
                                      UserProgress, InvalidSecret,
                                      calculate_secret_token, AVAILABLE_TASKS)
 from insekta.scenario.markup.creole import render_scenario
+from insekta.scenario.markup.parsesecrets import extract_secrets
 
 @login_required
 def scenario_home(request):
@@ -177,9 +178,6 @@ def editor(request):
         submitted_secrets = forms.CharField(label=_('Submitted secrets:'),
                 widget=forms.Textarea(attrs={'cols': 35, 'rows': 5}),
                 required=False)
-        all_secrets = forms.CharField(label=_('All secrets:'),
-                widget=forms.Textarea( attrs={'cols': 35, 'rows': 5}),
-                required=False)
         content = forms.CharField(label=_('Content:'),
                 widget=forms.Textarea(attrs={'cols': 80, 'rows': 30}),
                 required=False)
@@ -187,13 +185,15 @@ def editor(request):
     def parse_secrets(secrets):
         return [secret.strip() for secret in secrets.splitlines()]
 
+    secrets = None
     if request.method == 'POST':
         editor_form = EditorForm(request.POST)
         if editor_form.is_valid():
             data = editor_form.cleaned_data
+            secrets = extract_secrets(data['content'])
             environ = {
                 'submitted_secrets': parse_secrets(data['submitted_secrets']),
-                'all_secrets': parse_secrets(data['all_secrets']),
+                'all_secrets': secrets,
                 'secret_token_function': calculate_secret_token,
                 'user': request.user,
                 'enter_secret_target': 'javascript:return false;',
@@ -208,6 +208,7 @@ def editor(request):
     
     return TemplateResponse(request, 'scenario/editor.html', {
         'editor_form': editor_form,
-        'preview': preview
+        'preview': preview,
+        'secrets': secrets
     })
 
