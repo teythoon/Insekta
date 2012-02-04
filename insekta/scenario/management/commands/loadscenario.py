@@ -12,11 +12,12 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 from insekta.scenario.models import Scenario, Secret
+from insekta.scenario.markup.parsesecrets import extract_secrets
 from insekta.common.virt import connections
 from insekta.common.misc import progress_bar
 
 CHUNK_SIZE = 8192
-_REQUIRED_KEYS = ['name', 'title', 'memory', 'secrets', 'image']
+_REQUIRED_KEYS = ['name', 'title', 'memory', 'image']
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
@@ -52,12 +53,6 @@ class Command(BaseCommand):
                 raise CommandError('Metadata requires the key{0}'.format(
                         required_key))
        
-        # Validating secrets
-        secrets = metadata['secrets']
-        if (not isinstance(secrets, list) or not all(isinstance(x, basestring)
-                for x in secrets)):
-            raise CommandError('Secrets must be a list of strings')
-
         # Reading description
         description_file = os.path.join(scenario_dir, 'description.creole')
         try:
@@ -92,7 +87,8 @@ class Command(BaseCommand):
 
     def _create_scenario(self, metadata, description, scenario_img,
                          scenario_size, media_dir, options):
-        num_secrets = len(metadata['secrets'])
+        secrets = extract_secrets(description)
+        num_secrets = len(secrets)
         try:
             scenario = Scenario.objects.get(name=metadata['name'])
             was_enabled = scenario.enabled
@@ -114,10 +110,10 @@ class Command(BaseCommand):
 
         print('Importing secrets for scenario ...')
         for scenario_secret in Secret.objects.filter(scenario=scenario):
-            if scenario_secret.secret not in metadata['secrets']:
+            if scenario_secret.secret not in secrets:
                 scenario_secret.delete()
 
-        for secret in metadata['secrets']:
+        for secret in secrets:
             Secret.objects.get_or_create(scenario=scenario, secret=secret)
 
         print('Copying media files ...')
@@ -131,13 +127,10 @@ class Command(BaseCommand):
 
         print('Storing image on all nodes:')
         for node in scenario.get_nodes():
-            volume = self._update_volume(node, scenario, scenario_size)
-
             if not options['skip_upload']:
+                volume = self._update_volume(node, scenario, scenario_size)
                 self._upload_image(node, scenario_img, scenario_size, volume)
-
-
-            connections.close()
+                connections.close()
 
         if not created:
             scenario.enabled = was_enabled
