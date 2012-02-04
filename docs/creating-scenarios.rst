@@ -116,6 +116,9 @@ Put any files in this directory and you can reference them in your
 
    Download the [[media:simple-buffer-overflow/http-server.tar.gz|HTTP server source code]].
 
+   See the following image about the layout of the stack:
+   {{simple-buffer-overflows/stack.png|Layout of the stack}}
+
 They will be served via HTTP as static files.
 
 
