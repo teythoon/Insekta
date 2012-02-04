@@ -39,7 +39,6 @@ looks like::
        "name": "simple-buffer-overflow",
        "title": "Exploiting simple buffer overflows",
        "memory": 256,
-       "secrets": ["foo", "bar"]
    }
 
 Currently there are 5 directives:
@@ -56,14 +55,6 @@ Currently there are 5 directives:
 
 ``memory``
    The amount of memory in megabytes used by the virtual machine.
-
-``secrets``
-   A secret is some token that needs to be stolen in order to solve a
-   scenario. ``secrets`` is a list of strings with those tokens. If a hacker
-   collects all secrets, the scenario is solved.
-
-   Secrets can also be used to unlock certain parts of the description using
-   the ``requireSecret`` macro.
 
 description.creole
 ^^^^^^^^^^^^^^^^^^
