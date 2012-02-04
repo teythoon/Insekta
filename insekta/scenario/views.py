@@ -15,7 +15,7 @@ from insekta.scenario.models import (Scenario, ScenarioRun, RunTaskQueue,
                                      ScenarioGroup, ScenarioBelonging,
                                      UserProgress, InvalidSecret,
                                      calculate_secret_token, AVAILABLE_TASKS)
-from insekta.scenario.creole import render_scenario
+from insekta.scenario.markup.creole import render_scenario
 
 @login_required
 def scenario_home(request):

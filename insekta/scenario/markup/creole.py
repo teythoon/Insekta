@@ -9,6 +9,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
+from insekta.scenario.markup.highlight import highlight_parts
 
 def enter_secret(macro, environ, *secrets):
     """Macro for entering a secret. Takes a several secrets as args.
@@ -109,6 +110,7 @@ def ip(macro, environ):
     return tag.span(ip, class_='ip')
 
 def code(macro, environ, lang='text', linenos=False):
+    """Macro for syntax highlighting using pygments."""
     try:
         lexer = get_lexer_by_name(lang)
     except ClassNotFound:
@@ -116,6 +118,37 @@ def code(macro, environ, lang='text', linenos=False):
                        class_='error')
     formatter = HtmlFormatter(linenos=linenos == 'yes')
     return Markup(highlight(macro.body, lexer, formatter))
+
+_highlight_colors = {
+    '!': '#d00',
+    '^': '#00d',
+    '~': '#d50',
+    '-': '#0dd'
+}
+color_re = re.compile('^#[0-9A-Fa-f]{3}([0-9A-Fa-f]{3})?$')
+def color(macro, environ, color):
+    """Macro for coloring text. Supports also highlight chars as color."""
+    color = _highlight_colors.get(color, color)
+    # Prevent against CSS injections.
+    if not (color.isalpha() or color_re.match(color)):
+        color = 'black'
+    container = tag.p if macro.isblock else tag.span
+    return container(macro.parsed_body(), style='color:{0};'.format(color))
+
+def highlight_(macro, environ):
+    """Macro for highlighting some parts using special markup::
+       
+       Lorem ipsum dolor si amet
+             ^^^^^       ^^
+       consectetur adipiscing elit
+       Mauris ac magna a nisl ornare
+              ^^^^^^^^   ^^^^
+    """
+    def marking(some_str, char):
+        return '<<color {0}>>**{1}**<</color>>'.format(char, some_str)
+
+    return highlight_parts(macro.body, marking)
+
 
 comment_re = re.compile('\{#(.+?)#\}')
 def comment(match, environ):
@@ -135,7 +168,9 @@ _bodied_macros = {
     'enterSecret': enter_secret,
     'requireSecret': require_secret,
     'spoiler': spoiler,
-    'code': code
+    'code': code,
+    'color': color,
+    'highlight': highlight_
 }
 _dialect = create_dialect(creole11_base, non_bodied_macros=_non_bodied_macros,
         bodied_macros=_bodied_macros, custom_markup=[(comment_re, comment)],
