@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-02 21:01+0100\n"
-"PO-Revision-Date: 2012-01-02 21:04+0100\n"
+"POT-Creation-Date: 2012-02-05 18:49+0100\n"
+"PO-Revision-Date: 2012-02-05 18:54+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
 "Language: \n"
@@ -25,14 +25,14 @@ msgid "Home"
 msgstr "Start"
 
 #: common/templates/base.html:20
-#: scenario/templates/scenario/groups.html:4
-#: scenario/templates/scenario/groups.html:7
+#: scenario/templates/scenario/groups.html:5
+#: scenario/templates/scenario/groups.html:8
 msgid "Scenario groups"
 msgstr "Szenariogruppen"
 
 #: common/templates/base.html:21
-#: scenario/templates/scenario/all.html:3
-#: scenario/templates/scenario/all.html:6
+#: scenario/templates/scenario/all.html:5
+#: scenario/templates/scenario/all.html:8
 msgid "All scenarios"
 msgstr "Alle Szenarien"
 
@@ -54,95 +54,166 @@ msgstr "Ausloggen"
 msgid "Login"
 msgstr "Einloggen"
 
+#: pki/views.py:30
+msgid "Invalid CSR."
+msgstr "Ungültiges CSR."
+
+#: pki/templates/pki/home.html:4
+msgid "Certificate"
+msgstr "Zertifikat"
+
+#: pki/templates/pki/home.html:9
+msgid "Your certificate"
+msgstr "Dein Zertifikat"
+
+#: pki/templates/pki/home.html:13
+msgid "Download certificate with VPN setup instructions."
+msgstr "Zertifikat mit VPN-Anleitung herunterladen."
+
+#: pki/templates/pki/home.html:18
+msgid "Paste your CSR (Certificate Signing Request) into the following box"
+msgstr "Füge dein CSR (Certificate Signing Request) in das folgende Feld ein"
+
+#: pki/templates/pki/home.html:21
+msgid "Generate certificate"
+msgstr "Zertifikat erzeugen"
+
 #: registration/templates/registration/login.html:8
 msgid "Your username and password didn't match. Please try again."
 msgstr "Dein Benutzername oder Passwort stimmt nicht. Bitte versuche es erneut."
 
-#: scenario/creole.py:69
-msgid "Enter secret:"
-msgstr "Gib das Geheimnis ein:"
-
-#: scenario/creole.py:71
-msgid "Submit"
-msgstr "Einreichen"
-
-#: scenario/creole.py:92
-msgid "Here be dragons."
-msgstr "Here be dragons."
-
-#: scenario/creole.py:93
-msgid "This content is hidden, you need to submit a specific secret in order to show it."
-msgstr "Der Inhalt ist versteckt, du musst ein bestimmtes Geheimnis einreichen um es anzuzeigen."
-
-#: scenario/creole.py:112
-msgid "No such language: {lang}"
-msgstr "Die Sprache \"{lang}\" existiert nicht"
-
-#: scenario/models.py:53
+#: scenario/models.py:55
 msgid "Can view the scenario editor"
 msgstr "Kann Szenarien-Editor sehen"
 
-#: scenario/models.py:86
-#: scenario/models.py:90
+#: scenario/models.py:88
+#: scenario/models.py:92
 msgid "This secret is invalid!"
 msgstr "Dein Geheimnis ist ungültig!"
 
-#: scenario/models.py:93
+#: scenario/models.py:95
 msgid "This secret was already submitted!"
 msgstr "Dein Geheimnis wurde bereits eingericht."
 
-#: scenario/views.py:111
+#: scenario/views.py:163
 msgid "Task was received and will be executed."
 msgstr "Die Aufgabe wurde empfangen und wird ausgeführt."
 
-#: scenario/views.py:125
+#: scenario/views.py:177
 msgid "Congratulation! Your secret was valid."
 msgstr "Gratulation! Dein Geheimnis war gültig."
 
-#: scenario/views.py:133
+#: scenario/views.py:185
 msgid "Submitted secrets:"
 msgstr "Eingereichte Geheimnisse:"
 
-#: scenario/views.py:136
-msgid "All secrets:"
-msgstr "Alle Geheimnisse:"
-
-#: scenario/views.py:139
+#: scenario/views.py:188
 msgid "Content:"
 msgstr "Inhalt:"
 
-#: scenario/templates/scenario/all.html:15
-msgid "There are no scenarios."
-msgstr "Es gibt keine Szenarien."
+#: scenario/markup/creole.py:73
+msgid "Enter secret:"
+msgstr "Gib das Geheimnis ein:"
 
+#: scenario/markup/creole.py:75
+msgid "Submit"
+msgstr "Einreichen"
+
+#: scenario/markup/creole.py:96
+msgid "Here be dragons."
+msgstr "Here be dragons."
+
+#: scenario/markup/creole.py:97
+msgid "This content is hidden, you need to submit a specific secret in order to show it."
+msgstr "Der Inhalt ist versteckt, du musst ein bestimmtes Geheimnis einreichen um es anzuzeigen."
+
+#: scenario/markup/creole.py:117
+msgid "No such language: {lang}"
+msgstr "Die Sprache \"{lang}\" existiert nicht"
+
+#: scenario/templates/scenario/all.html:13
 #: scenario/templates/scenario/editor.html:19
-#: scenario/templates/scenario/home.html:12
+#: scenario/templates/scenario/groups.html:17
+#: scenario/templates/scenario/home.html:13
 msgid "Scenario"
 msgstr "Szenario"
 
+#: scenario/templates/scenario/all.html:14
+#: scenario/templates/scenario/groups.html:18
+msgid "Submitted secrets"
+msgstr "Eingereichte Geheimnisse"
+
+#: scenario/templates/scenario/all.html:24
+msgid "There are no scenarios."
+msgstr "Es gibt keine Szenarien."
+
 #: scenario/templates/scenario/editor.html:23
-#: scenario/templates/scenario/editor.html:42
+#: scenario/templates/scenario/editor.html:52
 msgid "Preview"
 msgstr "Vorschau"
+
+#: scenario/templates/scenario/editor.html:27
+msgid "All secrets"
+msgstr "Alle Geheimnisse"
+
+#: scenario/templates/scenario/editor.html:39
+msgid "No secrets available."
+msgstr "Keine Geheimnisse verfügbar."
+
+#: scenario/templates/scenario/groups.html:33
+msgid "There are no scenario groups."
+msgstr "Es existieren keine Szenario-Gruppen."
 
 #: scenario/templates/scenario/home.html:7
 #, python-format
 msgid "Welcome, %(username)s!"
 msgstr "Willkommen %(username)s!"
 
-#: scenario/templates/scenario/home.html:13
+#: scenario/templates/scenario/home.html:9
+msgid "Running scenarios"
+msgstr "Laufende Szenarien"
+
+#: scenario/templates/scenario/home.html:14
 msgid "VM state"
 msgstr "VM-Zustand"
 
-#: scenario/templates/scenario/home.html:26
+#: scenario/templates/scenario/home.html:27
 msgid "You have no running scenarios."
 msgstr "Du hast keine laufenden Szenarien."
 
-#: scenario/templates/scenario/show.html:9
+#: scenario/templates/scenario/home.html:31
+msgid "Certificate generation for VPN"
+msgstr "Zertifikatserstellung für das VPN"
+
+#: scenario/templates/scenario/home.html:32
+msgid "Please create a valid certificate for VPN setup."
+msgstr "Bitte erstelle ein gültiges Zertifikat für das VPN."
+
+#: scenario/templates/scenario/home.html:33
+msgid "Create certificate"
+msgstr "Zertifikat erstellen"
+
+#: scenario/templates/scenario/home.html:35
+msgid "Certificate and VPN instructions"
+msgstr "Zertifikat- und VPN-Anleitungen"
+
+#: scenario/templates/scenario/home.html:36
+msgid "View certificate page"
+msgstr "Zeige Zertifikatsseite"
+
+#: scenario/templates/scenario/show.html:13
+msgid "Scenario information"
+msgstr "Szenario-Informationen"
+
+#: scenario/templates/scenario/show.html:14
+msgid "Secrets:"
+msgstr "Geheimnisse:"
+
+#: scenario/templates/scenario/show.html:22
 msgid "Manage virtual machine"
 msgstr "Virtuelle Maschine verwalten"
 
-#: scenario/templates/scenario/show.html:11
+#: scenario/templates/scenario/show.html:24
 msgid "Please wait."
 msgstr "Bitte warte."
 
@@ -164,7 +235,7 @@ msgstr "Ausgeschaltet"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:11
 msgid "suspended (state)"
-msgstr "Im Ruhezustand"
+msgstr "Pausiert"
 
 #: scenario/templates/scenario/vmbox_dynamic.html:12
 msgid "disabled (state)"
