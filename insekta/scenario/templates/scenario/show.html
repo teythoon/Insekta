@@ -11,12 +11,33 @@
 <div class="box-shadow">
 <div class="box">
     <span class="box-title">{% trans "Scenario information" %}</span>
-    <p class="box-content section_title">{% trans "Secrets:" %}
+    <div class="box-content">
+    <p class="section_title">{% trans "Secrets:" %}
     {% scenario_progress num_submitted_secrets scenario.num_secrets %}
     </p>
+    
+    {% if vm_state == 'disabled' %}
+    <div class="vm_actions">
+    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
+            name="vmbox_form" class="vm_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create" />
+        <input type="submit" value="{% trans 'enable' %}" class="vm_enable" />
+    </form>
+    {% else %}
+    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
+            name="vmbox_form" class="vm_form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="destroy" />
+        <input type="submit" value="{% trans 'disable' %}" class="vm_disable" />
+    </form>
+    {% endif %}
+    </div>
+    </div>
 </div>
 </div>
 
+{% if vm_state != 'disabled' %}
 <div class="box-shadow">
 <div class="box" id="vmbox">
     <span class="box-title">{% trans "Manage virtual machine" %}</span>
@@ -28,6 +49,7 @@
     </div>
 </div>
 </div>
+{% endif %}
 
 </div>
 

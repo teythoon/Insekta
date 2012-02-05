@@ -50,6 +50,7 @@ class Command(NoArgsCommand):
         if task.action == 'create':
             if scenario_run.state == 'disabled':
                 scenario_run.create_domain()
+                scenario_run.start()
         elif task.action == 'start':
             if scenario_run.state == 'stopped':
                 scenario_run.start()
@@ -63,6 +64,7 @@ class Command(NoArgsCommand):
             if scenario_run.state == 'suspended':
                 scenario_run.resume()
         elif task.action == 'destroy':
+            scenario_run.stop()
             scenario_run.destroy_domain()
             scenario_run.delete()
 

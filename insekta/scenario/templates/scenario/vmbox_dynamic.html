@@ -53,23 +53,3 @@
     {% endif %}
 
 </div>
-
-<div class="vm_actions">
-    {% if vm_state == 'disabled' %} 
-    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
-            name="vmbox_form" class="vm_form">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="create" />
-        <input type="submit" value="{% trans 'enable' %}" class="vm_enable" />
-    </form>
-    {% endif %}
-
-    {% if vm_state == 'stopped' %}
-    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
-            name="vmbox_form" class="vm_form">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="destroy" />
-        <input type="submit" value="{% trans 'disable' %}" class="vm_disable" />
-    </form>
-    {% endif %}
-</div>
