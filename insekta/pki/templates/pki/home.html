@@ -15,6 +15,8 @@
 <h2>Generate certificate</h2>
 <form method="post" action="{% url pki.home %}">
 {% csrf_token %}
+<p>{% trans "You can use the following command to create a CSR (Certificate Signing Request):" %}</p>
+<pre>openssl req -out client.csr -new -newkey rsa:2048 -nodes -keyout client.key</pre>
 <p>{% trans "Paste your CSR (Certificate Signing Request) into the following box" %}</p>
 {{ csr_form.csr.errors }}
 <p>{{ csr_form.csr }}</p>

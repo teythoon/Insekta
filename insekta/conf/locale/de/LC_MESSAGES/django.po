@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-05 18:49+0100\n"
-"PO-Revision-Date: 2012-02-05 18:54+0100\n"
+"POT-Creation-Date: 2012-02-05 22:40+0100\n"
+"PO-Revision-Date: 2012-02-05 22:41+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
 "Language: \n"
@@ -71,10 +71,14 @@ msgid "Download certificate with VPN setup instructions."
 msgstr "Zertifikat mit VPN-Anleitung herunterladen."
 
 #: pki/templates/pki/home.html:18
+msgid "You can use the following command to create a CSR (Certificate Signing Request):"
+msgstr "Du kannst den folgenden Befehl benutzen um ein CSR (Certificate Signing Request) zu erzeugen:"
+
+#: pki/templates/pki/home.html:20
 msgid "Paste your CSR (Certificate Signing Request) into the following box"
 msgstr "Füge dein CSR (Certificate Signing Request) in das folgende Feld ein"
 
-#: pki/templates/pki/home.html:21
+#: pki/templates/pki/home.html:23
 msgid "Generate certificate"
 msgstr "Zertifikat erzeugen"
 
@@ -95,19 +99,19 @@ msgstr "Dein Geheimnis ist ungültig!"
 msgid "This secret was already submitted!"
 msgstr "Dein Geheimnis wurde bereits eingericht."
 
-#: scenario/views.py:163
+#: scenario/views.py:161
 msgid "Task was received and will be executed."
 msgstr "Die Aufgabe wurde empfangen und wird ausgeführt."
 
-#: scenario/views.py:177
+#: scenario/views.py:181
 msgid "Congratulation! Your secret was valid."
 msgstr "Gratulation! Dein Geheimnis war gültig."
 
-#: scenario/views.py:185
+#: scenario/views.py:189
 msgid "Submitted secrets:"
 msgstr "Eingereichte Geheimnisse:"
 
-#: scenario/views.py:188
+#: scenario/views.py:192
 msgid "Content:"
 msgstr "Inhalt:"
 
@@ -131,19 +135,19 @@ msgstr "Der Inhalt ist versteckt, du musst ein bestimmtes Geheimnis einreichen u
 msgid "No such language: {lang}"
 msgstr "Die Sprache \"{lang}\" existiert nicht"
 
-#: scenario/templates/scenario/all.html:13
+#: scenario/templates/scenario/all.html:14
 #: scenario/templates/scenario/editor.html:19
-#: scenario/templates/scenario/groups.html:17
-#: scenario/templates/scenario/home.html:13
+#: scenario/templates/scenario/groups.html:18
+#: scenario/templates/scenario/home.html:14
 msgid "Scenario"
 msgstr "Szenario"
 
-#: scenario/templates/scenario/all.html:14
-#: scenario/templates/scenario/groups.html:18
+#: scenario/templates/scenario/all.html:15
+#: scenario/templates/scenario/groups.html:19
 msgid "Submitted secrets"
 msgstr "Eingereichte Geheimnisse"
 
-#: scenario/templates/scenario/all.html:24
+#: scenario/templates/scenario/all.html:26
 msgid "There are no scenarios."
 msgstr "Es gibt keine Szenarien."
 
@@ -160,7 +164,7 @@ msgstr "Alle Geheimnisse"
 msgid "No secrets available."
 msgstr "Keine Geheimnisse verfügbar."
 
-#: scenario/templates/scenario/groups.html:33
+#: scenario/templates/scenario/groups.html:35
 msgid "There are no scenario groups."
 msgstr "Es existieren keine Szenario-Gruppen."
 
@@ -173,103 +177,104 @@ msgstr "Willkommen %(username)s!"
 msgid "Running scenarios"
 msgstr "Laufende Szenarien"
 
-#: scenario/templates/scenario/home.html:14
+#: scenario/templates/scenario/home.html:15
 msgid "VM state"
 msgstr "VM-Zustand"
 
-#: scenario/templates/scenario/home.html:27
+#: scenario/templates/scenario/home.html:29
 msgid "You have no running scenarios."
 msgstr "Du hast keine laufenden Szenarien."
 
-#: scenario/templates/scenario/home.html:31
+#: scenario/templates/scenario/home.html:33
 msgid "Certificate generation for VPN"
 msgstr "Zertifikatserstellung für das VPN"
 
-#: scenario/templates/scenario/home.html:32
+#: scenario/templates/scenario/home.html:34
 msgid "Please create a valid certificate for VPN setup."
 msgstr "Bitte erstelle ein gültiges Zertifikat für das VPN."
 
-#: scenario/templates/scenario/home.html:33
+#: scenario/templates/scenario/home.html:35
 msgid "Create certificate"
 msgstr "Zertifikat erstellen"
 
-#: scenario/templates/scenario/home.html:35
+#: scenario/templates/scenario/home.html:37
 msgid "Certificate and VPN instructions"
 msgstr "Zertifikat- und VPN-Anleitungen"
 
-#: scenario/templates/scenario/home.html:36
+#: scenario/templates/scenario/home.html:38
 msgid "View certificate page"
 msgstr "Zeige Zertifikatsseite"
 
-#: scenario/templates/scenario/show.html:13
-msgid "Scenario information"
-msgstr "Szenario-Informationen"
-
-#: scenario/templates/scenario/show.html:14
-msgid "Secrets:"
-msgstr "Geheimnisse:"
-
-#: scenario/templates/scenario/show.html:22
-msgid "Manage virtual machine"
-msgstr "Virtuelle Maschine verwalten"
-
-#: scenario/templates/scenario/show.html:24
+#: scenario/templates/scenario/show.html:11
+#: scenario/templates/scenario/show.html:12
 msgid "Please wait."
 msgstr "Bitte warte."
 
-#: scenario/templates/scenario/vmbox_dynamic.html:3
-msgid "IP address:"
-msgstr "IP-Adresse:"
+#: scenario/templates/scenario/sidebar.html:5
+msgid "Scenario information"
+msgstr "Szenario-Informationen"
 
-#: scenario/templates/scenario/vmbox_dynamic.html:7
-msgid "Current state:"
-msgstr "Aktueller Zustand:"
+#: scenario/templates/scenario/sidebar.html:7
+msgid "Secrets:"
+msgstr "Geheimnisse:"
 
-#: scenario/templates/scenario/vmbox_dynamic.html:9
-msgid "running (state)"
-msgstr "In Betrieb"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:10
-msgid "shutoff (state)"
-msgstr "Ausgeschaltet"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:11
-msgid "suspended (state)"
-msgstr "Pausiert"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:12
-msgid "disabled (state)"
-msgstr "Deaktiviert"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:13
-msgid "unknown error"
-msgstr "unbekannter Fehler"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:17
-msgid "Available actions:"
-msgstr "Verfügbare Aktionen:"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:24
-msgid "start"
-msgstr "starten"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:33
-msgid "stop"
-msgstr "stoppen"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:42
-msgid "suspend"
-msgstr "pausieren"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:51
-msgid "resume"
-msgstr "fortsetzen"
-
-#: scenario/templates/scenario/vmbox_dynamic.html:63
+#: scenario/templates/scenario/sidebar.html:17
 msgid "enable"
 msgstr "aktivieren"
 
-#: scenario/templates/scenario/vmbox_dynamic.html:72
+#: scenario/templates/scenario/sidebar.html:24
 msgid "disable"
 msgstr "deaktivieren"
+
+#: scenario/templates/scenario/sidebar.html:35
+msgid "Manage virtual machine"
+msgstr "Virtuelle Maschine verwalten"
+
+#: scenario/templates/scenario/sidebar.html:38
+msgid "IP address:"
+msgstr "IP-Adresse:"
+
+#: scenario/templates/scenario/sidebar.html:42
+msgid "Current state:"
+msgstr "Aktueller Zustand:"
+
+#: scenario/templates/scenario/sidebar.html:44
+msgid "running (state)"
+msgstr "In Betrieb"
+
+#: scenario/templates/scenario/sidebar.html:45
+msgid "shutoff (state)"
+msgstr "Ausgeschaltet"
+
+#: scenario/templates/scenario/sidebar.html:46
+msgid "suspended (state)"
+msgstr "Pausiert"
+
+#: scenario/templates/scenario/sidebar.html:47
+msgid "disabled (state)"
+msgstr "Deaktiviert"
+
+#: scenario/templates/scenario/sidebar.html:48
+msgid "unknown error"
+msgstr "unbekannter Fehler"
+
+#: scenario/templates/scenario/sidebar.html:52
+msgid "Available actions:"
+msgstr "Verfügbare Aktionen:"
+
+#: scenario/templates/scenario/sidebar.html:59
+msgid "start"
+msgstr "starten"
+
+#: scenario/templates/scenario/sidebar.html:68
+msgid "stop"
+msgstr "stoppen"
+
+#: scenario/templates/scenario/sidebar.html:77
+msgid "suspend"
+msgstr "pausieren"
+
+#: scenario/templates/scenario/sidebar.html:86
+msgid "resume"
+msgstr "fortsetzen"
 
