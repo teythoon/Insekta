@@ -74,6 +74,10 @@ All our images will now be saved to ``/var/lib/libvirt/images``.
 Configuring network
 -------------------
 
+.. warning::
+   This network setup is deprecated. Unfortunately the new network setup is
+   not documented yet.
+
 We assume that 192.168.0.* is your local network with 192.168.0.1 being your
 gateway. All domains should be reachable within the network, so everyone
 inside your network can learn hacking by attacking Insekta's scenarios.
@@ -133,7 +137,6 @@ Execute Djangos ``syndb`` and a few other management commands::
    ./manage.py syncdb # Create database structure
    ./manage.py compilemessages # Compile translations
    ./manage.py collectstatic # Collect all static files in _static
-   ./manage.py network fill # Inserts available IPs into database
 
 For testing, you can run the development server by calling::
    
