@@ -1,56 +1,21 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load scenario_progress %}
 
 {% block title %}{{ scenario.title }}{% endblock %}
 
 {% block content %}
 
-<div id="scenario-sidebar">
-    
+<div id="vm_spinner" style="display:none;">
 <div class="box-shadow">
 <div class="box">
-    <span class="box-title">{% trans "Scenario information" %}</span>
-    <div class="box-content">
-    <p class="section_title">{% trans "Secrets:" %}
-    {% scenario_progress num_submitted_secrets scenario.num_secrets %}
-    </p>
-    
-    {% if vm_state == 'disabled' %}
-    <div class="vm_actions">
-    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
-            name="vmbox_form" class="vm_form">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="create" />
-        <input type="submit" value="{% trans 'enable' %}" class="vm_enable" />
-    </form>
-    {% else %}
-    <form method="post" action="{% url scenario.manage_vm scenario.name %}"
-            name="vmbox_form" class="vm_form">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="destroy" />
-        <input type="submit" value="{% trans 'disable' %}" class="vm_disable" />
-    </form>
-    {% endif %}
-    </div>
-    </div>
+    <span class="box-title">{% trans "Please wait." %}</span>
+    <img src="{{ STATIC_URL }}vmspinner.gif" alt="{% trans "Please wait." %}" />
+</div>
 </div>
 </div>
 
-{% if vm_state != 'disabled' %}
-<div class="box-shadow">
-<div class="box" id="vmbox">
-    <span class="box-title">{% trans "Manage virtual machine" %}</span>
-    <div id="vm_spinner box-content" style="display:none;">
-        <img src="{{ STATIC_URL }}vmspinner.gif" alt="{% trans "Please wait." %}" />
-    </div>
-    <div class="vm_dynamic box-content">
-    {% include "scenario/vmbox_dynamic.html" %}
-    </div>
-</div>
-</div>
-{% endif %}
-
+<div id="scenario_sidebar">
+{% include "scenario/sidebar.html" %}
 </div>
 
 

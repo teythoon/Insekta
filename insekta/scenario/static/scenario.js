@@ -7,23 +7,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function submit_action(ev) {
-        console.log(ev);
         var action = ev.target.action.value;
         var csrf_token = ev.target.csrfmiddlewaretoken.value;
         var target_url = ev.target.getAttribute('action');
         
-        document.getElementById('vm_dynamic').innerHTML = '';
+        document.getElementById('scenario_sidebar').innerHTML = '';
         document.getElementById('vm_spinner').style.display = 'block';
         
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
-                    console.log(xhr.responseText);
                     var result = eval('(' + xhr.responseText + ')');
                     check_new(target_url, result['task_id']);
                 } else {
-                    document.getElementById('vm_dynamic').innerHTML = 'ERROR';
+                    document.getElementById('scenario_sidebar').innerHTML = 'ERROR';
                 }
             }
         }
@@ -42,12 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
                         document.getElementById('vm_spinner').style.display = 'none';
-                        document.getElementById('vm_dynamic').innerHTML = xhr.responseText;
+                        document.getElementById('scenario-sidebar').innerHTML = xhr.responseText;
                         register_eventhandler();
                     } else if (xhr.status == 304) { // not modified
                         check_new(check_url, task_id);
                     } else {
-                        document.getElementById('vm_dynamic').innerHTML = 'ERROR';
+                        document.getElementById('scenario-sidebar').innerHTML = 'ERROR';
                     }
                 }
             }

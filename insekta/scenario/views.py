@@ -95,11 +95,6 @@ def show_scenario(request, scenario_name):
         vm_state = 'disabled'
         ip = None
 
-    try:
-        num_submitted_secrets = UserProgress.objects.get(user=request.user,
-                scenario=scenario).num_secrets
-    except UserProgress.DoesNotExist:
-        num_submitted_secrets = 0
 
     environ = {
         'ip': ip,
@@ -117,7 +112,8 @@ def show_scenario(request, scenario_name):
         'description': render_scenario(scenario.description, environ=environ),
         'vm_state': vm_state,
         'ip': ip,
-        'num_submitted_secrets': num_submitted_secrets
+        'num_submitted_secrets': _get_num_submitted_secrets(scenario,
+                request.user)
     })
 
 @login_required
@@ -137,10 +133,12 @@ def manage_vm(request, scenario_name):
     if request.method == 'GET' and 'task_id' in request.GET:
         task_id = request.GET['task_id']
         if not RunTaskQueue.objects.filter(pk=task_id).count():
-            return TemplateResponse(request, 'scenario/vmbox_dynamic.html', {
+            return TemplateResponse(request, 'scenario/sidebar.html', {
                 'scenario': scenario,
                 'vm_state': scenario_run.state if scenario_run else 'disabled',
-                'ip': scenario_run.address.ip if scenario_run else None
+                'ip': scenario_run.address.ip if scenario_run else None,
+                'num_submitted_secrets': _get_num_submitted_secrets(scenario,
+                        request.user)
             })
         else:
             return HttpResponseNotModified()
@@ -164,6 +162,12 @@ def manage_vm(request, scenario_name):
     
     return redirect(reverse('scenario.show', args=(scenario_name, )))
 
+def _get_num_submitted_secrets(scenario, user):
+    try:
+        return (UserProgress.objects.get(user=user, scenario=scenario)
+                .num_secrets)
+    except UserProgress.DoesNotExist:
+        return 0
 
 @login_required
 def submit_secret(request, scenario_name):

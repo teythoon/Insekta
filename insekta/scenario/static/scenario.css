@@ -1,4 +1,4 @@
-#scenario-sidebar {
+#scenario_sidebar, #vm_spinner {
     position:absolute;
     right:0;
     width:20em;
