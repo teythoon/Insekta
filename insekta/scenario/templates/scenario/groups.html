@@ -12,7 +12,8 @@
 {% if scenario_group.scenario_list %}
 <div class="scenario_group">
 <h2>{{ scenario_group.title }}</h2>
-<table>
+<div class="box-shadow table-shadow">    
+<table class="real-table">
 <tr>
     <th>{% trans "Scenario" %}</th>
     <th>{% trans "Submitted secrets" %}</th>
@@ -24,6 +25,7 @@
 </tr>
 {% endfor %}
 <table>
+</div>
 </div>
 {% endif %} {% comment %}scenario list not empty{% endcomment %}
 {% endfor %} {% comment %}scenario group list{% endcomment %}

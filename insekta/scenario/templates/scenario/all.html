@@ -8,7 +8,8 @@
 <h1>{% trans "All scenarios" %}</h1>
 
 {% if scenario_list %}
-<table>
+<div class="box-shadow table-shadow">
+<table class="real-table">
 <tr>
     <th>{% trans "Scenario" %}</th>
     <th>{% trans "Submitted secrets" %}</th>
@@ -20,6 +21,7 @@
 </tr>
 {% endfor %}
 </table>
+</div>
 {% else %}
 <p>{% trans "There are no scenarios." %}</p>
 {% endif %}

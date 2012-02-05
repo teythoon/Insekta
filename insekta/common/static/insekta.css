@@ -89,6 +89,10 @@ th {
     -webkit-border-radius:3px;
 }
 
+.table-shadow {
+    display:table-cell;
+}
+
 .box {
     background:white;
     border:1px solid #ccc;
@@ -106,3 +110,24 @@ th {
 .box-content {
     padding:0 0.5em 0.5em 0.5em;
 }
+
+table.real-table {
+    border:1px solid #ccc;
+    border-collapse:collapse;
+}
+
+.real-table th {
+    background: -webkit-linear-gradient(#fafafa, #eaeaea);
+    background: linear-gradient(#fafafa, #eaeaea);
+}
+
+.real-table td {
+    background:#fff;
+}
+
+.real-table th, .real-table td {
+    border:1px solid #ccc;
+    padding:0.2em;
+}
+
+
