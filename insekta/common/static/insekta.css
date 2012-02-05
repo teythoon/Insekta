@@ -33,6 +33,10 @@ body {
     text-decoration:none;
     font-size:1.2em;
     padding:1em 0.5em 0em 0.5em;
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    -webkit-border-top-left-radius:10px;
+    -webkit-border-top-right-radius:10px;
 }
 
 #menu li a:hover {
@@ -47,15 +51,24 @@ ul.messages {
 
 .messages li {
     padding:0.3em;
+    -webkit-border-radius:5px;
+   border-radius: 5px;
+   font-weight:bold;
 }
 
 .messages li.error {
-    background:#ebb;
+    background-image: linear-gradient(bottom, rgb(249,100,100) 0%, rgb(235,141,141) 50%);
+    background-image: -moz-linear-gradient(bottom, rgb(249,100,100) 0%, rgb(235,141,141) 50%);
+    background-image: -webkit-linear-gradient(bottom, rgb(249,100,100) 0%, rgb(235,141,141) 50%);
+    /* background:#ebb; */
     border:1px solid #d00;
 }
 
 .messages li.success {
-    background:#beb;
+    background-image: linear-gradient(bottom, rgb(100,250,100) 0%, rgb(141,235,141) 50%);
+    background-image: -moz-linear-gradient(bottom, rgb(100,250,100) 0%, rgb(140,250,140) 50%);
+    background-image: -webkit-linear-gradient(bottom, rgb(100,250,100) 0%, rgb(140,250,140) 50%);
+    /* background:#beb; */
     border:1px solid #0d0;
 }
 
