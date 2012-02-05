@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-05 22:40+0100\n"
-"PO-Revision-Date: 2012-02-05 22:40+0100\n"
+"POT-Creation-Date: 2012-02-05 22:44+0100\n"
+"PO-Revision-Date: 2012-02-05 22:45+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
 "Language: \n"
@@ -62,6 +62,10 @@ msgstr "Invalid CSR."
 msgid "Certificate"
 msgstr "Certificate"
 
+#: pki/templates/pki/home.html:7
+msgid "Certificate home"
+msgstr "Certificate home"
+
 #: pki/templates/pki/home.html:9
 msgid "Your certificate"
 msgstr "Your certificate"
@@ -70,6 +74,11 @@ msgstr "Your certificate"
 msgid "Download certificate with VPN setup instructions."
 msgstr "Download certificate with VPN setup instructions."
 
+#: pki/templates/pki/home.html:15
+#: pki/templates/pki/home.html.py:23
+msgid "Generate certificate"
+msgstr "Generate certificate"
+
 #: pki/templates/pki/home.html:18
 msgid "You can use the following command to create a CSR (Certificate Signing Request):"
 msgstr "You can use the following command to create a CSR (Certificate Signing Request):"
@@ -77,10 +86,6 @@ msgstr "You can use the following command to create a CSR (Certificate Signing R
 #: pki/templates/pki/home.html:20
 msgid "Paste your CSR (Certificate Signing Request) into the following box"
 msgstr "Paste your CSR (Certificate Signing Request) into the following box"
-
-#: pki/templates/pki/home.html:23
-msgid "Generate certificate"
-msgstr "Generate certificate"
 
 #: registration/templates/registration/login.html:8
 msgid "Your username and password didn't match. Please try again."

@@ -4,7 +4,7 @@
 {% block title %}{% trans "Certificate" %}{% endblock %}
 
 {% block content %}
-<h1>Certificate home</h1>
+<h1>{% trans "Certificate home" %}</h1>
 {% if certificate.is_valid %}
 <h2>{% trans "Your certificate" %}</h2>
 <pre>
@@ -12,7 +12,7 @@
 </pre>
 <p><a href="{% url pki.download_cert %}">{% trans "Download certificate with VPN setup instructions." %}</a></p>
 {% else %}
-<h2>Generate certificate</h2>
+<h2>{% trans "Generate certificate" %}</h2>
 <form method="post" action="{% url pki.home %}">
 {% csrf_token %}
 <p>{% trans "You can use the following command to create a CSR (Certificate Signing Request):" %}</p>
