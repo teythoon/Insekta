@@ -151,6 +151,7 @@ def highlight_(macro, environ):
 
 
 comment_re = re.compile('\{#(.+?)#\}')
+page_name_re = re.compile('^[\w-]+$')
 def comment(match, environ):
     return Markup()
 
@@ -158,7 +159,10 @@ def wiki_link_cb(page_name):
     if page_name.startswith('media:'):
         return settings.MEDIA_URL + page_name.replace('media:', '', count=1)
     else:
-        return reverse('scenario.show', args=(page_name, ))
+        if page_name_re.match(page_name):
+            return reverse('scenario.show', args=(page_name, ))
+        else:
+            return False
 
 def wiki_image_cb(page_name):
     return settings.MEDIA_URL + page_name
