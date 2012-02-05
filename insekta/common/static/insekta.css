@@ -5,13 +5,14 @@ body {
 }
 
 #header {
-    background:#000;
+    background:#b8eeff;
     padding:2em 0 0 0;
+    border-bottom:5px solid #066;
 }
 
 #header h1 {
     float:right;
-    color:#fff;
+    color:#066;
     margin:-0.5em 0.5em 0 0;
     font-size:3em;
 }
@@ -29,7 +30,7 @@ body {
 
 #menu a:link, #menu a:visited {
     color:#fff;
-    background:#333;
+    background:#066;
     text-decoration:none;
     font-size:1.2em;
     padding:1em 0.5em 0em 0.5em;
@@ -78,4 +79,30 @@ ul.messages {
 
 th {
     text-align:left;
+}
+
+.box-shadow {
+    background:#eee;
+    padding:3px;
+    margin:10px;
+    border:radius:3px;
+    -webkit-border-radius:3px;
+}
+
+.box {
+    background:white;
+    border:1px solid #ccc;
+}
+
+.box-title {
+    background: -webkit-linear-gradient(#fafafa, #eaeaea);
+    background: linear-gradient(#fafafa, #eaeaea);
+    display:block;
+    font-size:1.3em;
+    border-bottom:1px solid #ccc;
+    text-align:center;
+}
+
+.box-content {
+    padding:0 0.5em 0.5em 0.5em;
 }

@@ -5,16 +5,29 @@
 
 {% block content %}
 
-<div id="vmbox">
-    <h1>{% trans "Manage virtual machine" %}</h1>
-    <div id="vm_spinner" style="display:none;">
+<div id="scenario-sidebar">
+    
+<div class="box-shadow">
+<div class="box">
+    <span class="box-title">{% trans "Scenario information" %}</span>
+
+</div>
+</div>
+
+<div class="box-shadow">
+<div class="box" id="vmbox">
+    <span class="box-title">{% trans "Manage virtual machine" %}</span>
+    <div id="vm_spinner box-content" style="display:none;">
         <img src="{{ STATIC_URL }}vmspinner.gif" alt="{% trans "Please wait." %}" />
     </div>
-    <div id="vm_dynamic"> {% comment %}will be refreshed via ajax{% endcomment %}
+    <div class="vm_dynamic box-content">
     {% include "scenario/vmbox_dynamic.html" %}
     </div>
-    </div> {% comment %} /vm_dynamic {% endcomment %}
 </div>
+</div>
+
+</div>
+
 
 <div id="scenario">
     <h1>{{ scenario.title }}</h1>
