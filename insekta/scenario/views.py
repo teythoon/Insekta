@@ -95,6 +95,12 @@ def show_scenario(request, scenario_name):
         vm_state = 'disabled'
         ip = None
 
+    try:
+        num_submitted_secrets = UserProgress.objects.get(user=request.user,
+                scenario=scenario).num_secrets
+    except UserProgress.DoesNotExist:
+        num_submitted_secrets = 0
+
     environ = {
         'ip': ip,
         'user': request.user,
@@ -110,7 +116,8 @@ def show_scenario(request, scenario_name):
         'scenario': scenario,
         'description': render_scenario(scenario.description, environ=environ),
         'vm_state': vm_state,
-        'ip': ip
+        'ip': ip,
+        'num_submitted_secrets': num_submitted_secrets
     })
 
 @login_required

@@ -5,6 +5,11 @@
     margin-right:0.5em;
 }
 
+.section_title {
+    font-weight:bold;
+}
+
+
 #vm_spinner {
     text-align:center;
     padding:1em;
@@ -53,10 +58,6 @@
 
 .vm_resume {
     background:#fff url(resume.png) no-repeat 5px center;
-}
-
-.vm_section_title {
-    font-weight:bold;
 }
 
 .vm_disable {

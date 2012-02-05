@@ -1,10 +1,10 @@
 {% load i18n %}
 {% if ip %}
-<p class="vm_section_title">{% trans "IP address:" %}</p>
+<p class="section_title">{% trans "IP address:" %}</p>
 <p class="vm_ip">{{ ip }}</p>
 {% endif %}
 
-<p class="vm_section_title">{% trans "Current state:" %}</p>
+<p class="section_title">{% trans "Current state:" %}</p>
 <p class="vm_state">
 {% if vm_state == 'started' %}{% trans "running (state)" %}{% endif %}
 {% if vm_state == 'stopped' %}{% trans "shutoff (state)" %}{% endif %}
@@ -14,7 +14,7 @@
 
 </p>
 
-<p class="vm_section_title">{% trans "Available actions:" %}</p>
+<p class="section_title">{% trans "Available actions:" %}</p>
 <div class="vm_actions">
     {% if vm_state == 'stopped' %}
     <form method="post" action="{% url scenario.manage_vm scenario.name %}"

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load scenario_progress %}
 
 {% block title %}{{ scenario.title }}{% endblock %}
 
@@ -10,7 +11,9 @@
 <div class="box-shadow">
 <div class="box">
     <span class="box-title">{% trans "Scenario information" %}</span>
-
+    <p class="box-content section_title">{% trans "Secrets:" %}
+    {% scenario_progress num_submitted_secrets scenario.num_secrets %}
+    </p>
 </div>
 </div>
 
