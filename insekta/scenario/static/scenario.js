@@ -40,12 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
                         document.getElementById('vm_spinner').style.display = 'none';
-                        document.getElementById('scenario-sidebar').innerHTML = xhr.responseText;
+                        document.getElementById('scenario_sidebar').innerHTML = xhr.responseText;
                         register_eventhandler();
                     } else if (xhr.status == 304) { // not modified
                         check_new(check_url, task_id);
                     } else {
-                        document.getElementById('scenario-sidebar').innerHTML = 'ERROR';
+                        document.getElementById('scenario_sidebar').innerHTML = 'ERROR';
                     }
                 }
             }
