@@ -175,18 +175,19 @@ class ScenarioRun(models.Model):
         self._do_vm_action('create', 'started')
 
     def stop(self):
-        """Stops the virtual machine."""
+        """Stop the virtual machine."""
         self._do_vm_action('destroy', 'stopped')
 
     def suspend(self):
-        """Suspends the virtual machine."""
+        """Suspend the virtual machine."""
         self._do_vm_action('suspend', 'suspended')
 
     def resume(self):
+        """Resume the virtual machine."""
         self._do_vm_action('resume', 'started')
 
     def destroy(self):
-        """Destroy this scenario run including vm."""
+        """Destroy this scenario run including virtual machine."""
         try:
             self.stop()
         except ScenarioError:
