@@ -21,7 +21,8 @@ def scenario_title(obj):
 scenario_title.short_description = 'Scenario title'
 
 class ScenarioRunAdmin(admin.ModelAdmin):
-    list_display = ('user', 'state', scenario_name, scenario_title)
+    list_display = ('user', 'state', scenario_name, scenario_title,
+                    'last_activity')
 
 
 def secret(obj):

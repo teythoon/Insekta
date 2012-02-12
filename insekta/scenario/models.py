@@ -1,6 +1,7 @@
 import random
 import hmac
 import hashlib
+from datetime import datetime
 
 import libvirt
 from django.db import models
@@ -141,16 +142,33 @@ class Scenario(models.Model):
         return ScenarioRun.objects.create(scenario=self, user=user, node=node,
                                           address=Address.objects.get_free())
 
+    def get_run(self, user, fail_silently=False):
+        """Return the ScenarioRun for an user if it exists."""
+        try:
+            return ScenarioRun.objects.get(user=user, scenario=self)
+        except ScenarioRun.DoesNotExist:
+            if not fail_silently:
+                raise
+
 class ScenarioRun(models.Model):
     scenario = models.ForeignKey(Scenario)
     user = models.ForeignKey(User)
     node = models.CharField(max_length=20)
     address = models.ForeignKey(Address)
+    last_activity = models.DateTimeField(default=datetime.today, db_index=True)
     state = models.CharField(max_length=10, default='disabled',
                              choices=RUN_STATE_CHOICES)
 
     class Meta:
         unique_together = (('user', 'scenario'), )
+
+    @property
+    def expires_at(self):
+        return self.last_activity + settings.SCENARIO_EXPIRE_TIME
+    
+    def heartbeat(self):
+        self.last_activity = datetime.today()
+        self.save()
 
     def start(self):
         """Start the virtual machine."""
@@ -166,6 +184,15 @@ class ScenarioRun(models.Model):
 
     def resume(self):
         self._do_vm_action('resume', 'started')
+
+    def destroy(self):
+        """Destroy this scenario run including vm."""
+        try:
+            self.stop()
+        except ScenarioError:
+            pass
+        self.destroy_domain()
+        self.delete()
 
     def refresh_state(self):
         """Fetches the state from libvirt and saves it."""

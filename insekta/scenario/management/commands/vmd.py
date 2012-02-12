@@ -1,11 +1,13 @@
 from __future__ import print_function
 import time
 import signal
+from datetime import datetime
 
 from django.core.management.base import NoArgsCommand
+from django.conf import settings
 
 from insekta.common.virt import connections
-from insekta.scenario.models import RunTaskQueue, ScenarioError
+from insekta.scenario.models import ScenarioRun, RunTaskQueue, ScenarioError
 
 MIN_SLEEP = 1.0
 
@@ -19,6 +21,7 @@ class Command(NoArgsCommand):
 
         last_call = time.time()
         while self.run:
+            # Process all open tasks
             for task in RunTaskQueue.objects.all():
                 try:
                     self._handle_task(task)
@@ -27,6 +30,17 @@ class Command(NoArgsCommand):
                     # We can just ignore it, it does no harm
                     pass
                 task.delete()
+           
+            # Delete expired scenarios
+            expired_runs = ScenarioRun.objects.filter(last_activity__lt=
+                    datetime.today() - settings.SCENARIO_EXPIRE_TIME)
+            for scenario_run in expired_runs:
+                try:
+                    scenario_run.destroy()
+                except ScenarioError:
+                    # We have an inconsistent state. See comment above.
+                    pass
+
             current_time = time.time()
             time_passed = current_time - last_call
             if time_passed < MIN_SLEEP:
@@ -64,9 +78,7 @@ class Command(NoArgsCommand):
             if scenario_run.state == 'suspended':
                 scenario_run.resume()
         elif task.action == 'destroy':
-            scenario_run.stop()
-            scenario_run.destroy_domain()
-            scenario_run.delete()
+            scenario_run.destroy()
 
     def stop(self):
         print('Stopping, please wait a few moments.')

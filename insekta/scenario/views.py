@@ -11,12 +11,15 @@ from django.contrib import messages
 from django.middleware.csrf import get_token
 from django import forms
 
+from insekta.common.dblock import dblock
 from insekta.scenario.models import (Scenario, ScenarioRun, RunTaskQueue,
                                      ScenarioGroup, ScenarioBelonging,
                                      UserProgress, InvalidSecret,
                                      calculate_secret_token, AVAILABLE_TASKS)
 from insekta.scenario.markup.creole import render_scenario
 from insekta.scenario.markup.parsesecrets import extract_secrets
+
+LOCK_RUN_TASK_QUEUE = 298437
 
 @login_required
 def scenario_home(request):
@@ -149,11 +152,19 @@ def manage_vm(request, scenario_name):
         if not action or action not in AVAILABLE_TASKS:
             raise HttpResponseBadRequest('Action not available')
 
+        scenario_run.heartbeat()
+
         # FIXME: Implement some way to prevent spamming (aka. DoS)
         # Checking is done in the daemon, here we just assume that
         # everything will work fine
-        task = RunTaskQueue.objects.create(scenario_run=scenario_run,
-                                           action=action)
+        
+       
+        with dblock(LOCK_RUN_TASK_QUEUE):
+            try:
+                task = RunTaskQueue.objects.get(scenario_run=scenario_run)
+            except RunTaskQueue.DoesNotExist:
+                task = RunTaskQueue.objects.create(scenario_run=scenario_run,
+                                                   action=action)
         if request.is_ajax():
             return HttpResponse('{{"task_id": {0}}}'.format(task.pk),
                                 mimetype='application/x-json')
@@ -172,6 +183,11 @@ def _get_num_submitted_secrets(scenario, user):
 @login_required
 def submit_secret(request, scenario_name):
     scenario = get_object_or_404(Scenario, name=scenario_name, enabled=True)
+    try:
+        scenario.get_run(request.user).heartbeat()
+    except ScenarioRun.DoesNotExist:
+        pass
+
     try:
         scenario.submit_secret(request.user, request.POST.get('secret'),
                                request.POST.getlist('secret_token'))

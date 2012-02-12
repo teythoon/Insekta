@@ -13,6 +13,7 @@
     <tr>
         <th>{% trans "Scenario" %}</th>
         <th>{% trans "VM state" %}</th>
+        <th>{% trans "Expiry" %}</th>
     </tr>
 {% for scenario_run in scenario_run_list %}
 {% with scenario=scenario_run.scenario %}
@@ -20,6 +21,7 @@
         <td><a href="{% url scenario.show scenario.name %}">
                 {{ scenario.title }}</a></td>
         <td>{{ scenario_run.state }}</td>
+        <td>{{ scenario_run.expires_at|timeuntil }}</td>
     </tr>
 {% endwith %}
 {% endfor %}

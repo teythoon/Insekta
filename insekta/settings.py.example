@@ -1,5 +1,7 @@
 # Django settings for insekta project.
+from datetime import timedelta
 import os
+
 ROOT = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = True
@@ -171,3 +173,5 @@ VM_BRIDGE = 'br-scn0'
 PKI_CA_KEYFILE = os.path.join(ROOT, 'ca.key')
 PKI_CA_CERTFILE = os.path.join(ROOT, 'ca.crt')
 PKI_OPENVPN_CONFIG = os.path.join(ROOT, 'client.conf')
+
+SCENARIO_EXPIRE_TIME = timedelta(days=15)
