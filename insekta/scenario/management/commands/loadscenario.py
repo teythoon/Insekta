@@ -118,12 +118,12 @@ class Command(BaseCommand):
 
         print('Copying media files ...')
         media_target = os.path.join(settings.MEDIA_ROOT, metadata['name'])
-        try:
-            shutil.rmtree(media_target)
-        except shutil.Error:
-            # If we create the scenario there is no old directory to remove
-            pass
-        shutil.copytree(media_dir, media_target)
+        
+        # Remove old media dir if it exists, otherwise just ignore errors
+        shutil.rmtree(media_target, ignore_errors=True)
+
+        if os.path.exists(media_dir):
+            shutil.copytree(media_dir, media_target)
 
         print('Storing image on all nodes:')
         for node in scenario.get_nodes():
