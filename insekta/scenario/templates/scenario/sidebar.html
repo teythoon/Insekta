@@ -7,6 +7,16 @@
     <p class="section_title">{% trans "Secrets:" %}
     {% scenario_progress num_submitted_secrets scenario.num_secrets %}
     </p>
+
+    {% if expiry %}
+    <form method="post" action="{% url scenario.heartbeat scenario.name %}">
+    {% csrf_token %}
+    <p class="section_title">{% trans "Expires in:" %}
+    {{ expiry|timeuntil }}
+        <input type="submit" value="reset" class="roundbutton" />
+    </p>
+    </form>
+    {% endif %}
     
     <div class="vm_actions">
     {% if vm_state == 'disabled' %}

@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.middleware.csrf import get_token
 from django import forms
+from django.views.decorators.http import require_POST
 
 from insekta.common.dblock import dblock
 from insekta.scenario.models import (Scenario, ScenarioRun, RunTaskQueue,
@@ -94,10 +95,11 @@ def show_scenario(request, scenario_name):
                                                scenario=scenario)
         vm_state = scenario_run.state
         ip = scenario_run.address.ip
+        expiry = scenario_run.expires_at
     except ScenarioRun.DoesNotExist:
         vm_state = 'disabled'
         ip = None
-
+        expiry = None
 
     environ = {
         'ip': ip,
@@ -115,6 +117,7 @@ def show_scenario(request, scenario_name):
         'description': render_scenario(scenario.description, environ=environ),
         'vm_state': vm_state,
         'ip': ip,
+        'expiry': expiry,
         'num_submitted_secrets': _get_num_submitted_secrets(scenario,
                 request.user)
     })
@@ -170,6 +173,17 @@ def manage_vm(request, scenario_name):
                                 mimetype='application/x-json')
         else:
             messages.success(request, _('Task was received and will be executed.'))
+    
+    return redirect(reverse('scenario.show', args=(scenario_name, )))
+
+@require_POST
+@login_required
+def heartbeat(request, scenario_name):
+    scenario = get_object_or_404(Scenario, name=scenario_name, enabled=True)
+    try:
+        scenario.get_run(request.user).heartbeat()
+    except ScenarioRun.DoesNotExist:
+        pass
     
     return redirect(reverse('scenario.show', args=(scenario_name, )))
 
