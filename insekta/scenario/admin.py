@@ -8,7 +8,7 @@ class SecretInline(admin.TabularInline):
     model = Secret
 
 class ScenarioAdmin(admin.ModelAdmin):
-    list_display = ('name', 'title', 'hypervisor', 'memory', 'enabled')
+    list_display = ('name', 'title', 'memory', 'enabled')
     inlines = [SecretInline]
 
 
@@ -20,8 +20,12 @@ def scenario_title(obj):
     return obj.scenario.title
 scenario_title.short_description = 'Scenario title'
 
+def vm_state(obj):
+    return obj.vm.state
+vm_state.short_description = 'VM state'
+
 class ScenarioRunAdmin(admin.ModelAdmin):
-    list_display = ('user', 'state', scenario_name, scenario_title,
+    list_display = ('user', vm_state, scenario_name, scenario_title,
                     'last_activity')
 
 

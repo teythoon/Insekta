@@ -93,8 +93,9 @@ def show_scenario(request, scenario_name):
     try:
         scenario_run = ScenarioRun.objects.get(user=request.user,
                                                scenario=scenario)
-        vm_state = scenario_run.state
-        ip = scenario_run.address.ip
+        vm = scenario_run.vm
+        vm_state = vm.state
+        ip = vm.address.ip
         expiry = scenario_run.expires_at
     except ScenarioRun.DoesNotExist:
         vm_state = 'disabled'
@@ -129,6 +130,7 @@ def manage_vm(request, scenario_name):
     try:
         scenario_run = ScenarioRun.objects.get(user=request.user,
                                                scenario=scenario)
+        vm = scenario_run.vm
     except ScenarioRun.DoesNotExist:
         if request.method == 'POST':
             scenario_run = scenario.start(request.user)
@@ -141,8 +143,8 @@ def manage_vm(request, scenario_name):
         if not RunTaskQueue.objects.filter(pk=task_id).count():
             return TemplateResponse(request, 'scenario/sidebar.html', {
                 'scenario': scenario,
-                'vm_state': scenario_run.state if scenario_run else 'disabled',
-                'ip': scenario_run.address.ip if scenario_run else None,
+                'vm_state': vm.state if scenario_run else 'disabled',
+                'ip': vm.address.ip if scenario_run else None,
                 'num_submitted_secrets': _get_num_submitted_secrets(scenario,
                         request.user)
             })

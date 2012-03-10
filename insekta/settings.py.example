@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'insekta.common',
     'insekta.registration',
     'insekta.scenario',
+    'insekta.vm',
     'insekta.network',
     'insekta.pki',
 )

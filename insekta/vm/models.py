@@ -47,7 +47,7 @@ class BaseImage(models.Model):
     def __unicode__(self):
         return self.name
 
-class VirtualMachine(models.Models):
+class VirtualMachine(models.Model):
     memory = models.IntegerField()
     base_image = models.ForeignKey(BaseImage)
     node = models.CharField(max_length=80)

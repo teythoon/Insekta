@@ -7,15 +7,13 @@ import re
 import shutil
 import time
 import hashlib
-from optparse import make_option
 
-import libvirt
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 from insekta.scenario.models import Scenario, Secret
 from insekta.scenario.markup.parsesecrets import extract_secrets
-from insekta.vm import BaseImage
+from insekta.vm.models import BaseImage
 from insekta.common.virt import connections
 from insekta.common.misc import progress_bar
 
@@ -23,14 +21,6 @@ CHUNK_SIZE = 8192
 _REQUIRED_KEYS = ['name', 'title', 'memory', 'image']
 
 class Command(BaseCommand):
-    option_list = BaseCommand.option_list + (
-        make_option('--skipupload',
-                    action='store_true',
-                    dest='skip_upload',
-                    default=False,
-                    help='Do not upload the scenario image'),
-    )
-
     args = '<scenario_path>'
     help = 'Loads a scenario into the database and storage pool'
     def handle(self, *args, **options):
@@ -135,7 +125,7 @@ class Command(BaseCommand):
         if os.path.exists(media_dir):
             shutil.copytree(media_dir, media_target)
 
-        if not (options['skip_upload'] or image_hash == scenario.image_hash):
+        if created or image_hash != image.hash:
             print('Storing image on all nodes:')
             image = BaseImage.objects.create(name=image_name, hash=image_hash)
             for node in scenario.get_nodes():
