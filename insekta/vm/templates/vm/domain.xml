@@ -1,0 +1,22 @@
+<domain type='kvm'>
+    <name>scenarioRun{{ id }}</name>
+    <description>scenario of user {{ user.username }}</description>
+    <memory>{{ memory }}</memory>
+    <vcpu>1</vcpu>
+    <os>
+        <type arch="x86_64">hvm</type>
+    </os>
+    <devices>
+        <disk type='file' device='disk'>
+            <driver name='qemu' type='qcow2' />
+            <source file='{{ volume }}' />
+            <target dev='vda' bus='virtio' />
+        </disk>
+        <interface type='bridge'>
+            <mac address='{{ mac }}' />
+            <source bridge='{{ bridge }}' />
+            <model type='virtio' />
+        </interface>
+        <graphics type='vnc' port='-1' autoport='yes' />
+    </devices>
+</domain>

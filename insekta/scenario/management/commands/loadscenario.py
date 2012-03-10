@@ -5,6 +5,8 @@ import json
 import subprocess
 import re
 import shutil
+import time
+import hashlib
 from optparse import make_option
 
 import libvirt
@@ -13,6 +15,7 @@ from django.conf import settings
 
 from insekta.scenario.models import Scenario, Secret
 from insekta.scenario.markup.parsesecrets import extract_secrets
+from insekta.vm import BaseImage
 from insekta.common.virt import connections
 from insekta.common.misc import progress_bar
 
@@ -89,6 +92,10 @@ class Command(BaseCommand):
                          scenario_size, media_dir, options):
         secrets = extract_secrets(description)
         num_secrets = len(secrets)
+        
+        image_name = str(int(time.time() * 1000))
+        image_hash = self._calculate_image_hash(scenario_img)
+
         try:
             scenario = Scenario.objects.get(name=metadata['name'])
             was_enabled = scenario.enabled
@@ -98,11 +105,14 @@ class Command(BaseCommand):
             scenario.num_secrets = num_secrets 
             scenario.enabled = False
             created = False
+            image = scenario.image
             print('Updating scenario ...')
         except Scenario.DoesNotExist:
+            image = BaseImage.objects.create(name=image_name, hash=image_hash)
             scenario = Scenario(name=metadata['name'], title=
                     metadata['title'], memory=metadata['memory'],
-                    description=description, num_secrets=num_secrets)
+                    image=image, description=description,
+                    num_secrets=num_secrets)
             created = True
             print('Creating scenario ...')
         
@@ -125,29 +135,25 @@ class Command(BaseCommand):
         if os.path.exists(media_dir):
             shutil.copytree(media_dir, media_target)
 
-        print('Storing image on all nodes:')
-        for node in scenario.get_nodes():
-            if not options['skip_upload']:
-                volume = self._update_volume(node, scenario, scenario_size)
+        if not (options['skip_upload'] or image_hash == scenario.image_hash):
+            print('Storing image on all nodes:')
+            image = BaseImage.objects.create(name=image_name, hash=image_hash)
+            for node in scenario.get_nodes():
+                volume = self._create_volume(node, image, scenario_size)
                 self._upload_image(node, scenario_img, scenario_size, volume)
                 connections.close()
 
         if not created:
+            scenario.image = image
             scenario.enabled = was_enabled
             scenario.save()
         
         enable_str = 'is' if scenario.enabled else 'is NOT'
         print('Done! Scenario {0} enabled'.format(enable_str))
 
-    def _update_volume(self, node, scenario, scenario_size):
-        try:
-            volume = scenario.get_volume(node)
-            volume.delete(flags=0)
-        except libvirt.libvirtError:
-            pass
-        
+    def _create_volume(self, node, image, scenario_size):
         print('Creating volume on node {0} ...'.format(node))
-        pool = scenario.get_pool(node)
+        pool = image.get_pool(node)
         xml_desc = """
         <volume>
           <name>{0}</name>
@@ -156,7 +162,7 @@ class Command(BaseCommand):
             <format type='qcow2' />
           </target>
         </volume>
-        """.format(scenario.name, scenario_size)
+        """.format(image.name, scenario_size)
         return pool.createXML(xml_desc, flags=0)
 
     def _upload_image(self, node, scenario_img, scenario_size, volume):
@@ -181,3 +187,14 @@ class Command(BaseCommand):
                 data_sent += len(data)
                 progress.send(data_sent)
         print()
+
+    def _calculate_image_hash(self, scenario_img):
+        m = hashlib.sha1()
+        with open(scenario_img, 'r') as f_scenario_img:
+            while True:
+                data = f_scenario_img.read(1024)
+                if not data:
+                    break
+                m.update(data)
+
+        return m.hexdigest()

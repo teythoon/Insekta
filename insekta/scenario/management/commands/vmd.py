@@ -8,6 +8,7 @@ from django.conf import settings
 
 from insekta.common.virt import connections
 from insekta.scenario.models import ScenarioRun, RunTaskQueue, ScenarioError
+from insekta.vm.models import VirtualMachineError
 
 MIN_SLEEP = 1.0
 
@@ -36,8 +37,8 @@ class Command(NoArgsCommand):
                     datetime.today() - settings.SCENARIO_EXPIRE_TIME)
             for scenario_run in expired_runs:
                 try:
-                    scenario_run.destroy()
-                except ScenarioError:
+                    scenario_run.vm.destroy()
+                except VirtualMachineError:
                     # We have an inconsistent state. See comment above.
                     pass
 
@@ -50,35 +51,36 @@ class Command(NoArgsCommand):
 
     def _handle_task(self, task):
         scenario_run = task.scenario_run
+        vm = scenario_run.vm
 
-        db_state = scenario_run.state
-        scenario_run.refresh_state()
-        if scenario_run.state != db_state:
-            scenario_run.save()
+        db_state = vm.state
+        vm.refresh_state()
+        if vm.state != db_state:
+            vm.save()
 
         # Scenario run was deleted in a previous task, we need to ignore
         # all further task actions except create
-        if scenario_run.state == 'disabled' and task.action != 'create':
+        if vm.state == 'disabled' and task.action != 'create':
             return
         
         if task.action == 'create':
-            if scenario_run.state == 'disabled':
-                scenario_run.create_domain()
-                scenario_run.start()
+            if vm.state == 'disabled':
+                vm.create_domain()
+                vm.start()
         elif task.action == 'start':
-            if scenario_run.state == 'stopped':
-                scenario_run.start()
+            if vm.state == 'stopped':
+                vm.start()
         elif task.action == 'stop':
-            if scenario_run.state == 'started':
-                scenario_run.stop()
+            if vm.state == 'started':
+                vm.stop()
         elif task.action == 'suspend':
-            if scenario_run.state == 'started':
-                scenario_run.suspend()
+            if vm.state == 'started':
+                vm.suspend()
         elif task.action == 'resume':
-            if scenario_run.state == 'suspended':
-                scenario_run.resume()
+            if vm.state == 'suspended':
+                vm.resume()
         elif task.action == 'destroy':
-            scenario_run.destroy()
+            vm.destroy()
 
     def stop(self):
         print('Stopping, please wait a few moments.')

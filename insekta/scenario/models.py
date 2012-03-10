@@ -3,28 +3,14 @@ import hmac
 import hashlib
 from datetime import datetime
 
-import libvirt
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
-from insekta.common.virt import connections
 from insekta.network.models import Address
-
-HYPERVISOR_CHOICES = (
-    ('qemu', 'Qemu (with KVM)'),
-)
-
-RUN_STATE_CHOICES = (
-    ('disabled', 'VM is not created yet'),
-    ('preparing', 'Preparing'),
-    ('started', 'VM started'),
-    ('suspended', 'VM suspended'),
-    ('stopped', 'VM stopped'),
-    ('error', 'VM has weird error')
-)
+from insekta.vm.models import VirtualMachine, BaseImage
 
 AVAILABLE_TASKS = {
     'create': 'Create VM',
@@ -44,11 +30,10 @@ class InvalidSecret(ScenarioError):
 class Scenario(models.Model):
     name = models.CharField(max_length=80, unique=True)
     title = models.CharField(max_length=200)
-    memory = models.IntegerField()
-    hypervisor = models.CharField(max_length=10, default='qemu',
-                                  choices=HYPERVISOR_CHOICES)
     description = models.TextField()
     num_secrets = models.IntegerField()
+    memory = models.IntegerField()
+    image = models.ForeignKey(BaseImage)
     enabled = models.BooleanField(default=False)
 
     class Meta:
@@ -99,33 +84,7 @@ class Scenario(models.Model):
 
     def get_nodes(self):
         """Return a list containing all nodes this scenario can run on."""
-        # For now, we have only one node per hypervisor, but this
-        # can change. Using this method we can easily assign
-        # each scenario an own node or several nodes if we need
-        # to scale.
-        return [self.hypervisor]
-
-    def get_pool(self, node):
-        """Return the pool where volume of the scenario image is stored.
-        
-        :param node: A libvirt node, e.g. 'mynode'
-        :rtype: :class:`libvirt.virStoragePool`
-        """
-        pool_name = settings.LIBVIRT_STORAGE_POOLS[node]
-        return connections[node].storagePoolLookupByName(pool_name)
-
-    def get_volume(self, node):
-        """Return the volume where the image of this scenario is stored.
-
-        :param node: A libvirt node, e.g. 'mynode'.
-        :rtype: :class:`libvirt.virStorageVol`
-
-        >>> scenario = Scenario.objects.get(pk=1)
-        >>> vol = scenario.get_volume('mynode')
-        >>> print(vol.path()) # Prints /dev/insekta/simple-buffer-overflow
-        """
-        pool = self.get_pool(node)
-        return pool.storageVolLookupByName(self.name)
+        return settings.LIBVIRT_NODES.keys()
 
     def start(self, user, node=None):
         """Start this scenario for the given user.
@@ -139,8 +98,10 @@ class Scenario(models.Model):
         if node is None:
             node = random.choice(self.get_nodes())
 
-        return ScenarioRun.objects.create(scenario=self, user=user, node=node,
-                                          address=Address.objects.get_free())
+        vm = VirtualMachine.objects.create(node=node, memory=self.memory,
+                base_image=self.image, address=Address.objects.get_free())
+
+        return ScenarioRun.objects.create(vm=vm, user=user, scenario=self)
 
     def get_run(self, user, fail_silently=False):
         """Return the ScenarioRun for an user if it exists."""
@@ -153,11 +114,8 @@ class Scenario(models.Model):
 class ScenarioRun(models.Model):
     scenario = models.ForeignKey(Scenario)
     user = models.ForeignKey(User)
-    node = models.CharField(max_length=20)
-    address = models.ForeignKey(Address)
     last_activity = models.DateTimeField(default=datetime.today, db_index=True)
-    state = models.CharField(max_length=10, default='disabled',
-                             choices=RUN_STATE_CHOICES)
+    vm = models.OneToOneField(VirtualMachine)
 
     class Meta:
         unique_together = (('user', 'scenario'), )
@@ -169,178 +127,6 @@ class ScenarioRun(models.Model):
     def heartbeat(self):
         self.last_activity = datetime.today()
         self.save()
-
-    def start(self):
-        """Start the virtual machine."""
-        self._do_vm_action('create', 'started')
-
-    def stop(self):
-        """Stop the virtual machine."""
-        self._do_vm_action('destroy', 'stopped')
-
-    def suspend(self):
-        """Suspend the virtual machine."""
-        self._do_vm_action('suspend', 'suspended')
-
-    def resume(self):
-        """Resume the virtual machine."""
-        self._do_vm_action('resume', 'started')
-
-    def destroy(self):
-        """Destroy this scenario run including virtual machine."""
-        try:
-            self.stop()
-        except ScenarioError:
-            pass
-        self.destroy_domain()
-        self.delete()
-
-    def refresh_state(self):
-        """Fetches the state from libvirt and saves it."""
-        try:
-            domain = self.get_domain()
-        except libvirt.libvirtError:
-            self.state = 'disabled'
-        else:
-            try:
-                state, _reason = domain.state(flags=0)
-            except libvirt.libvirtError:
-                new_state = 'error'
-            else:
-                new_state = {
-                    libvirt.VIR_DOMAIN_NOSTATE: 'error',
-                    libvirt.VIR_DOMAIN_RUNNING: 'started',
-                    libvirt.VIR_DOMAIN_BLOCKED: 'error',
-                    libvirt.VIR_DOMAIN_PAUSED: 'suspended',
-                    libvirt.VIR_DOMAIN_SHUTDOWN: 'error',
-                    libvirt.VIR_DOMAIN_SHUTOFF: 'stopped'
-                }.get(state, 'error')
-            self.state = new_state
-
-    def create_domain(self):
-        """Create a domain for this scenario run.
-
-        This includes the following:
-        * Cloning the volume of the scenario
-        * Creating a new domain using the cloned volume as disk
-        * Starting the domain
-
-        :rtype: :class:`libvirt.virDomain`.
-        """
-        volume = self._create_volume()
-        xml_desc = self._build_domain_xml(volume)
-        domain = connections[self.node].defineXML(xml_desc)
-        self.state = 'stopped'
-        self.save()
-        return domain
-
-    def destroy_domain(self):
-        """ Destroy a domain of this scenario run.
-
-        This includes the following:
-        * Killing the domain if it is running
-        * Undefining the domain
-        * Deleting the volume of the domain
-        """
-        try:
-            self._do_vm_action('destroy', 'stopped')
-        except ScenarioError:
-            # It is already stopped, just ignore exception
-            pass
-        self._do_vm_action('undefine', 'disabled')
-        self.get_volume().delete(flags=0)
-
-    def get_domain(self):
-        """Return the domain of this scenario run.
-
-        :rtype: :class:`libvirt.virDomain`.
-        """
-        conn = connections[self.node]
-        return conn.lookupByName('scenarioRun{0}'.format(self.pk))
-
-    def get_volume(self):
-        """Return the volume where this scenario run stores it's data.
-
-        :rtype: :class:`libvirt.virStorageVol`.
-        """
-        pool = self.scenario.get_pool(self.node)
-        return pool.storageVolLookupByName('scenarioRun{0}'.format(self.pk))
-
-    def _create_volume(self):
-        """Create a new volume by using a backing image.
-
-        :rtype: :class:`libvirt.virStorageVol`
-        """
-        pool = self.scenario.get_pool(self.node)
-        base_volume = self.scenario.get_volume(self.node)
-        capacity = base_volume.info()[1]
-        xmldesc = """
-        <volume>
-          <name>scenarioRun{id}</name>
-          <capacity>{capacity}</capacity>
-          <target>
-            <format type='qcow2' />
-          </target>
-          <backingStore>
-            <path>{backing_image}</path>
-            <format type='qcow2' />
-          </backingStore>
-        </volume>
-        """.format(id=self.pk, capacity=capacity,
-                   backing_image=base_volume.path())
-        return pool.createXML(xmldesc, flags=0)
-    
-    def _build_domain_xml(self, volume):
-        scenario = self.scenario
-        return """
-        <domain type='kvm'>
-          <name>scenarioRun{id}</name>
-          <description>{user} running &quot;{title}&quot;</description>
-          <memory>{memory}</memory>
-          <vcpu>1</vcpu>
-          <os>
-            <type arch="x86_64">hvm</type>
-          </os>
-          <devices>
-            <disk type='file' device='disk'>
-              <driver name='qemu' type='qcow2' />
-              <source file='{volume}' />
-              <target dev='vda' bus='virtio' />
-            </disk>
-            <interface type='bridge'>
-              <mac address='{mac}' />
-              <source bridge='{bridge}' />
-              <model type='virtio' />
-            </interface>
-            <graphics type='vnc' port='-1' autoport='yes' />
-          </devices>
-        </domain>
-        """.format(id=self.pk, user=self.user.username, title=scenario.title,
-                   memory=scenario.memory * 1024, volume=volume.path(),
-                   mac=self.address.mac, bridge=settings.VM_BRIDGE)
-    
-    def _do_vm_action(self, action, new_state):
-        """Do an action on the virtual machine.
-
-        After executing the action, the scenario run is in the state
-        `new_state`.
-        
-        If it fails, it will reread the state from libvirt, since this is
-        mostly the cause for failing.
-
-        :param action: One of 'start', 'destroy', 'suspend', 'resume' and
-                       'undefine'
-        """
-        try:
-            domain = self.get_domain()
-            getattr(domain, action)()
-            self.state = new_state
-        except libvirt.libvirtError, e:
-            self.refresh_state()
-            raise ScenarioError(str(e))
-        finally:
-            self.save()
-
 
     def __unicode__(self):
         return u'{0} running "{1}"'.format(self.user, self.scenario)
