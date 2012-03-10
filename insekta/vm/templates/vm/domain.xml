@@ -1,6 +1,6 @@
 <domain type='kvm'>
     <name>scenarioRun{{ id }}</name>
-    <description>scenario of user {{ user.username }}</description>
+    <description>running scenario</description>
     <memory>{{ memory }}</memory>
     <vcpu>1</vcpu>
     <os>

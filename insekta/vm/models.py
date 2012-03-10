@@ -156,6 +156,10 @@ class VirtualMachine(models.Model):
 
         :rtype: :class:`libvirt.virStorageVol`
         """
+        try:
+            self.get_volume().delete(flags=0)
+        except libvirt.libvirtError:
+            pass
         pool = self.base_image.get_pool(self.node)
         base_volume = self.base_image.get_volume(self.node)
         capacity = base_volume.info()[1]
@@ -169,7 +173,6 @@ class VirtualMachine(models.Model):
     def _build_domain_xml(self, volume):
         return render_to_string('vm/domain.xml', {
             'id': self.pk,
-            'user': self.user,
             'memory': self.memory * 1024,
             'volume': volume.path(),
             'mac': self.address.mac,
