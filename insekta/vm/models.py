@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.db.models.signals import post_delete
 from django.template.loader import render_to_string
 import libvirt
 
@@ -45,7 +46,14 @@ class BaseImage(models.Model):
         return pool.storageVolLookupByName(self.name)
 
     def __unicode__(self):
-        return self.name
+        try:
+            scenario = self.scenario
+            return u'Image for "{0}"'.format(scenario.title)
+        except:
+            if not self.virtualmachine_set.count():
+                return u'No longer used'
+            else:
+                return u'Deprecated image, but still in use'
 
 class VirtualMachine(models.Model):
     memory = models.IntegerField()
@@ -54,6 +62,12 @@ class VirtualMachine(models.Model):
     address = models.OneToOneField(Address)
     state = models.CharField(max_length=10, default='disabled',
                              choices=RUN_STATE_CHOICES)
+
+    def __unicode__(self):
+        scenario_run = self.scenariorun
+        return u'VM for scenario "{0}" played by {1}'.format(
+                scenario_run.scenario.title,
+                scenario_run.user.username)
 
     def start(self):
         """Start the virtual machine."""
@@ -171,8 +185,11 @@ class VirtualMachine(models.Model):
         return pool.createXML(xmldesc, flags=0)
     
     def _build_domain_xml(self, volume):
+        scenario_run = self.scenariorun
         return render_to_string('vm/domain.xml', {
             'id': self.pk,
+            'user': scenario_run.user,
+            'scenario': scenario_run.scenario,
             'memory': self.memory * 1024,
             'volume': volume.path(),
             'mac': self.address.mac,
@@ -201,3 +218,11 @@ class VirtualMachine(models.Model):
         finally:
             self.save()
 
+def _delete_image(sender, instance, **kwargs):
+    for node in settings.LIBVIRT_NODES.keys():
+        try:
+            instance.get_volume(node).delete(flags=0)
+        except libvirt.libvirtError:
+            pass
+
+post_delete.connect(_delete_image, BaseImage)

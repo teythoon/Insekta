@@ -1,6 +1,6 @@
 <domain type='kvm'>
     <name>scenarioRun{{ id }}</name>
-    <description>running scenario</description>
+    <description>Scenario &quot;{{ scenario.title }}&quot; played by {{ user.username }}</description>
     <memory>{{ memory }}</memory>
     <vcpu>1</vcpu>
     <os>

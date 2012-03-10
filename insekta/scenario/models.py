@@ -33,7 +33,7 @@ class Scenario(models.Model):
     description = models.TextField()
     num_secrets = models.IntegerField()
     memory = models.IntegerField()
-    image = models.ForeignKey(BaseImage)
+    image = models.OneToOneField(BaseImage)
     enabled = models.BooleanField(default=False)
 
     class Meta:
