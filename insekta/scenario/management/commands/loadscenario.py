@@ -83,7 +83,7 @@ class Command(BaseCommand):
         secrets = extract_secrets(description)
         num_secrets = len(secrets)
         
-        image_name = str(int(time.time() * 1000))
+        image_name = 'si' + str(int(time.time() * 1000))
         image_hash = self._calculate_image_hash(scenario_img)
 
         try:
@@ -96,6 +96,12 @@ class Command(BaseCommand):
             scenario.enabled = False
             created = False
             image = scenario.image
+            if image_hash != image.hash:
+                image = BaseImage.objects.create(name=image_name,
+                                                 hash=image_hash)
+                upload_image = True
+            else:
+                upload_image = False
             print('Updating scenario ...')
         except Scenario.DoesNotExist:
             image = BaseImage.objects.create(name=image_name, hash=image_hash)
@@ -104,6 +110,7 @@ class Command(BaseCommand):
                     image=image, description=description,
                     num_secrets=num_secrets)
             created = True
+            upload_image = True
             print('Creating scenario ...')
         
         scenario.save()
@@ -125,9 +132,8 @@ class Command(BaseCommand):
         if os.path.exists(media_dir):
             shutil.copytree(media_dir, media_target)
 
-        if created or image_hash != image.hash:
+        if upload_image:
             print('Storing image on all nodes:')
-            image = BaseImage.objects.create(name=image_name, hash=image_hash)
             for node in scenario.get_nodes():
                 volume = self._create_volume(node, image, scenario_size)
                 self._upload_image(node, scenario_img, scenario_size, volume)
