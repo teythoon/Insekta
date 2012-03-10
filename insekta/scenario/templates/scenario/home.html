@@ -20,7 +20,7 @@
     <tr>
         <td><a href="{% url scenario.show scenario.name %}">
                 {{ scenario.title }}</a></td>
-        <td>{{ scenario_run.vm.state }}</td>
+        <td>{{ scenario_run.vm.get_state_display }}</td>
         <td>{{ scenario_run.expires_at|timeuntil }}</td>
     </tr>
 {% endwith %}
