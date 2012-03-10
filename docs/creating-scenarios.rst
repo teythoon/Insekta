@@ -122,6 +122,8 @@ Put any files in this directory and you can reference them in your
 They will be served via HTTP as static files.
 
 
+.. _registering-scenario
+
 Registering the scenario image
 ------------------------------
 
