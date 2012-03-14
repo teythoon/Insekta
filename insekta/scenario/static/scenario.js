@@ -32,7 +32,7 @@ $(function() {
                 } else if (xhr.status == 304) {
                     check_new(check_url, task_id);
                 }
-            }, 'xhtml');
+            });
         }, 1500);
     }
     
