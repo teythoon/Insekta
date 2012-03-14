@@ -1,9 +1,6 @@
-document.addEventListener('DOMContentLoaded', function() {
+$(function() {
     function register_eventhandler() {
-        var vm_forms = document.getElementsByName('vmbox_form');
-        for (var i = 0; i < vm_forms.length; i++) {
-            vm_forms[i].addEventListener('submit', submit_action, false);
-        }
+        $('form[name="vmbox_form"]').submit(submit_action);
     }
     
     function submit_action(ev) {
@@ -11,23 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var csrf_token = ev.target.csrfmiddlewaretoken.value;
         var target_url = ev.target.getAttribute('action');
         
-        document.getElementById('scenario_sidebar').innerHTML = '';
-        document.getElementById('vm_spinner').style.display = 'block';
+        $('#scenario_sidebar').hide();
+        $('#vm_spinner').show()
         
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    var result = eval('(' + xhr.responseText + ')');
-                    check_new(target_url, result['task_id']);
-                } else {
-                    document.getElementById('scenario_sidebar').innerHTML = 'ERROR';
-                }
-            }
-        }
-        xhr.open('POST', target_url, false);
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        xhr.send('action=' + action + '&csrfmiddlewaretoken=' + csrf_token);
+        $.post(target_url, {
+            'action': action,
+            'csrfmiddlewaretoken': csrf_token    
+        }, function(result) {
+            check_new(target_url, result['task_id'])
+        }, 'json');
 
         ev.preventDefault();
         ev.stopPropagation();
@@ -35,24 +24,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function check_new(check_url, task_id) {
         setTimeout(function() {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        document.getElementById('vm_spinner').style.display = 'none';
-                        document.getElementById('scenario_sidebar').innerHTML = xhr.responseText;
-                        register_eventhandler();
-                    } else if (xhr.status == 304) { // not modified
-                        check_new(check_url, task_id);
-                    } else {
-                        document.getElementById('scenario_sidebar').innerHTML = 'ERROR';
-                    }
+            $.get(check_url, {'task_id': task_id}, function(result, s, xhr) {
+                if (xhr.status == 200) {
+                    $('#vm_spinner').hide();
+                    $('#scenario_sidebar').html(result).show();
+                    register_eventhandler()
+                } else if (xhr.status == 304) {
+                    check_new(check_url, task_id);
                 }
-            }
-            xhr.open('GET', check_url + '?task_id=' + task_id, false);
-            xhr.send(null);
+            }, 'xhtml');
         }, 1500);
     }
     
     register_eventhandler();
-}, false);
+
+    $(".spoiler").hide();
+    $('<a class="reveal_spoiler">show spoiler</a> ').insertBefore('.spoiler');
+    
+    $("a.reveal_spoiler").click(function(ev) {
+        var link = $(ev.target);
+        link.next().show();
+        link.hide();
+    });
+});

@@ -120,6 +120,11 @@
 .spoiler {
 }
 
+.reveal_spoiler {
+    cursor:pointer;
+    text-decoration:underline;
+}
+
 .roundbutton {
     border: 1px solid #000;
     background:#fff;
