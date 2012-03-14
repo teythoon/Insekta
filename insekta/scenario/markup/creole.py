@@ -52,30 +52,44 @@ def enter_secret(macro, environ, *secrets):
     target = environ['enter_secret_target']
     user = environ['user']
     
-    form = tag.form(macro.parsed_body(), method='post', action=target)
-
-    # If there are no secrets in the arguments, we will accept all secrets
-    if not secrets:
-        secrets = environ['all_secrets']
-
-    # If all secrets are already submitted, hide this box
-    if all(secret in environ['submitted_secrets'] for secret in secrets):
-        return ''
-   
-    for secret in secrets:
-        secret_token = environ['secret_token_function'](user, secret)
-        form.append(tag.input(name='secret_token', value=secret_token,
-                              type='hidden'))
+    # If all secrets are already submitted, change css class
+    solved = all(secret in environ['submitted_secrets'] for secret in secrets)
+    css_class = 'enter_secret secret_solved' if solved else 'enter_secret'
+    secret_div = tag.div(macro.parsed_body(), class_=css_class)
     
-    form.append(tag.input(type='hidden', name='csrfmiddlewaretoken',
-                          value=environ['csrf_token']))
+    if not solved:
+        # If there are no secrets in the arguments, we will accept all secrets
+        if not secrets:
+            secrets = environ['all_secrets']
+        
+        form = tag.form(method='post', action=target)
+        
+        for secret in secrets:
+            secret_token = environ['secret_token_function'](user, secret)
+            form.append(tag.input(name='secret_token', value=secret_token,
+                                  type='hidden'))
+    
+        form.append(tag.input(type='hidden', name='csrfmiddlewaretoken',
+                              value=environ['csrf_token']))
 
-    p = tag.p(tag.strong(_('Enter secret:')), ' ')
-    p.append(tag.input(name='secret', type='text'))
-    p.append(tag.input(type='submit', name='enter_secret', value=_('Submit')))
-    form.append(p)
+        p = tag.p(tag.strong(_('Enter secret:')), ' ')
+        p.append(tag.input(name='secret', type='text'))
+        p.append(tag.input(type='submit', name='enter_secret', value=_('Submit')))
+        form.append(p)
+        secret_div.append(form)
 
-    return tag.div(form, class_='enter_secret')
+    form_submitted_secrets = [secret for secret in secrets
+                         if secret in environ['submitted_secrets']]
+    if form_submitted_secrets:
+        submitted_div = tag.div(tag.p(_('Already submitted secrets:')),
+                                _class='submitted_secrets')
+        secret_list = tag.ul()
+        for secret in form_submitted_secrets:
+            secret_list.append(tag.li(secret))
+        submitted_div.append(secret_list)
+        secret_div.append(submitted_div)
+
+    return secret_div
 
 def require_secret(macro, environ, *secrets):
     """Macro for hiding text that can be shown by submitting a secret.

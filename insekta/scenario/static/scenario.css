@@ -99,12 +99,15 @@
     margin:0.5em;
 }
 
-
 .enter_secret {
     background: url(secret.png) no-repeat 5px center;
     min-height:50px;
     padding-left:80px;
     border:2px solid #000;
+}
+
+.secret_solved {
+    border:2px solid #0a0;
 }
 
 .require_secret {
