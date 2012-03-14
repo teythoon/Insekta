@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+<h2>{% trans "Registration" %}</h2>
+<p>{% trans "Please note that your accounts needs to be verified by an administrator." %}</p>
+
+<form method="post" action="{% url registration.registration %}">
+    {% csrf_token %}
+    <table>
+        {{ register_form }}
+    </table>
+    <p><input type="submit" value="Register" /></p>
+</form>
+{% endblock %}

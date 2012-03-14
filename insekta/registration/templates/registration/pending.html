@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Activation" %}{% endblock %}
+
+{% block content %}
+<h2>Status of {{ checked_user.username }}</h2>
+{% if checked_user.is_active %}
+<p>{% trans "Your account ist active." %}</p>
+{% else %}
+<p>{% trans "Your account is still pending. Please wait some days." %}</p>
+{% endif %}
+
+{% endblock %}

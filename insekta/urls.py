@@ -11,9 +11,7 @@ urlpatterns = patterns('',
     url(r'^$', lambda request: redirect(reverse('scenario.home'))),
     url(r'^scenario/', include('insekta.scenario.urls')),
     url(r'^certificate/', include('insekta.pki.urls')),
-    
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
-    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login'),
+    url(r'^accounts/', include('insekta.registration.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

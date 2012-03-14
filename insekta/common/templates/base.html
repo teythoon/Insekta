@@ -28,6 +28,7 @@
     <li><a href="{% url 'django.contrib.auth.views.logout_then_login' %}">{% trans "Logout" %}</a></li>
 {% else %}
     <li><a href="{% url 'django.contrib.auth.views.login' %}">{% trans "Login" %}</a></li>
+    <li><a href="{% url 'registration.registration' %}">{% trans "Register" %}</a></li>
 {% endif %}
 </ul>
 </div>
