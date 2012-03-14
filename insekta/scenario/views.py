@@ -61,8 +61,10 @@ def scenario_groups(request):
     
     _attach_user_progress(all_scenarios, request.user)
 
+    group_list = groups.values()
+    group_list.sort(key=attrgetter('title'))
     return TemplateResponse(request, 'scenario/groups.html', {
-        'scenario_group_list': groups.values() 
+        'scenario_group_list': group_list
     })
 
 @login_required
