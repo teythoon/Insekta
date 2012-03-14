@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 14:59+0100\n"
-"PO-Revision-Date: 2012-03-14 15:03+0100\n"
+"POT-Creation-Date: 2012-03-14 21:37+0100\n"
+"PO-Revision-Date: 2012-03-14 21:38+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
 "Language: \n"
@@ -19,42 +19,43 @@ msgstr ""
 "X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: common/templates/base.html:19
+#: common/templates/base.html:20
 #: scenario/templates/scenario/home.html:4
 msgid "Home"
 msgstr "Start"
 
-#: common/templates/base.html:20
+#: common/templates/base.html:21
 #: scenario/templates/scenario/groups.html:5
 #: scenario/templates/scenario/groups.html:8
 msgid "Scenario groups"
 msgstr "Szenariogruppen"
 
-#: common/templates/base.html:21
+#: common/templates/base.html:22
 #: scenario/templates/scenario/all.html:5
 #: scenario/templates/scenario/all.html:8
 msgid "All scenarios"
 msgstr "Alle Szenarien"
 
-#: common/templates/base.html:23
+#: common/templates/base.html:24
 #: scenario/templates/scenario/editor.html:4
 #: scenario/templates/scenario/editor.html:7
 msgid "Scenario editor"
 msgstr "Szenario-Editor"
 
-#: common/templates/base.html:26
+#: common/templates/base.html:27
 msgid "Administration"
 msgstr "Administration"
 
-#: common/templates/base.html:28
+#: common/templates/base.html:29
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: common/templates/base.html:30
+#: common/templates/base.html:31
+#: registration/templates/registration/login.html:5
 msgid "Login"
 msgstr "Einloggen"
 
-#: common/templates/base.html:31
+#: common/templates/base.html:32
 msgid "Register"
 msgstr "Registrieren"
 
@@ -103,7 +104,7 @@ msgstr "Geschlossen"
 msgid "Resolved"
 msgstr "Gelöst"
 
-#: registration/templates/registration/login.html:8
+#: registration/templates/registration/login.html:10
 msgid "Your username and password didn't match. Please try again."
 msgstr "Dein Benutzername oder Passwort stimmt nicht. Bitte versuche es erneut."
 
@@ -124,7 +125,7 @@ msgid "Registration"
 msgstr "Registrierung"
 
 #: registration/templates/registration/registration.html:7
-msgid "Please note that your accounts needs to be verified by an administrator."
+msgid "Please note that your account needs to be verified by an administrator."
 msgstr "Bitte beachte, dass dein Account von einem Administrator freigeschaltet werden muss."
 
 #: scenario/models.py:41
@@ -140,39 +141,43 @@ msgstr "Dein Geheimnis ist ungültig!"
 msgid "This secret was already submitted!"
 msgstr "Dein Geheimnis wurde bereits eingericht."
 
-#: scenario/views.py:177
+#: scenario/views.py:179
 msgid "Task was received and will be executed."
 msgstr "Die Aufgabe wurde empfangen und wird ausgeführt."
 
-#: scenario/views.py:213
+#: scenario/views.py:215
 msgid "Congratulation! Your secret was valid."
 msgstr "Gratulation! Dein Geheimnis war gültig."
 
-#: scenario/views.py:221
+#: scenario/views.py:223
 msgid "Submitted secrets:"
 msgstr "Eingereichte Geheimnisse:"
 
-#: scenario/views.py:224
+#: scenario/views.py:226
 msgid "Content:"
 msgstr "Inhalt:"
 
-#: scenario/markup/creole.py:73
+#: scenario/markup/creole.py:75
 msgid "Enter secret:"
 msgstr "Gib das Geheimnis ein:"
 
-#: scenario/markup/creole.py:75
+#: scenario/markup/creole.py:77
 msgid "Submit"
 msgstr "Einreichen"
 
-#: scenario/markup/creole.py:96
+#: scenario/markup/creole.py:84
+msgid "Already submitted secrets:"
+msgstr "Bereits eingereichte Geheimnisse:"
+
+#: scenario/markup/creole.py:110
 msgid "Here be dragons."
 msgstr "Here be dragons."
 
-#: scenario/markup/creole.py:97
+#: scenario/markup/creole.py:111
 msgid "This content is hidden, you need to submit a specific secret in order to show it."
 msgstr "Der Inhalt ist versteckt, du musst ein bestimmtes Geheimnis einreichen um es anzuzeigen."
 
-#: scenario/markup/creole.py:117
+#: scenario/markup/creole.py:131
 msgid "No such language: {lang}"
 msgstr "Die Sprache \"{lang}\" existiert nicht"
 

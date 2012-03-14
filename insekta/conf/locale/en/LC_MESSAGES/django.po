@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 14:59+0100\n"
-"PO-Revision-Date: 2012-03-14 15:00+0100\n"
+"POT-Creation-Date: 2012-03-14 21:37+0100\n"
+"PO-Revision-Date: 2012-03-14 21:38+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
 "Language: \n"
@@ -19,42 +19,43 @@ msgstr ""
 "X-Poedit-Country: UNITED STATES\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: common/templates/base.html:19
+#: common/templates/base.html:20
 #: scenario/templates/scenario/home.html:4
 msgid "Home"
 msgstr "Home"
 
-#: common/templates/base.html:20
+#: common/templates/base.html:21
 #: scenario/templates/scenario/groups.html:5
 #: scenario/templates/scenario/groups.html:8
 msgid "Scenario groups"
 msgstr "Scenario groups"
 
-#: common/templates/base.html:21
+#: common/templates/base.html:22
 #: scenario/templates/scenario/all.html:5
 #: scenario/templates/scenario/all.html:8
 msgid "All scenarios"
 msgstr "All scenarios"
 
-#: common/templates/base.html:23
+#: common/templates/base.html:24
 #: scenario/templates/scenario/editor.html:4
 #: scenario/templates/scenario/editor.html:7
 msgid "Scenario editor"
 msgstr "Scenario editor"
 
-#: common/templates/base.html:26
+#: common/templates/base.html:27
 msgid "Administration"
 msgstr "Administration"
 
-#: common/templates/base.html:28
+#: common/templates/base.html:29
 msgid "Logout"
 msgstr "Logout"
 
-#: common/templates/base.html:30
+#: common/templates/base.html:31
+#: registration/templates/registration/login.html:5
 msgid "Login"
 msgstr "Login"
 
-#: common/templates/base.html:31
+#: common/templates/base.html:32
 msgid "Register"
 msgstr "Register"
 
@@ -103,7 +104,7 @@ msgstr "Closed"
 msgid "Resolved"
 msgstr "Resolved"
 
-#: registration/templates/registration/login.html:8
+#: registration/templates/registration/login.html:10
 msgid "Your username and password didn't match. Please try again."
 msgstr "Your username and password didn't match. Please try again."
 
@@ -124,8 +125,8 @@ msgid "Registration"
 msgstr "Registration"
 
 #: registration/templates/registration/registration.html:7
-msgid "Please note that your accounts needs to be verified by an administrator."
-msgstr "Please note that your accounts needs to be verified by an administrator."
+msgid "Please note that your account needs to be verified by an administrator."
+msgstr "Please note that your account needs to be verified by an administrator."
 
 #: scenario/models.py:41
 msgid "Can view the scenario editor"
@@ -140,39 +141,43 @@ msgstr "This secret is invalid!"
 msgid "This secret was already submitted!"
 msgstr "This secret was already submitted!"
 
-#: scenario/views.py:177
+#: scenario/views.py:179
 msgid "Task was received and will be executed."
 msgstr "Task was received and will be executed."
 
-#: scenario/views.py:213
+#: scenario/views.py:215
 msgid "Congratulation! Your secret was valid."
 msgstr "Congratulation! Your secret was valid."
 
-#: scenario/views.py:221
+#: scenario/views.py:223
 msgid "Submitted secrets:"
 msgstr "Submitted secrets:"
 
-#: scenario/views.py:224
+#: scenario/views.py:226
 msgid "Content:"
 msgstr "Content:"
 
-#: scenario/markup/creole.py:73
+#: scenario/markup/creole.py:75
 msgid "Enter secret:"
 msgstr "Enter secret:"
 
-#: scenario/markup/creole.py:75
+#: scenario/markup/creole.py:77
 msgid "Submit"
 msgstr "Submit"
 
-#: scenario/markup/creole.py:96
+#: scenario/markup/creole.py:84
+msgid "Already submitted secrets:"
+msgstr "Already submitted secrets:"
+
+#: scenario/markup/creole.py:110
 msgid "Here be dragons."
 msgstr "Here be dragons."
 
-#: scenario/markup/creole.py:97
+#: scenario/markup/creole.py:111
 msgid "This content is hidden, you need to submit a specific secret in order to show it."
 msgstr "This content is hidden, you need to submit a specific secret in order to show it."
 
-#: scenario/markup/creole.py:117
+#: scenario/markup/creole.py:131
 msgid "No such language: {lang}"
 msgstr "No such language: {lang}"
 

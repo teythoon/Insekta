@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>{% trans "Registration" %}</h2>
-<p>{% trans "Please note that your accounts needs to be verified by an administrator." %}</p>
+<p>{% trans "Please note that your account needs to be verified by an administrator." %}</p>
 
 <form method="post" action="{% url registration.registration %}">
     {% csrf_token %}
