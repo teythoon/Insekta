@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Insekta 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-05 22:44+0100\n"
-"PO-Revision-Date: 2012-02-05 22:44+0100\n"
+"POT-Creation-Date: 2012-03-14 14:59+0100\n"
+"PO-Revision-Date: 2012-03-14 15:03+0100\n"
 "Last-Translator: Henning Pridoehl <henning@cinsects.de>\n"
 "Language-Team: Insekta team <insekta@cinsects.de>\n"
 "Language: \n"
@@ -54,6 +54,10 @@ msgstr "Ausloggen"
 msgid "Login"
 msgstr "Einloggen"
 
+#: common/templates/base.html:31
+msgid "Register"
+msgstr "Registrieren"
+
 #: pki/views.py:30
 msgid "Invalid CSR."
 msgstr "Ungültiges CSR."
@@ -87,36 +91,68 @@ msgstr "Du kannst den folgenden Befehl benutzen um ein CSR (Certificate Signing 
 msgid "Paste your CSR (Certificate Signing Request) into the following box"
 msgstr "Füge dein CSR (Certificate Signing Request) in das folgende Feld ein"
 
+#: question/models.py:9
+msgid "Open"
+msgstr "Offen"
+
+#: question/models.py:10
+msgid "Closed"
+msgstr "Geschlossen"
+
+#: question/models.py:11
+msgid "Resolved"
+msgstr "Gelöst"
+
 #: registration/templates/registration/login.html:8
 msgid "Your username and password didn't match. Please try again."
 msgstr "Dein Benutzername oder Passwort stimmt nicht. Bitte versuche es erneut."
 
-#: scenario/models.py:55
+#: registration/templates/registration/pending.html:4
+msgid "Activation"
+msgstr "Aktivierung"
+
+#: registration/templates/registration/pending.html:9
+msgid "Your account ist active."
+msgstr "Dein Account ist aktiv."
+
+#: registration/templates/registration/pending.html:11
+msgid "Your account is still pending. Please wait some days."
+msgstr "Die Aktivierung deines Accounts steht noch aus. Bitte warte ein paar Tage."
+
+#: registration/templates/registration/registration.html:6
+msgid "Registration"
+msgstr "Registrierung"
+
+#: registration/templates/registration/registration.html:7
+msgid "Please note that your accounts needs to be verified by an administrator."
+msgstr "Bitte beachte, dass dein Account von einem Administrator freigeschaltet werden muss."
+
+#: scenario/models.py:41
 msgid "Can view the scenario editor"
 msgstr "Kann Szenarien-Editor sehen"
 
-#: scenario/models.py:88
-#: scenario/models.py:92
+#: scenario/models.py:74
+#: scenario/models.py:78
 msgid "This secret is invalid!"
 msgstr "Dein Geheimnis ist ungültig!"
 
-#: scenario/models.py:95
+#: scenario/models.py:81
 msgid "This secret was already submitted!"
 msgstr "Dein Geheimnis wurde bereits eingericht."
 
-#: scenario/views.py:161
+#: scenario/views.py:177
 msgid "Task was received and will be executed."
 msgstr "Die Aufgabe wurde empfangen und wird ausgeführt."
 
-#: scenario/views.py:181
+#: scenario/views.py:213
 msgid "Congratulation! Your secret was valid."
 msgstr "Gratulation! Dein Geheimnis war gültig."
 
-#: scenario/views.py:189
+#: scenario/views.py:221
 msgid "Submitted secrets:"
 msgstr "Eingereichte Geheimnisse:"
 
-#: scenario/views.py:192
+#: scenario/views.py:224
 msgid "Content:"
 msgstr "Inhalt:"
 
@@ -186,27 +222,31 @@ msgstr "Laufende Szenarien"
 msgid "VM state"
 msgstr "VM-Zustand"
 
-#: scenario/templates/scenario/home.html:29
+#: scenario/templates/scenario/home.html:16
+msgid "Expiry"
+msgstr "Ablauf"
+
+#: scenario/templates/scenario/home.html:31
 msgid "You have no running scenarios."
 msgstr "Du hast keine laufenden Szenarien."
 
-#: scenario/templates/scenario/home.html:33
+#: scenario/templates/scenario/home.html:35
 msgid "Certificate generation for VPN"
 msgstr "Zertifikatserstellung für das VPN"
 
-#: scenario/templates/scenario/home.html:34
+#: scenario/templates/scenario/home.html:36
 msgid "Please create a valid certificate for VPN setup."
 msgstr "Bitte erstelle ein gültiges Zertifikat für das VPN."
 
-#: scenario/templates/scenario/home.html:35
+#: scenario/templates/scenario/home.html:37
 msgid "Create certificate"
 msgstr "Zertifikat erstellen"
 
-#: scenario/templates/scenario/home.html:37
+#: scenario/templates/scenario/home.html:39
 msgid "Certificate and VPN instructions"
 msgstr "Zertifikat- und VPN-Anleitungen"
 
-#: scenario/templates/scenario/home.html:38
+#: scenario/templates/scenario/home.html:40
 msgid "View certificate page"
 msgstr "Zeige Zertifikatsseite"
 
@@ -223,63 +263,67 @@ msgstr "Szenario-Informationen"
 msgid "Secrets:"
 msgstr "Geheimnisse:"
 
-#: scenario/templates/scenario/sidebar.html:17
+#: scenario/templates/scenario/sidebar.html:14
+msgid "Expires in:"
+msgstr "Läuft ab in:"
+
+#: scenario/templates/scenario/sidebar.html:27
 msgid "enable"
 msgstr "aktivieren"
 
-#: scenario/templates/scenario/sidebar.html:24
+#: scenario/templates/scenario/sidebar.html:34
 msgid "disable"
 msgstr "deaktivieren"
 
-#: scenario/templates/scenario/sidebar.html:35
+#: scenario/templates/scenario/sidebar.html:45
 msgid "Manage virtual machine"
 msgstr "Virtuelle Maschine verwalten"
 
-#: scenario/templates/scenario/sidebar.html:38
+#: scenario/templates/scenario/sidebar.html:48
 msgid "IP address:"
 msgstr "IP-Adresse:"
 
-#: scenario/templates/scenario/sidebar.html:42
+#: scenario/templates/scenario/sidebar.html:52
 msgid "Current state:"
 msgstr "Aktueller Zustand:"
 
-#: scenario/templates/scenario/sidebar.html:44
+#: scenario/templates/scenario/sidebar.html:54
 msgid "running (state)"
 msgstr "In Betrieb"
 
-#: scenario/templates/scenario/sidebar.html:45
+#: scenario/templates/scenario/sidebar.html:55
 msgid "shutoff (state)"
 msgstr "Ausgeschaltet"
 
-#: scenario/templates/scenario/sidebar.html:46
+#: scenario/templates/scenario/sidebar.html:56
 msgid "suspended (state)"
 msgstr "Pausiert"
 
-#: scenario/templates/scenario/sidebar.html:47
+#: scenario/templates/scenario/sidebar.html:57
 msgid "disabled (state)"
 msgstr "Deaktiviert"
 
-#: scenario/templates/scenario/sidebar.html:48
+#: scenario/templates/scenario/sidebar.html:58
 msgid "unknown error"
 msgstr "unbekannter Fehler"
 
-#: scenario/templates/scenario/sidebar.html:52
+#: scenario/templates/scenario/sidebar.html:62
 msgid "Available actions:"
 msgstr "Verfügbare Aktionen:"
 
-#: scenario/templates/scenario/sidebar.html:59
+#: scenario/templates/scenario/sidebar.html:69
 msgid "start"
 msgstr "starten"
 
-#: scenario/templates/scenario/sidebar.html:68
+#: scenario/templates/scenario/sidebar.html:78
 msgid "stop"
 msgstr "stoppen"
 
-#: scenario/templates/scenario/sidebar.html:77
+#: scenario/templates/scenario/sidebar.html:87
 msgid "suspend"
 msgstr "pausieren"
 
-#: scenario/templates/scenario/sidebar.html:86
+#: scenario/templates/scenario/sidebar.html:96
 msgid "resume"
 msgstr "fortsetzen"
 
